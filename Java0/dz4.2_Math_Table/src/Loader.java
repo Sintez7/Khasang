@@ -10,11 +10,14 @@
 
    На сайте в качестве примера приведена таблица где до 5 считается с умножением на 10, а после - без него.
    Не знаю, ошибка ли это, ведь ниже приведён скрин с таблицей а там считается до 10.
-   Сделаю как в образце, потому что могу.
-   Ах да, раз уж вопрос в ООП + циклы, то пожалуй я могу использовать абстракции.
-   А раз так - метод 2 будет попыткой в архитектурный паттерн "Стратегия".
-   Метод 3 будет попыткой в паттерн "Фабрика".
+   Первые два метода сделаю как в образце, потому что могу.
+   Раз уж урок про применение цикла for, в третьем варианте использую его бесконечную версию.
+   За прерывание будет отвечать ввод пользователя, либо внутренняя ошибка при парсе.
  */
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class Loader {
     public static void main(String[] args) {
@@ -43,10 +46,91 @@ public class Loader {
     }
 
     private static void method2() {
-
+        ArrayList<String> mathSheet = new ArrayList<>();
+        StringBuilder str = new StringBuilder();
+        for(int column = 1; column <= 10; column++) {
+            for(int row = 2; row <= 5; row++) {
+                str.append(row).append(" * ").append(column).append(" = ").append(column * row).append("\t\t");
+            }
+            mathSheet.add(str.toString());
+            str.delete(0, str.length());
+        }
+        mathSheet.add("");
+        for(int column = 1; column <= 9; column++) {
+            for(int row = 6; row <= 9; row++) {
+                str.append(row).append(" * ").append(column).append(" = ").append(row * column).append("\t\t");
+            }
+            mathSheet.add(str.toString());
+            str.delete(0, str.length());
+        }
+        for(String s : mathSheet) {
+            System.out.println(s);
+        }
+        System.out.println();
     }
 
     private static void method3() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int from;
+        int to;
+        String temp;
+        for(;;) {
+            System.out.println("Input starting number of math sheet.\n" +
+                    "Available range 1 - 9 inclusive.\n" +
+                    "Press Enter with empty line to close.");
+            try {
+                temp = reader.readLine();
+                if(temp.equals("")) break;
+                from = Integer.parseInt(temp);
+                if (from > 9) {
+                    System.out.println("Error! Inputted number is higher than 9.");
+                    break;
+                }
+                if (from < 1) {
+                    System.out.println("Error! Inputted number is less than 1.");
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Error! " + e.getLocalizedMessage());
+                break;
+            }
 
+            System.out.println("Input ending number of math sheet.\n" +
+                    "Available range 1 - 9 inclusive.\n" +
+                    "Ending number MUST be lower than starting\n" +
+                    "Press Enter with empty line to close.");
+            try {
+                temp = reader.readLine();
+                if(temp.equals("")) break;
+                to = Integer.parseInt(temp);
+                if (to > 9) {
+                    System.out.println("Error! Inputted number is higher than 9.");
+                    break;
+                }
+                if (to < 1) {
+                    System.out.println("Error! Inputted number is less than 1.");
+                    break;
+                }
+                if (to < from) {
+                    System.out.println("Error: Ending number higher than starting!");
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Error! " + e.getLocalizedMessage());
+                break;
+            }
+            System.out.println("Result: ");
+            printMathSheet(from, to);
+        }
+    }
+
+    private static void printMathSheet(int from, int to) {
+        for(int row = 1; row <= 10; row++) {
+            for(int column = from; column <= to; column++) {
+                System.out.printf("%d * %d = %d\t\t", column, row, column * row);
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 }
