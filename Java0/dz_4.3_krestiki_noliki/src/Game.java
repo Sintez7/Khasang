@@ -1,13 +1,17 @@
-public abstract class Game {
+/*
+ * Абстрактный класс, который должны наследовать все игры для корректной работы
+ * Не имеет конструктора по-умолчанию, чтобы исключить возможность создания игры без имени
+ * Имплеминтирует интерфейс GameStrategy для обязательного наличия у конкретной игры метода runGame()
+ */
+
+public abstract class Game implements GameStrategy {
     private String gameName;
 
-    Game(String gameName) {
+    public Game(String gameName) {
         this.gameName = gameName;
     }
 
-    String getThisName() {
+    public String getName() {
         return gameName;
     }
-
-    abstract String getGameName();
 }
