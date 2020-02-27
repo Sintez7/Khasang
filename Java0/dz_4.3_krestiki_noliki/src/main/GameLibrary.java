@@ -1,3 +1,5 @@
+package main;
+
 import java.util.ArrayList;
 
 public class GameLibrary{
@@ -13,7 +15,7 @@ public class GameLibrary{
     }
 
     /*
-     * Полученный экземпляр Game добавляется в коллекцию gameLibrary,
+     * Полученный экземпляр main.Game добавляется в коллекцию gameLibrary,
      * позиция в листе возвращается как gameID,
      * по которому мы будем вытаскивать игру из библиотеки
      */

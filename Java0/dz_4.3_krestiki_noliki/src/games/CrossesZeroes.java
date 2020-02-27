@@ -1,5 +1,7 @@
-package games;//package games;
-//import GameLibrary;
+package games;
+
+import main.Game;
+import main.GameLibrary;
 
 public class CrossesZeroes extends Game {
 
