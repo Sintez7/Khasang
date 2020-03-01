@@ -15,11 +15,11 @@ public class GameLibrary{
     }
 
     /*
-     * Полученный экземпляр main.Game добавляется в коллекцию gameLibrary,
+     * Полученный экземпляр Game добавляется в коллекцию gameLibrary,
      * позиция в листе возвращается как gameID,
      * по которому мы будем вытаскивать игру из библиотеки
      */
-    private int processRegistration (Game game) { //throws GameRegistrationException
+    private int processRegistration (Game game) {
         gameLibrary.add(game);
         return gameLibrary.size() - 1;
     }
