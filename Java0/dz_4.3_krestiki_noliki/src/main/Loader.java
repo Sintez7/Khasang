@@ -1,5 +1,7 @@
 package main;
 
+import games.CrossesZeroes.CrossesZeroes;
+
 public class Loader {
     private static GameLibrary gameLibrary;  // Создаём объект main.GameLibrary, который будет содержать в себе игры
 
@@ -23,6 +25,6 @@ public class Loader {
      * но пока этого я делать не буду, пусть пока будет так
      */
     private static void createGames() {
-        games.CrossesZeroes cz = new games.CrossesZeroes(gameLibrary);
+        CrossesZeroes cz = new CrossesZeroes(gameLibrary);
     }
 }
