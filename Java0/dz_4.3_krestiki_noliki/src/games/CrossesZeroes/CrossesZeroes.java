@@ -11,6 +11,7 @@ public class CrossesZeroes extends Game {
 
     private int gameID;
     private int fieldSize = 3;
+    private int winCondition = 3;
     Field field;
     CrossesZeroesInputStrategy input; // Для тестов
 
@@ -38,10 +39,7 @@ public class CrossesZeroes extends Game {
         field.showField();
 
         while (turnCounter <= fieldSize * fieldSize && nextTurnPossible) {
-            System.out.println("Player " + (turn ? 2:1) + " turn");
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {}
+            System.out.println("Ходит " + (turn ? 2:1) + " игрок.");
 
             int result = -2;        // Инициализируем как -2 чтобы запустить первый цикл ввода данных игроком
             /*
@@ -50,6 +48,9 @@ public class CrossesZeroes extends Game {
             while(!(result == 0) && nextTurnPossible) {
                 result = field.makeMove(input.move(), turn ? 1 : 2);        // Имитируем ход
                 switch (result) {
+                    case -2:
+                        System.out.println("Клетка должна быть в игровом поле!");   // если вдруг координаты больше или меньш8е допустимых
+                        continue;
                     case -1:
                         System.out.println("Эта клетка занята!");         // Надо повторить ход
                         continue;
@@ -62,15 +63,14 @@ public class CrossesZeroes extends Game {
                         System.out.println("Игрок 2 победил!");
                         nextTurnPossible = false;
                         break;
-                    case 3:
-                        System.out.println("Ничья!");
-                        nextTurnPossible = false;
-                        break;
                     default:        // Ход прошел нормально, выходим из цикла
                 }
             }
             if (nextTurnPossible) {
-                System.out.println(turnCounter + " game turn is done");
+                System.out.println(turnCounter + " ход завершен.");
+                if (turnCounter == fieldSize * fieldSize) {
+                    System.out.println("Ничья! Победила дружба!");
+                }
                 field.showField();
                 turn = !turn;
                 turnCounter++;
@@ -82,7 +82,7 @@ public class CrossesZeroes extends Game {
     }
 
     private void initialiseGameField() {
-        field = new Field(fieldSize, fieldSize, 3);
+        field = new Field(fieldSize, fieldSize, winCondition);
     }
 
     public int getGameID() {
@@ -100,6 +100,15 @@ class Field {
     private int winCondition = 0;
     private static String P1SIGN = "X";
     private static String P2SIGN = "O";
+    private static int winConditionDefault = 3;
+    private static final int[][] scanDirections =
+            {{0, -1},
+             {1, 0},
+             {1, 1},
+             {0, 1},
+             {-1, 1},
+             {-1, 0},
+             {-1, -1}};
 
     Field() {
         this(0);
@@ -115,7 +124,11 @@ class Field {
 
     Field (int sizeX, int sizeY, int winCondition) {
         initField(sizeX, sizeY);
-        this.winCondition = winCondition;
+        if (winCondition == 0) {
+            winCondition = winConditionDefault;
+        } else {
+            this.winCondition = winCondition;
+        }
     }
 
     private void initField(int sizeX, int sizeY) {
@@ -155,7 +168,12 @@ class Field {
     }
 
     int makeMove(int[] mC, int player) {
-        Cell temp = field[mC[0]][mC[1]];
+        Cell temp;
+        if (mC[0] < 1 || mC[1] < 1 || mC[0] > field.length - 1 || mC[1] > field.length - 1) {
+            return -2;     // Ячейка находится вне допустимых пределов
+        } else {
+            temp = field[mC[0]][mC[1]];
+        }
         boolean successful;
         int checkResult;
         if (!temp.getContent().equals(P1SIGN) & !temp.getContent().equals(P2SIGN)) {
@@ -174,8 +192,6 @@ class Field {
                 return 1;           // Выйграл 1 игрок
             case 2:
                 return 2;           // Выйграл 2 игрок
-            case 3:
-                return 3;           // Ничья
             default:
                 return 0;           // Игра может продолжаться
         }
@@ -194,52 +210,29 @@ class Field {
      */
     private int scan(int x, int y) {
         String temp;
-        int vX = 0;
-        int vY = 0;
-        for (int i = 0; i < 8; i++) {
+        int vX;
+        int vY;
+        StringBuilder sbTemp1 = new StringBuilder();
+        StringBuilder sbTemp2 = new StringBuilder();
+        String p1win;
+        String p2win;
+        for (int i = 0; i < winCondition; i++) {
+            sbTemp1.append(P1SIGN);
+            sbTemp2.append(P2SIGN);
+        }
+        p1win = sbTemp1.toString();
+        p2win = sbTemp2.toString();
+
+        for (int i = 0; i < 7; i++) {
+            vX = scanDirections[i][0];
+            vY = scanDirections[i][1];
             temp = "";
-            switch (i) {        // Этот свич выбирает вектор скана, начало на север, по часовой
-                case 0:         // Север
-                    vX = 0;
-                    vY = -1;
-                    break;
-                case 1:         // Северо-Восток
-                    vX = 1;
-                    vY = -1;
-                    break;
-                case 2:         // Восток
-                    vX = 1;
-                    vY = 0;
-                    break;
-                case 3:         // Юго-Восток
-                    vX = 1;
-                    vY = 1;
-                    break;
-                case 4:         // Юг
-                    vX = 0;
-                    vY = 1;
-                    break;
-                case 5:         // Юго-Запад
-                    vX = -1;
-                    vY = 1;
-                    break;
-                case 6:         // Запад
-                    vX = -1;
-                    vY = 0;
-                    break;
-                case 7:         // Северо-Запад
-                    vX = -1;
-                    vY = -1;
-                    break;
-                default:
-                    break;
-            }
             StringBuilder rsb = new StringBuilder();
-            temp = field[x][y].getContent() + recursiveScanNext(x, y, vX, vY, 1, field.length, rsb);
-            if (temp.equals(P1SIGN + P1SIGN + P1SIGN)) {
+            temp = scanNext(x, y,vX, vY, winCondition, rsb);
+            if (temp.equals(p1win)) {
                 return 0;
             } else {
-                if (temp.equals(P2SIGN + P2SIGN + P2SIGN)) {
+                if (temp.equals(p2win)) {
                     return 1;
                 } else {
 
@@ -249,14 +242,16 @@ class Field {
         return -1;
     }
 
-    private String recursiveScanNext(int x, int y, int vX, int vY, int deep, int maxDeep, StringBuilder sb) {
-        deep++;
-        if(deep < maxDeep) {
-            int curX = x + vX;
-            int curY = y + vY;
-            if (curX >= 0 && curY >=0 && curX < field.length && curY < field.length) {
+    private String scanNext(int x, int y,int vX, int vY, int deep, StringBuilder sb) {
+        int curX;
+        int curY;
+        for (int i = 0; i < deep; i++) {
+            curX = x + (vX * i);
+            curY = y + (vY * i);
+            if (curX > 0 && curY > 0 && curX < field.length && curY < field.length) {
                 sb.append(field[curX][curY].getContent());
-                recursiveScanNext(curX, curY, vX, vY, deep, maxDeep, sb);
+            } else {
+                return "";
             }
         }
         return sb.toString();
@@ -267,7 +262,9 @@ class Field {
  * Класс созданный для теста ввода
  * Предполагается, что для ввода будет использоваться сторонний ввод,
  * потому здесь код только чтобы проверить работоспособность кода игры,
- * ответственность за ввод лежит на тестере
+ * ответственность за ввод лежит на тестере.
+ * Да, этот метод сломается при значении больше 9 или отрицательном,
+ * но для теста достаточно.
  */
 class DefaultInput implements CrossesZeroesInputStrategy {
 
