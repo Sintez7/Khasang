@@ -1,0 +1,38 @@
+for (int i = 0; i < 8; i++) {
+            temp = "";
+            switch (i) {        // Этот свич выбирает вектор скана, начало на север, по часовой
+                case 0:         // Север
+                    vX = 0;
+                    vY = -1;
+                    break;
+                case 1:         // Северо-Восток
+                    vX = 1;
+                    vY = -1;
+                    break;
+                case 2:         // Восток
+                    vX = 1;
+                    vY = 0;
+                    break;
+                case 3:         // Юго-Восток
+                    vX = 1;
+                    vY = 1;
+                    break;
+                case 4:         // Юг
+                    vX = 0;
+                    vY = 1;
+                    break;
+                case 5:         // Юго-Запад
+                    vX = -1;
+                    vY = 1;
+                    break;
+                case 6:         // Запад
+                    vX = -1;
+                    vY = 0;
+                    break;
+                case 7:         // Северо-Запад
+                    vX = -1;
+                    vY = -1;
+                    break;
+                default:
+                    break;
+            }
