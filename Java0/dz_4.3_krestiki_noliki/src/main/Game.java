@@ -15,4 +15,6 @@ public abstract class Game implements GameStrategy {
     public String getName() {
         return gameName;
     }
+
+    abstract public int getGameID();
 }

@@ -29,6 +29,19 @@ public class CrossesZeroes extends Game {
         }
     }
 
+    private void initialiseGameField() {
+        field = new Field(fieldSize, fieldSize, winCondition);
+    }
+
+    @Override
+    public int getGameID() {
+        return gameID;
+    }
+
+    void setInputStrategy (CrossesZeroesInputStrategy input) {
+        this.input = input;
+    }
+
     @Override
     public void runGame() {
         initialiseGameField();
@@ -49,7 +62,7 @@ public class CrossesZeroes extends Game {
                 result = field.makeMove(input.move(), turn ? 1 : 2);        // Имитируем ход
                 switch (result) {
                     case -2:
-                        System.out.println("Клетка должна быть в игровом поле!");   // если вдруг координаты больше или меньш8е допустимых
+                        System.out.println("Клетка должна быть в игровом поле!");   // если вдруг координаты больше или меньше допустимых
                         continue;
                     case -1:
                         System.out.println("Эта клетка занята!");         // Надо повторить ход
@@ -80,18 +93,6 @@ public class CrossesZeroes extends Game {
             }
         }
     }
-
-    private void initialiseGameField() {
-        field = new Field(fieldSize, fieldSize, winCondition);
-    }
-
-    public int getGameID() {
-        return gameID;
-    }
-
-    void setInputStrategy (CrossesZeroesInputStrategy input) {
-        this.input = input;
-    }
 }
 
 class Field {
@@ -101,7 +102,7 @@ class Field {
     private static String P1SIGN = "X";
     private static String P2SIGN = "O";
     private static int winConditionDefault = 3;
-    private static final int[][] scanDirections =
+    private static final int[][] SCAN_DIRECTIONS =
             {{0, -1},
              {1, 0},
              {1, 1},
@@ -224,8 +225,8 @@ class Field {
         p2win = sbTemp2.toString();
 
         for (int i = 0; i < 7; i++) {
-            vX = scanDirections[i][0];
-            vY = scanDirections[i][1];
+            vX = SCAN_DIRECTIONS[i][0];
+            vY = SCAN_DIRECTIONS[i][1];
             temp = "";
             StringBuilder rsb = new StringBuilder();
             temp = scanNext(x, y,vX, vY, winCondition, rsb);
