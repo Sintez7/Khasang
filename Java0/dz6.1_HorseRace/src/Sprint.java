@@ -16,12 +16,12 @@ public class Sprint implements Track {
 
     @Override
     public boolean cycled() {
-        return false;
+        return cycled;
     }
 
     @Override
     public int cycleCount() {
-        return 0;
+        return cycleCount;
     }
 
     @Override

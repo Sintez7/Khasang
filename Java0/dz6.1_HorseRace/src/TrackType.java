@@ -1,5 +1,15 @@
 public enum TrackType {
-    SPRINT,
-    ROUND,
-    TIME_ATTACK
+    SPRINT("Sprint"),
+    ROUND("Round"),
+    TIME_ATTACK("Time Attack");
+
+    private String name;
+
+    TrackType(String name) {
+        this.name = name;
+    }
+
+    public String getTrackName(){
+        return name;
+    }
 }

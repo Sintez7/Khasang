@@ -6,18 +6,26 @@ public class TimeAttack implements Track {
     private int cycleCount = 0;
     private double length;
 
+    TimeAttack() {
+        this(DEFAULT_LENGTH);
+    }
+
+    public TimeAttack(double length) {
+        this.length = length;
+    }
+
     @Override
     public boolean cycled() {
-        return false;
+        return cycled;
     }
 
     @Override
     public int cycleCount() {
-        return 0;
+        return cycleCount;
     }
 
     @Override
     public double getLength() {
-        return 0;
+        return length;
     }
 }

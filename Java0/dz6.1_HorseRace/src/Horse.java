@@ -1,15 +1,9 @@
-public class Horse {
+public interface Horse {
+    double getMinSpeed();
 
-    private double minSpeed;
-    private double maxSpeed;
-    private double coveredDistance;
+    double getMaxSpeed();
 
-    @Override
-    public String toString() {
-        return "Horse{" +
-                "minSpeed=" + minSpeed +
-                ", maxSpeed=" + maxSpeed +
-                ", coveredDistance=" + coveredDistance +
-                '}';
-    }
+    double getCoveredDistance();
+
+    void addCoveredDistance(double distance);
 }

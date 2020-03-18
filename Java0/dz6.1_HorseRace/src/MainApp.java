@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class MainApp {
 
     private static final int DEFAULT_HORSES_COUNT = 5;
@@ -9,31 +7,33 @@ public class MainApp {
 
     TrackFactory trackFactory = new TrackFactory();
     RaceManager raceManager = new RaceManager();
+    UserInput input = new DefaultInput();
 
     TrackType trackType;
-    int horsesCount;
+
 
     public void start() {
-        trackType = getTrackTypeUserChoice();
-        horsesCount = getHorsesCountUserChoice();
+        int horsesCount = getHorsesCount();
+        trackType = getTrackType();
+        Track track = trackFactory.buildTrack(trackType);
 
-        raceManager.invokeRace(trackType, horsesCount);
+        raceManager.invokeRaceStart(track, horsesCount, input);
     }
 
-    private TrackType getTrackTypeUserChoice() {
-        Scanner scanner = new Scanner(System.in);
+    private TrackType getTrackType() {
         TrackType result = null;
         int number;
-        do {
+        do
+        {
             System.out.println("Choose track type:");
             showTrackTypes();
-            scanner.nextLine();
-            number = scanner.nextInt();
+            number = input.getInt();
 
-            if (number > TRACK_TYPES.length + 1 || number < 1) {
+            if (number > TRACK_TYPES.length || number < 1) {
                 System.out.println("Invalid track type number! Try again");
             } else {
-                switch (number){
+                //TODO: Поменять свич на что-нибудь по лучше
+                switch (number) {
                     case 1:
                         result = TrackType.SPRINT;
                         break;
@@ -44,33 +44,34 @@ public class MainApp {
                         result = TrackType.TIME_ATTACK;
                         break;
                 }
+                break;
             }
 
-        }while (result == null);
+        } while (true);
 
         return result;
     }
 
-    private int getHorsesCountUserChoice() {
-        Scanner scanner = new Scanner(System.in);
+    private int getHorsesCount() {
         int number = 0;
-        do{
-            scanner.nextLine();
-            number = scanner.nextInt();
+        System.out.println("Enter horses count");
+
+        do
+        {
+            number = input.getInt();
             if (number > MAX_HORSES_TO_RACE || number < MIN_HORSES_TO_RACE) {
                 System.out.println("Invalid horses number! Try again");
-                number = 0;
             } else {
                 break;
             }
-        }while (number == 0);
+        } while (true);
 
         return number;
     }
 
     private void showTrackTypes() {
         for (TrackType t : TRACK_TYPES) {
-            System.out.println("№ " + (t.ordinal() + 1) + t.name().toLowerCase());
+            System.out.println("№ " + (t.ordinal() + 1) + ": " + t.getTrackName());
         }
     }
 }
