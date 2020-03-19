@@ -1,3 +1,5 @@
+package horses;
+
 public class HorseFactory {
 
     public Horse createHorse(HorseType type) {

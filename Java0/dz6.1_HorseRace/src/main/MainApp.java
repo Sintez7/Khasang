@@ -1,21 +1,25 @@
+package main;
+
+import race.RaceManager;
+import tracks.Track;
+import tracks.TrackType;
+
 public class MainApp {
 
-    private static final int DEFAULT_HORSES_COUNT = 5;
     private static final TrackType[] TRACK_TYPES = TrackType.values();
     private static final int MIN_HORSES_TO_RACE = 2;
     private static final int MAX_HORSES_TO_RACE = 10;
 
-    TrackFactory trackFactory = new TrackFactory();
+//    TrackFactory trackFactory = new TrackFactory();
     RaceManager raceManager = new RaceManager();
     UserInput input = new DefaultInput();
-
     TrackType trackType;
-
 
     public void start() {
         int horsesCount = getHorsesCount();
         trackType = getTrackType();
-        Track track = trackFactory.buildTrack(trackType);
+//        Track track = trackFactory.buildTrack(trackType);
+        Track track = trackType.getInstance();
 
         raceManager.invokeRaceStart(track, horsesCount, input);
     }
@@ -32,18 +36,7 @@ public class MainApp {
             if (number > TRACK_TYPES.length || number < 1) {
                 System.out.println("Invalid track type number! Try again");
             } else {
-                //TODO: Поменять свич на что-нибудь по лучше
-                switch (number) {
-                    case 1:
-                        result = TrackType.SPRINT;
-                        break;
-                    case 2:
-                        result = TrackType.ROUND;
-                        break;
-                    case 3:
-                        result = TrackType.TIME_ATTACK;
-                        break;
-                }
+                result = TRACK_TYPES[number - 1];
                 break;
             }
 
