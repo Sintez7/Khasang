@@ -1,6 +1,8 @@
-package horses;
+package horses.types;
 
-public class GrayHorse implements Horse {
+import horses.Horse;
+
+public class BulatHorse implements Horse {
 
     private static final int MIN_SPEED_RANDOM_MODIFIER = 10;
     private static final int MIN_SPEED_FLAT_MODIFIER = 10;
@@ -15,7 +17,7 @@ public class GrayHorse implements Horse {
 
     public boolean finished = false;
 
-    GrayHorse() {
+    BulatHorse() {
         minSpeed = (Math.random() * MIN_SPEED_RANDOM_MODIFIER) + MIN_SPEED_FLAT_MODIFIER;
         maxSpeed = (Math.random() * MAX_SPEED_RANDOM_MODIFIER) + MAX_SPEED_FLAT_MODIFIER;
     }

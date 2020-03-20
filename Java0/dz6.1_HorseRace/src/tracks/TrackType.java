@@ -1,5 +1,9 @@
 package tracks;
 
+import tracks.types.Round;
+import tracks.types.Sprint;
+import tracks.types.TimeAttack;
+
 public enum TrackType {
     SPRINT("Sprint") {
         @Override

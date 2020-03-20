@@ -25,7 +25,7 @@ public class MainApp {
     }
 
     private TrackType getTrackType() {
-        TrackType result = null;
+        TrackType result;
         int number;
         do
         {

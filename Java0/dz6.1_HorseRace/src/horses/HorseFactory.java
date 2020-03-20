@@ -1,5 +1,9 @@
 package horses;
 
+import horses.types.BulatHorse;
+import horses.types.DefaultHorse;
+import horses.types.GrayHorse;
+
 public class HorseFactory {
 
     public Horse createHorse(HorseType type) {

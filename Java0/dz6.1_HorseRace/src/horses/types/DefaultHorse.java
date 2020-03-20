@@ -1,4 +1,6 @@
-package horses;
+package horses.types;
+
+import horses.Horse;
 
 public class DefaultHorse implements Horse {
 

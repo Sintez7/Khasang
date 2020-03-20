@@ -1,9 +1,11 @@
-package tracks;
+package tracks.types;
 
 import horses.Horse;
+import tracks.Track;
+
 import java.util.Comparator;
 
-public class Sprint implements Track {
+public class TimeAttack implements Track {
 
     private static final double DEFAULT_LENGTH = 1000.0;
 
@@ -11,11 +13,11 @@ public class Sprint implements Track {
     private int cycleCount = 0;
     private double length;
 
-    Sprint() {
+    TimeAttack() {
         this(DEFAULT_LENGTH);
     }
 
-    Sprint(double length) {
+    TimeAttack(double length) {
         this.length = length;
     }
 
@@ -41,7 +43,15 @@ public class Sprint implements Track {
             @Override
             public int compare(Horse o1, Horse o2) {
 
-                return Integer.compare(o1.getTime(), o2.getTime());
+                if (o1.getTime() > o2.getTime()) {
+                    return 1;
+                } else {
+                    if (o1.getTime() < o2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
             }
         };
     }
