@@ -18,6 +18,6 @@ public class DefaultInput implements UserInput {
                 System.out.println("Invalid input");
                 scanner.nextLine();
             }
-        }while (true);
+        } while (true);
     }
 }

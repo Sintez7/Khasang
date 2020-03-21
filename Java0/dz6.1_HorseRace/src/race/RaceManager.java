@@ -5,7 +5,9 @@ import horses.HorsesStall;
 import main.UserInput;
 import tracks.Track;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RaceManager {
 

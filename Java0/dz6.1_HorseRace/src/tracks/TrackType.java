@@ -30,7 +30,7 @@ public enum TrackType {
         this.name = name;
     }
 
-    public String getTrackName(){
+    public String getTrackName() {
         return name;
     }
 
