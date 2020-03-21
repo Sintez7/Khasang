@@ -11,10 +11,10 @@ public class Round implements Track {
     private static final int DEFAULT_CYCLE_COUNT = 3;
 
     private boolean cycled = true;
-    private int cycleCount = 0;
+    private int cycleCount;
     private double length;
 
-    Round() {
+    public Round() {
         this(DEFAULT_CYCLE_COUNT);
     }
 

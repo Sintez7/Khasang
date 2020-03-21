@@ -13,7 +13,7 @@ public class TimeAttack implements Track {
     private int cycleCount = 0;
     private double length;
 
-    TimeAttack() {
+    public TimeAttack() {
         this(DEFAULT_LENGTH);
     }
 

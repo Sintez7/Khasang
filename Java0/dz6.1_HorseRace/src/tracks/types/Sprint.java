@@ -13,7 +13,7 @@ public class Sprint implements Track {
     private int cycleCount = 0;
     private double length;
 
-    Sprint() {
+    public Sprint() {
         this(DEFAULT_LENGTH);
     }
 

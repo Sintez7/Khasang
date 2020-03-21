@@ -10,7 +10,6 @@ public class MainApp {
     private static final int MIN_HORSES_TO_RACE = 2;
     private static final int MAX_HORSES_TO_RACE = 10;
 
-//    TrackFactory trackFactory = new TrackFactory();
     RaceManager raceManager = new RaceManager();
     UserInput input = new DefaultInput();
     TrackType trackType;
@@ -18,7 +17,6 @@ public class MainApp {
     public void start() {
         int horsesCount = getHorsesCount();
         trackType = getTrackType();
-//        Track track = trackFactory.buildTrack(trackType);
         Track track = trackType.getInstance();
 
         raceManager.invokeRaceStart(track, horsesCount, input);
@@ -46,7 +44,7 @@ public class MainApp {
     }
 
     private int getHorsesCount() {
-        int number = 0;
+        int number;
         System.out.println("Enter horses count");
 
         do

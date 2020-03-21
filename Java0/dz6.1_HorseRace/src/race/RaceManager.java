@@ -12,18 +12,17 @@ public class RaceManager {
     private static final int DISTANCE_RANDOM_MODIFIER = 20;
 
     private double totalDistance;
-    private int place;
     private Horse[] horses;
     private HorsesStall horsesStall = new HorsesStall();
+    private int userHorse;
 
 
     public void invokeRaceStart(Track track, int horsesCount, UserInput input) {
+        userHorse = getUserBet(input, horsesCount);
         setTotalDistance(track);
         prepareHorses(horsesCount);
 
-        int userHorse = getUserBet(input, horsesCount);
         startRace(track);
-        showResults(track, userHorse);
     }
 
     private void setTotalDistance(Track track) {
@@ -57,7 +56,7 @@ public class RaceManager {
     private void startRace(Track track) {
 
         boolean raceEnded = false;
-        int horsesFinished = 0;
+        int horsesFinished;
 
         do
         {
@@ -87,6 +86,7 @@ public class RaceManager {
             }
         } while (!raceEnded);
 
+        raceEnded(track);
     }
 
     private double getTickDistance(Horse horse) {
@@ -94,7 +94,11 @@ public class RaceManager {
         return Math.min(speed, horse.getMaxSpeed());
     }
 
-    private void showResults(Track track, int userHorse) {
+    private void raceEnded(Track track) {
+        showResults(track);
+    }
+
+    private void showResults(Track track) {
         List<Horse> resultList = new ArrayList<>(Arrays.asList(horses));
         resultList.sort(track.getWinComparator());
 

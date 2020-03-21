@@ -17,7 +17,7 @@ public class GrayHorse implements Horse {
 
     public boolean finished = false;
 
-    GrayHorse() {
+    public GrayHorse() {
         minSpeed = (Math.random() * MIN_SPEED_RANDOM_MODIFIER) + MIN_SPEED_FLAT_MODIFIER;
         maxSpeed = (Math.random() * MAX_SPEED_RANDOM_MODIFIER) + MAX_SPEED_FLAT_MODIFIER;
     }
