@@ -1,4 +1,11 @@
-public class TimeAttack implements Track {
+package tracks.types;
+
+import horses.Horse;
+import tracks.Track;
+
+import java.util.Comparator;
+
+public class Sprint implements Track {
 
     private static final double DEFAULT_LENGTH = 1000.0;
 
@@ -6,11 +13,11 @@ public class TimeAttack implements Track {
     private int cycleCount = 0;
     private double length;
 
-    TimeAttack() {
+    Sprint() {
         this(DEFAULT_LENGTH);
     }
 
-    public TimeAttack(double length) {
+    Sprint(double length) {
         this.length = length;
     }
 
@@ -27,5 +34,17 @@ public class TimeAttack implements Track {
     @Override
     public double getLength() {
         return length;
+    }
+
+    @Override
+    public Comparator<Horse> getWinComparator() {
+
+        return new Comparator<>() {
+            @Override
+            public int compare(Horse o1, Horse o2) {
+
+                return Integer.compare(o1.getTime(), o2.getTime());
+            }
+        };
     }
 }
