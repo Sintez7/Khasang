@@ -87,8 +87,5 @@ public class Loader {
         cat1.info();
         cat2.info();
         cat3.info();
-
-        String str1 = "hello";
-        String str2 = "hello";
     }
 }
