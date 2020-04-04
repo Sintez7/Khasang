@@ -1,20 +1,18 @@
-package manager;
+package app;
 
-import main.ThingManager;
-import things.Thing;
+import thing.Thing;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultManager extends ThingManager {
-
+public class DefaultThingDataBase implements ThingDataBase {
     List<Thing> list = new ArrayList<>();
     int id = 0;
 
     @Override
-    public int add(Thing thing) {
+    public void add(Thing thing) {
         list.add(thing);
-        return id++;
+        thing.setId(id++);
     }
 
     @Override
@@ -49,10 +47,4 @@ public class DefaultManager extends ThingManager {
     public int getThingsCount() {
         return list.size();
     }
-
-    @Override
-    public int register() {
-        return 0;
-    }
-
 }

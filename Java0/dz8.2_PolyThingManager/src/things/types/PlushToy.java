@@ -13,4 +13,11 @@ public class PlushToy extends Thing {
         name = "Plush Toy name";
         description = "Plush Toy description";
     }
+
+    @Override
+    public String toString() {
+        return "№ " + getId() + " Plush Toy " +
+                "name " + name +
+                " description " + description;
+    }
 }

@@ -1,16 +1,18 @@
-package main;
+package app;
 
-import manager.DefaultManager;
-import things.types.*;
+import thing.DefaultThingManager;
+import thing.ThingManager;
+import thing.types.*;
 
 import java.util.Random;
 
-public class MainApp {
+public class Application implements AppInterface {
 
-    ThingManager manager = new DefaultManager();
+    ThingDataBase db = new DefaultThingDataBase();
+    ThingManager manager = new DefaultThingManager(db);
 
+    @Override
     public void start() {
-
         Random rand = new Random();
 
         System.out.println("=========== addSomeThings ===========");
@@ -46,60 +48,26 @@ public class MainApp {
         System.out.println("=========== showThings ===========");
         manager.showThings();
         System.out.println();
+
     }
 
     private void addSomeThings() {
-        new Book(manager);
-        new Book(manager);
-        new Book(manager);
-        new Clothes();
-        new Clothes();
-        new Magnet();
-        new PhotoFrame();
-        new PlushToy();
-        new PlushToy();
+        manager.add(new Book());
+        manager.add(new Book());
+        manager.add(new Book());
+        manager.add(new Clothes());
+        manager.add(new Clothes());
+        manager.add(new Magnet());
     }
 
     private void addSomeMoreThings() {
-        new PlushToy();
-        new PhotoFrame();
-        new Magnet();
+        manager.add(new Magnet());
     }
 
     private void addOnceMoreSomeThings() {
-        new Clothes();
-        new Magnet();
-        new Clothes();
-        new Book();
-        new PlushToy();
+        manager.add(new Clothes());
+        manager.add(new Magnet());
+        manager.add(new Clothes());
+        manager.add(new Book());
     }
 }
-
-
-/*
-private void addSomeThings() {
-        manager.add(new Book());
-        manager.add(new Book());
-        manager.add(new Book());
-        manager.add(new Clothes());
-        manager.add(new Clothes());
-        manager.add(new Magnet());
-        manager.add(new PhotoFrame());
-        manager.add(new PlushToy());
-        manager.add(new PlushToy());
-    }
-
-    private void addSomeMoreThings() {
-        manager.add(new PlushToy());
-        manager.add(new PhotoFrame());
-        manager.add(new Magnet());
-    }
-
-    private void addOnceMoreSomeThings() {
-        manager.add(new Clothes());
-        manager.add(new Magnet());
-        manager.add(new Clothes());
-        manager.add(new Book());
-        manager.add(new PlushToy());
-    }
- */

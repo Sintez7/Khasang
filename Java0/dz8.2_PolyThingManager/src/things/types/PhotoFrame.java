@@ -20,4 +20,12 @@ public class PhotoFrame extends Thing {
     public String getPictureDescription() {
         return pictureDescription;
     }
+
+    @Override
+    public String toString() {
+        return "№ " + getId() + " PhotoFrame " +
+                " name " + name +
+                " description " + description +
+                " pictureDescription " + pictureDescription;
+    }
 }

@@ -16,4 +16,12 @@ public class Magnet extends Thing {
         description = "brought from Italy";
         from = "Italy";
     }
+
+    @Override
+    public String toString() {
+        return "№ " + getId() + " Magnet" +
+                " name " + name +
+                " description " + description +
+                " from " + from;
+    }
 }

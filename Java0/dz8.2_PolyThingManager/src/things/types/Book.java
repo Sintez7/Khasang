@@ -1,16 +1,24 @@
 package things.types;
 
+import main.ThingManager;
 import things.Thing;
 
 public class Book extends Thing {
 
     public Book() {
-        this(0);
+        this(null);
     }
 
-    public Book (int id) {
-        super(id);
+    public Book (ThingManager manager) {
+        super(manager.add(this));
         name = "Book name";
         description = "Book description";
+    }
+
+    @Override
+    public String toString() {
+        return "№ " + getId() + " Book " +
+                "name " + name +
+                " description " + description;
     }
 }

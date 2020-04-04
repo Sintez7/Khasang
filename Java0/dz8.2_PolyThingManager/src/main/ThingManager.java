@@ -10,4 +10,5 @@ public abstract class ThingManager {
     public abstract void clear();
     public abstract Thing getThingById(int id);
     public abstract int getThingsCount();
+    public abstract int register();
 }

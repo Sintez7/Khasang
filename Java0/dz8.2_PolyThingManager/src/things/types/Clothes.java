@@ -20,4 +20,12 @@ public class Clothes extends Thing {
     public double getSize() {
         return size;
     }
+
+    @Override
+    public String toString() {
+        return "№ " + getId() + " Clothes " +
+                "size " + size +
+                " name " + name + " " +
+                " description " + description;
+    }
 }
