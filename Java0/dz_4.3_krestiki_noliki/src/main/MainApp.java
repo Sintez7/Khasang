@@ -35,6 +35,7 @@ public class MainApp {
 
     public void startMainCycle() {
         boolean exit = false;
+        showHelp();
 
         do {
             String userChoice = getUserChoice();
@@ -55,6 +56,10 @@ public class MainApp {
                 default:
             }
         } while (exit);
+    }
+
+    private void showHelp() {
+
     }
 
     private void devMenu() {
