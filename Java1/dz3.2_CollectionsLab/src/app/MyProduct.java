@@ -1,10 +1,11 @@
 package app;
 
 import app.legacy.Product;
-
 import java.util.Arrays;
-import java.util.Objects;
 
+// Класс - декоратор для легаси класса Product
+// используя его как обёртку, добавляем функционал
+// оставляя нетронутым легаси класс
 public class MyProduct {
 
     private final Product localProduct;
@@ -51,21 +52,22 @@ public class MyProduct {
 
     @Override
     public boolean equals(Object o) {
-        MyProduct myProduct = (MyProduct) o;
+        MyProduct myProduct = null;
+        if (o != null) {
+            try {
+                myProduct = (MyProduct) o;
+            } catch (ClassCastException e) {
+                return false;
+            }
+        }
 
-        if (this.localProduct == myProduct.localProduct)
+        if (myProduct != null && this.localProduct == myProduct.localProduct)
             return true;
 
-        if (o == null || this.localProduct.getClass() != myProduct.localProduct.getClass())
+        if (myProduct == null || this.localProduct.getClass() != myProduct.localProduct.getClass())
             return false;
 
-        if (cachedHashCode == myProduct.cachedHashCode)
-            return true;
-
-        if (bruteCompare(myProduct))
-            return true;
-
-        return false;
+        return bruteCompare(myProduct);
     }
 
     private boolean bruteCompare(MyProduct myProduct) {
@@ -74,15 +76,6 @@ public class MyProduct {
                 && localProduct.getName().equals(myProduct.getName());
     }
 
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(localProduct.getName(), localProduct.getCategory());
-        result = 31 * result + Arrays.hashCode(localProduct.getInternalCode());
-        return result;
-    }
-
-    /*
     @Override
     public int hashCode() {
         int result = 17;
@@ -93,6 +86,4 @@ public class MyProduct {
         }
         return result;
     }
-
-     */
 }
