@@ -1,5 +1,6 @@
 package app;
 
+import app.controller.exceptions.AtmIsBusyException;
 import app.model.bank.*;
 import app.model.bank.card.ICard;
 
@@ -13,24 +14,22 @@ public class ATM implements IATM {
     }
 
     @Override
-    public void insertCard(ICard card) {
+    public boolean insertCard(ICard card) throws AtmIsBusyException{
         if (currentCard == null) {
             currentCard = card;
-            System.out.println("Карта вставлена");
-            System.out.println();
-
+            return true;
         } else {
-            System.out.println("Карта уже вставлена");
+            throw new AtmIsBusyException();
         }
     }
 
     @Override
-    public void ejectCurrentCard() {
+    public boolean ejectCurrentCard() {
         if (currentCard == null){
-            System.out.println("Карты нет в банкомате");
+            return false;
         } else {
             currentCard = null;
-            System.out.println("Карта извлечена");
+            return true;
         }
     }
 

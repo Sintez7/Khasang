@@ -1,12 +1,13 @@
 package app;
 
+import app.controller.exceptions.AtmIsBusyException;
 import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 
 public interface IATM {
 
-    void insertCard(ICard card);
-    void ejectCurrentCard();
+    boolean insertCard(ICard card) throws AtmIsBusyException;
+    boolean ejectCurrentCard();
     IBankResponse queueOrder(IOrder order);
     void showBalance();
     void showHistory();

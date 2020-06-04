@@ -1,6 +1,8 @@
 package app.view;
 
-public interface View {
+import app.controller.Controller;
 
-    void start();
+public interface View extends Runnable{
+
+    void setController(Controller controller);
 }

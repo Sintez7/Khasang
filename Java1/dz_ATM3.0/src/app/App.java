@@ -1,12 +1,21 @@
 package app;
 
+import app.controller.Controller;
+import app.controller.DefaultController;
+import app.model.DefaultModel;
+import app.model.Model;
 import app.model.bank.IBank;
 import app.model.bank.banks.SomeCommonBank;
 import app.model.bank.banks.UniversalBank;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
+import app.view.View;
 
 public class App {
+
+    private Model model;
+    private Controller controller;
+    private View view;
 
     private IBank uBank;
     private IBank commonBank;
@@ -20,7 +29,10 @@ public class App {
 
     public void start() {
         initModules();
-        mainCycle();
+//        mainCycle();
+        new Thread(controller).start();
+        new Thread(model).start();
+        new Thread(view).start();
     }
 
     private void initModules() {
@@ -34,8 +46,23 @@ public class App {
         commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
 
         atm = new ATM(uBank);
+
+        model = new DefaultModel();
+        controller = new DefaultController(model, atm);
+        view = new View() {
+            @Override
+            public void setController(Controller controller) {
+                Controller controller1 = controller;
+            }
+
+            @Override
+            public void run() {
+
+            }
+        };
     }
 
+    /*
     private void mainCycle() {
         IOrder order = new TestOrder();
 
@@ -146,4 +173,6 @@ public class App {
         System.out.println();
         atm.showHistory();
     }
+
+     */
 }
