@@ -1,11 +1,10 @@
 package app;
 
-import bank.IBank;
-import bank.IBankResponse;
-import bank.banks.SomeCommonBank;
-import bank.banks.UniversalBank;
-import bank.card.CardType;
-import bank.card.ICard;
+import app.model.bank.IBank;
+import app.model.bank.banks.SomeCommonBank;
+import app.model.bank.banks.UniversalBank;
+import app.model.bank.card.CardType;
+import app.model.bank.card.ICard;
 
 public class App {
 
@@ -50,11 +49,11 @@ public class App {
         atm.showBalance();
 
         System.out.println("\n========== order 1: debit, balance allows withdrawal ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
 
         System.out.println("\n========== order 2: debit, balance lower than price ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
 
         System.out.println("\n========== insert card, atm occupied with other card ==========\n");
@@ -71,16 +70,16 @@ public class App {
         atm.showBalance();
 
         System.out.println("\n========== order 3: credit, balance allows withdrawal once without credit ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
 
         System.out.println("\n========== order 4: credit, credit operations only ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
         atm.showCredit();
 
         System.out.println("\n========== order 5: credit, withdrawal out of credit limits ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
         atm.showCredit();
 
@@ -95,11 +94,11 @@ public class App {
         atm.showBalance();
 
         System.out.println("\n========== order 6: debit, balance allows withdrawal ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
 
         System.out.println("\n========== order 7: debit, balance lower than price ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
         atm.showCredit();
 
@@ -114,16 +113,16 @@ public class App {
         atm.showBalance();
 
         System.out.println("\n========== order 8: credit, balance allows withdrawal once without credit ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
 
         System.out.println("\n========== order 9: credit, credit operations only ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
         atm.showCredit();
 
         System.out.println("\n========== order 10: credit, withdrawal out of credit limits ==========\n");
-        atm.queueOrder(order).show();
+//        atm.queueOrder(order).show();
         atm.showBalance();
         atm.showCredit();
 

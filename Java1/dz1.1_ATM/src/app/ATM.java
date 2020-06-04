@@ -1,7 +1,7 @@
 package app;
 
-import bank.*;
-import bank.card.ICard;
+import app.model.bank.*;
+import app.model.bank.card.ICard;
 
 public class ATM implements IATM {
 
@@ -36,37 +36,37 @@ public class ATM implements IATM {
 
     @Override
     public IBankResponse queueOrder(IOrder order) {
-        BankRequest request = new BankRequest(BankRequestTypes.PAYMENT);
+        BankRequest request = new BankRequest(BankRequest.Type.PAYMENT);
         request.setSum(order.getTotalPrice());
         return delegateToMainBank(request);
     }
 
     @Override
     public void showBalance() {
-        BankRequest request = new BankRequest(BankRequestTypes.BALANCE);
+        BankRequest request = new BankRequest(BankRequest.Type.BALANCE);
         IBankResponse response = delegateToMainBank(request);
-        response.show();
+//        response.show();
     }
 
     @Override
     public void showHistory() {
-        BankRequest request = new BankRequest(BankRequestTypes.SHOW_HISTORY);
+        BankRequest request = new BankRequest(BankRequest.Type.SHOW_HISTORY);
         delegateToMainBank(request);
     }
 
     @Override
     public void showCredit() {
-        BankRequest request = new BankRequest(BankRequestTypes.SHOW_CREDIT);
+        BankRequest request = new BankRequest(BankRequest.Type.SHOW_CREDIT);
         IBankResponse response = delegateToMainBank(request);
-        response.show();
+//        response.show();
     }
 
     @Override
     public void addMoney(double count) {
-        BankRequest request = new BankRequest(BankRequestTypes.ADD_MONEY);
+        BankRequest request = new BankRequest(BankRequest.Type.ADD_MONEY);
         request.setSum(count);
         IBankResponse response = delegateToMainBank(request);
-        response.show();
+//        response.show();
     }
 
     private IBankResponse delegateToMainBank(BankRequest request) {
