@@ -1,7 +1,7 @@
 package app;
 
-import bank.IBankResponse;
-import bank.card.ICard;
+import app.model.bank.IBankResponse;
+import app.model.bank.card.ICard;
 
 public interface IATM {
 
