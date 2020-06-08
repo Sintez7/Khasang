@@ -16,12 +16,15 @@ public class DefaultController implements Runnable, Controller{
     private final Object controllerMainKey = new Object();
     private final Model model;
 
+    private State state = null;
     private IATM atm;
     private IBankRequest currentRequest;
+    private RequestState currentRequestState;
 
     public DefaultController(Model model, IATM atm) {
         this.model = model;
         this.atm = atm;
+        state = State.READY;
     }
 
     @Override
@@ -34,29 +37,70 @@ public class DefaultController implements Runnable, Controller{
 
     }
 
-
-    @Override
-    public ICard initNewCard(CardType type) {
-        return model.initNewCard(type);
-    }
-
     @Override
     public boolean insertCard(ICard card) throws AtmIsBusyException {
-        model.insertCard(card);
+        return model.insertCard(card);
     }
 
     @Override
     public boolean ejectCard() throws CardBusyException {
-
+        return false;
     }
 
     @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
-        return model.queueRequest(request);
+    public RequestState isRequestReady() {
+        return checkRequest();
+    }
+
+    private RequestState checkRequest() {
+        if (currentRequest.getSum() == 0.0) {
+            return RequestState.MISSING_SUM;
+        }
+        if (currentRequest.getType() == null) {
+            return RequestState.MISSING_TYPE;
+        }
+
+        return RequestState.READY;
+    }
+
+    @Override
+    public synchronized IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+        if (currentRequestState == RequestState.READY) {
+            return model.queueRequest(request);
+        } else if (currentRequestState == RequestState.MISSING_SUM) {
+            throw new IllegalRequestSumException();
+        } else if (currentRequestState == RequestState.MISSING_TYPE) {
+            throw new IllegalRequestTypeException();
+        }
+        return null;
     }
 
     @Override
     public Object getControllerKey() {
         return controllerMainKey;
+    }
+
+    enum RequestState {
+        MISSING_TYPE,
+        MISSING_SUM,
+        READY
+    }
+
+    enum RequestType {
+        PAYMENT,
+        BALANCE,
+        SHOW_HISTORY,
+        SHOW_CREDIT,
+        ADD_MONEY
+    }
+
+    private enum State {
+        READY,
+        WORKING_WITH_USER,
+        WORKING_WITH_BANK
+    }
+
+    private class StateMachine {
+
     }
 }

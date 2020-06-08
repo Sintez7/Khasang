@@ -9,15 +9,6 @@ import app.model.bank.card.ICard;
 public interface Controller extends Runnable {
 
     /**
-     * Данный метод создаёт новую карту.
-     * Она сразу готова к работе.
-     * ВНИМАНИЕ! В текущий момент карта заполняется рандомным наполнением!
-     * @param type - тип карты DEBIT и CREDIT
-     * @return инстанс Card
-     */
-    ICard initNewCard(CardType type);
-
-    /**
      * Метод для "вставки" карты в атм.
      * @param card
      * @throws AtmIsBusyException если в банкомат
@@ -27,7 +18,15 @@ public interface Controller extends Runnable {
 
     boolean ejectCard() throws CardBusyException;
 
+    DefaultController.RequestState isRequestReady();
+
+    /*
+     * метод synchronized
+     * может вернуть null если запрос корявый, но ошибка не была выброшена
+     */
     IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
 
     Object getControllerKey();
+
+
 }

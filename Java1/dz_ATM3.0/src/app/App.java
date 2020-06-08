@@ -47,7 +47,7 @@ public class App {
 
         atm = new ATM(uBank);
 
-        model = new DefaultModel();
+        model = new DefaultModel(atm);
         controller = new DefaultController(model, atm);
         view = new View() {
             @Override
