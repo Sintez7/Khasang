@@ -2,10 +2,9 @@ package app;
 
 public abstract class Order {
 
-    private double sum;
-    private  Type type;
-
-    private boolean withSum;
+    double sum;
+    Type type;
+    boolean withSum;
 
     public Order (Type type) {
         this.type = type;

@@ -2,9 +2,15 @@ package app;
 
 import app.controller.Controller;
 import app.controller.DefaultController;
+import app.controller.exceptions.AtmIsBusyException;
+import app.controller.exceptions.IllegalRequestSumException;
+import app.controller.exceptions.IllegalRequestTypeException;
 import app.model.DefaultModel;
 import app.model.Model;
+import app.model.bank.BankResponse;
 import app.model.bank.IBank;
+import app.model.bank.IBankRequest;
+import app.model.bank.IBankResponse;
 import app.model.bank.banks.SomeCommonBank;
 import app.model.bank.banks.UniversalBank;
 import app.model.bank.card.CardType;
@@ -33,6 +39,8 @@ public class App {
         new Thread(controller).start();
         new Thread(model).start();
         new Thread(view).start();
+
+        runRandomTests();
     }
 
     private void initModules() {
@@ -60,6 +68,47 @@ public class App {
 
             }
         };
+    }
+
+    private void runRandomTests() {
+        // тут тесты
+        /*
+        IBankResponse response = null;
+        ICard card = uBank.initNewCard(CardType.DEBIT);
+        try {
+            controller.insertCard(card);
+        } catch (AtmIsBusyException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            response = controller.queueRequest(new Order(Order.Type.PAYMENT, 152) {
+                @Override
+                public double getSum() {
+                    return sum;
+                }
+
+                @Override
+                public Type getType() {
+                    return type;
+                }
+
+                @Override
+                public boolean isWithSum() {
+                    return withSum;
+                }
+            });
+        } catch (IllegalRequestTypeException e) {
+            e.printStackTrace();
+        } catch (IllegalRequestSumException e) {
+            e.printStackTrace();
+        }
+
+        if (response != null) {
+            System.out.println(response.getMessage());
+        }
+
+         */
     }
 
     /*

@@ -8,6 +8,7 @@ import app.model.bank.card.ICard;
 
 public class DefaultModel implements Model {
 
+    private final Object modelMainKey = new Object();
     private IATM atm;
 
     public DefaultModel (IATM atm) {
@@ -16,17 +17,21 @@ public class DefaultModel implements Model {
 
     @Override
     public void run() {
-
+        try {
+            synchronized (modelMainKey) {
+                modelMainKey.wait();
+            }
+        } catch (InterruptedException e) {}
     }
 
     @Override
     public boolean insertCard(ICard card) throws AtmIsBusyException {
-        return false;
+        return atm.insertCard(card);
     }
 
     @Override
     public boolean ejectCard() throws CardBusyException {
-        return false;
+        return atm.ejectCurrentCard();
     }
 
     @Override
