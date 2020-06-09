@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.Order;
 import app.controller.exceptions.*;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
@@ -18,15 +19,8 @@ public interface Controller extends Runnable {
 
     boolean ejectCard() throws CardBusyException;
 
-    DefaultController.RequestState isRequestReady();
-
-    /*
-     * метод synchronized
-     * может вернуть null если запрос корявый, но ошибка не была выброшена
-     */
-    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
+     // synchronized
+    IBankResponse queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException;
 
     Object getControllerKey();
-
-
 }

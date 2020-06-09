@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.IATM;
+import app.Order;
 import app.controller.exceptions.AtmIsBusyException;
 import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
@@ -47,11 +48,6 @@ public class DefaultController implements Runnable, Controller{
         return false;
     }
 
-    @Override
-    public RequestState isRequestReady() {
-        return checkRequest();
-    }
-
     private RequestState checkRequest() {
         if (currentRequest.getSum() == 0.0) {
             return RequestState.MISSING_SUM;
@@ -64,15 +60,8 @@ public class DefaultController implements Runnable, Controller{
     }
 
     @Override
-    public synchronized IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
-        if (currentRequestState == RequestState.READY) {
-            return model.queueRequest(request);
-        } else if (currentRequestState == RequestState.MISSING_SUM) {
-            throw new IllegalRequestSumException();
-        } else if (currentRequestState == RequestState.MISSING_TYPE) {
-            throw new IllegalRequestTypeException();
-        }
-        return null;
+    public synchronized IBankResponse queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException {
+
     }
 
     @Override
