@@ -20,8 +20,8 @@ import app.view.View;
 public class App {
 
     private Model model;
-    private Controller controller;
     private View view;
+    private Controller controller;
 
     private IBank uBank;
     private IBank commonBank;
