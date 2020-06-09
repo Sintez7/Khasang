@@ -7,6 +7,7 @@ import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
 import app.controller.exceptions.IllegalRequestTypeException;
 import app.model.Model;
+import app.model.bank.BankRequest;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
 import app.model.bank.card.CardType;
@@ -61,7 +62,48 @@ public class DefaultController implements Runnable, Controller{
 
     @Override
     public synchronized IBankResponse queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException {
+        switch (order.getType()) {
+            case PAYMENT:
+                return executeRequest(initPaymentRequest(order));
+            case BALANCE:
+                return executeRequest(initBalanceRequest());
+            case SHOW_CREDIT:
+                return executeRequest(initShowCreditRequest());
+            case SHOW_HISTORY:
+                return executeRequest(initShowHistoryRequest());
+            case ADD_MONEY:
+                return executeRequest(initAddMoneyRequest(order));
+            default:
+                throw new IllegalRequestTypeException();
+        }
+    }
 
+    private IBankResponse executeRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+        return model.queueRequest(request);
+    }
+
+    private IBankRequest initPaymentRequest(Order order) {
+        IBankRequest temp = new BankRequest(IBankRequest.Type.PAYMENT);
+        temp.setSum(order.getSum());
+        return temp;
+    }
+
+    private IBankRequest initBalanceRequest() {
+        return new BankRequest(IBankRequest.Type.BALANCE);
+    }
+
+    private IBankRequest initShowCreditRequest() {
+        return new BankRequest(IBankRequest.Type.SHOW_CREDIT);
+    }
+
+    private IBankRequest initShowHistoryRequest() {
+        return new BankRequest(IBankRequest.Type.SHOW_HISTORY);
+    }
+
+    private IBankRequest initAddMoneyRequest(Order order) {
+        IBankRequest temp = new BankRequest(IBankRequest.Type.ADD_MONEY);
+        temp.setSum(order.getSum());
+        return temp;
     }
 
     @Override

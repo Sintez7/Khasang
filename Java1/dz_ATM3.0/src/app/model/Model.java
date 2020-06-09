@@ -11,8 +11,6 @@ import app.model.bank.card.ICard;
 
 public interface Model extends Runnable{
 
-    ICard initNewCard(CardType type);
-
     boolean insertCard(ICard card) throws AtmIsBusyException;
 
     boolean ejectCard() throws CardBusyException;

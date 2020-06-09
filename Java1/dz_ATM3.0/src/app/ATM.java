@@ -34,41 +34,11 @@ public class ATM implements IATM {
     }
 
     @Override
-    public IBankResponse queueOrder(IOrder order) {
-        BankRequest request = new BankRequest(BankRequest.Type.PAYMENT);
-        request.setSum(order.getTotalPrice());
+    public IBankResponse queueOrder(IBankRequest request) {
         return delegateToMainBank(request);
     }
 
-    @Override
-    public void showBalance() {
-        BankRequest request = new BankRequest(BankRequest.Type.BALANCE);
-        IBankResponse response = delegateToMainBank(request);
-//        response.show();
-    }
-
-    @Override
-    public void showHistory() {
-        BankRequest request = new BankRequest(BankRequest.Type.SHOW_HISTORY);
-        delegateToMainBank(request);
-    }
-
-    @Override
-    public void showCredit() {
-        BankRequest request = new BankRequest(BankRequest.Type.SHOW_CREDIT);
-        IBankResponse response = delegateToMainBank(request);
-//        response.show();
-    }
-
-    @Override
-    public void addMoney(double count) {
-        BankRequest request = new BankRequest(BankRequest.Type.ADD_MONEY);
-        request.setSum(count);
-        IBankResponse response = delegateToMainBank(request);
-//        response.show();
-    }
-
-    private IBankResponse delegateToMainBank(BankRequest request) {
+    private IBankResponse delegateToMainBank(IBankRequest request) {
         return mainBank.queue(currentCard.getCardInfo(), request);
     }
 }

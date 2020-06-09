@@ -1,13 +1,9 @@
 package app.model;
 
 import app.IATM;
-import app.controller.exceptions.AtmIsBusyException;
-import app.controller.exceptions.CardBusyException;
-import app.controller.exceptions.IllegalRequestSumException;
-import app.controller.exceptions.IllegalRequestTypeException;
+import app.controller.exceptions.*;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
-import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 
 public class DefaultModel implements Model {
@@ -24,11 +20,6 @@ public class DefaultModel implements Model {
     }
 
     @Override
-    public ICard initNewCard(CardType type) {
-        return atm.;
-    }
-
-    @Override
     public boolean insertCard(ICard card) throws AtmIsBusyException {
         return false;
     }
@@ -40,6 +31,6 @@ public class DefaultModel implements Model {
 
     @Override
     public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
-        return null;
+        return atm.queueOrder(request);
     }
 }

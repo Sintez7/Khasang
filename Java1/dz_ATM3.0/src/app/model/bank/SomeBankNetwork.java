@@ -11,7 +11,7 @@ public class SomeBankNetwork {
         bankList.add(bank);
     }
 
-    public static IBankResponse redirectRequest(ClientRequisites client, BankRequest request) {
+    public static IBankResponse redirectRequest(ClientRequisites client, IBankRequest request) {
         IBankResponse result = null;
         for (IBank bank : bankList) {
             if (client.getBank().getBankName().equals(bank.getBankName())) {

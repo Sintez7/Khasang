@@ -25,6 +25,10 @@ public abstract class Order {
         return type;
     }
 
+    public boolean isWithSum() {
+        return withSum;
+    }
+
     public enum Type {
         PAYMENT,
         BALANCE,

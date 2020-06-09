@@ -44,7 +44,7 @@ public abstract class Bank implements IBank {
     public abstract String setName();
 
     @Override
-    public IBankResponse queue(ClientRequisites costumer, BankRequest request) {
+    public IBankResponse queue(ClientRequisites costumer, IBankRequest request) {
         IBankResponse result;
         if (costumer.getBank().getBankName().equals(this.getBankName())) {
             result = processRequest(costumer, request);
@@ -54,7 +54,7 @@ public abstract class Bank implements IBank {
         return result;
     }
 
-    public IBankResponse processRequest(ClientRequisites costumer, BankRequest request) {
+    public IBankResponse processRequest(ClientRequisites costumer, IBankRequest request) {
         IBankResponse result = null;
         switch (request.getType()) {
             case PAYMENT:
@@ -76,7 +76,7 @@ public abstract class Bank implements IBank {
         return result;
     }
 
-    public IBankResponse queuePaymentRequest(ClientRequisites costumer, BankRequest request) {
+    public IBankResponse queuePaymentRequest(ClientRequisites costumer, IBankRequest request) {
         IBankResponse result = null;
         CardType cardType = getClient(costumer).getCard().getCardType();
         switch (cardType) {
@@ -91,7 +91,7 @@ public abstract class Bank implements IBank {
         return result;
     }
 
-    private IBankResponse delegateRequest(ClientRequisites costumer, BankRequest request) {
+    private IBankResponse delegateRequest(ClientRequisites costumer, IBankRequest request) {
         return SomeBankNetwork.redirectRequest(costumer, request);
     }
 
@@ -188,7 +188,7 @@ public abstract class Bank implements IBank {
         return result;
     }
 
-    private IBankResponse addMoney(ClientRequisites costumer, BankRequest request) {
+    private IBankResponse addMoney(ClientRequisites costumer, IBankRequest request) {
         BankClient client = getClient(costumer);
         client.queueOperation(BankClientOperations.Type.ADD, request.getSum());
         return new BankResponse(BankResponse.Type.ACCEPTED_MONEY_ADDITION, MONEY_ADDED_MESSAGE);
