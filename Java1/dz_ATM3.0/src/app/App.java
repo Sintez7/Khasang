@@ -15,6 +15,7 @@ import app.model.bank.banks.SomeCommonBank;
 import app.model.bank.banks.UniversalBank;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
+import app.view.DefaultView;
 import app.view.View;
 
 public class App {
@@ -57,17 +58,7 @@ public class App {
 
         model = new DefaultModel(atm);
         controller = new DefaultController(model, atm);
-        view = new View() {
-            @Override
-            public void setController(Controller controller) {
-                Controller controller1 = controller;
-            }
-
-            @Override
-            public void run() {
-
-            }
-        };
+        view = new DefaultView();
     }
 
     private void runRandomTests() {

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="app.view.forms.NewForm">
+  <grid id="27dc6" binding="rootPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="385" height="400"/>
+    </constraints>
+    <properties>
+      <maximumSize width="800" height="600"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="af954" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <maximumSize width="1000" height="822"/>
+          <minimumSize width="282" height="180"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="f508" binding="statusBar" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="South"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="eb90a" class="javax.swing.JTextPane" binding="statusBarTextPane" default-binding="true">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <text value="statusBar"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="f746e" binding="mainDisplay" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints border-constraint="Center"/>
+            <properties>
+              <maximumSize width="800" height="600"/>
+              <minimumSize width="292" height="150"/>
+              <preferredSize width="500" height="400"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <grid id="fc30" binding="screen" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="d1765" class="javax.swing.JTextPane" binding="loremIpsumTextPane" default-binding="true">
+                    <constraints border-constraint="Center"/>
+                    <properties>
+                      <editable value="false"/>
+                      <enabled value="true"/>
+                      <focusable value="false"/>
+                      <requestFocusEnabled value="false"/>
+                      <text value="lorem ipsum"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="f0038" binding="keyboard" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="d6d0b" binding="button1Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="1f93" class="javax.swing.JButton" binding="a1Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="1"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="1c7af" binding="button2Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="84107" class="javax.swing.JButton" binding="a2Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="2"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="1ee86" binding="button3Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="e65c2" class="javax.swing.JButton" binding="a3Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="3"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="a9e6b" binding="button4Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="66200" class="javax.swing.JButton" binding="a4Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="4"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="8d066" binding="button5Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="baec6" class="javax.swing.JButton" binding="a5Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="5"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="4e996" binding="button6Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="5aecf" class="javax.swing.JButton" binding="a6Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="6"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="8d711" binding="button7Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="549bc" class="javax.swing.JButton" binding="a7Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="7"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="fa36b" binding="button8Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="d68e9" class="javax.swing.JButton" binding="a8Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="8"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="26521" binding="button9Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="5ae64" class="javax.swing.JButton" binding="a9Button" default-binding="true">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="9"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="b21c" binding="buttonStarContainer" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="e15ce" class="javax.swing.JButton" binding="buttonStar">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="*"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="8cf88" binding="button0Container" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="23619" class="javax.swing.JButton" binding="button0">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="0"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="c80f0" binding="buttonFenceContainer" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="9aba4" class="javax.swing.JButton" binding="buttonFence">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <text value="#"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                </children>
+              </grid>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
