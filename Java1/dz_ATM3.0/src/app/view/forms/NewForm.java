@@ -8,7 +8,7 @@ public class NewForm {
     private JPanel statusBar;
     private JPanel mainDisplay;
     private JTextPane statusBarTextPane;
-    private JTextPane loremIpsumTextPane;
+    private JTextPane modelInfoTextPane;
     private JPanel screen;
     private JPanel keyboard;
     private JButton a1Button;
@@ -35,6 +35,19 @@ public class NewForm {
     private JPanel buttonStarContainer;
     private JPanel button0Container;
     private JPanel buttonFenceContainer;
+    private JButton okButton;
+    private JButton cancelButton;
+    private JButton eraseButton;
+    private JPanel okButtonContainer;
+    private JPanel cancelButtonContainer;
+    private JPanel eraseButtonContainer;
+    private JTextPane userInputTextPane;
+    private JPanel topButtonsLayer;
+    private JPanel userInputDisplay;
+
+    public NewForm() {
+
+    }
 
     public JPanel getRootPanel() {
         return rootPanel;

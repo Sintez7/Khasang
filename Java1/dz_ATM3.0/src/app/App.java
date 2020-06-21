@@ -57,8 +57,8 @@ public class App {
         atm = new ATM(uBank);
 
         model = new DefaultModel(atm);
-        controller = new DefaultController(model, atm);
         view = new DefaultView();
+        controller = new DefaultController(model, atm, view);
     }
 
     private void runRandomTests() {

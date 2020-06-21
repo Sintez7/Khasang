@@ -5,4 +5,5 @@ import app.controller.Controller;
 public interface View extends Runnable{
 
     void setController(Controller controller);
+    void update();
 }

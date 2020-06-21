@@ -10,33 +10,52 @@ import app.model.Model;
 import app.model.bank.BankRequest;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
-import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
+import app.view.View;
 
-public class DefaultController implements Runnable, Controller{
+public class DefaultController implements Runnable, Controller {
 
     private final Object controllerMainKey = new Object();
     private final Model model;
+    private final View view;
+
+    private ControllerStateMachine stateMachine = null;
 
     private State state = null;
     private IATM atm;
     private IBankRequest currentRequest;
     private RequestState currentRequestState;
 
-    public DefaultController(Model model, IATM atm) {
+    public DefaultController(Model model, IATM atm, View view) {
         this.model = model;
         this.atm = atm;
-        state = State.READY;
+        this.view = view;
+        stateMachine = new StateMachine();
+        state = State.FIRST_LAUNCH;
     }
+
+    public void setStateMachine(ControllerStateMachine stateMachine) {
+        this.stateMachine = stateMachine;
+    }
+
+
 
     @Override
     public void run() {
-        try {
-            synchronized (controllerMainKey) {
-                controllerMainKey.wait();
-            }
-        } catch (InterruptedException e) {}
+//        try {
+//            synchronized (controllerMainKey) {
+//                controllerMainKey.wait();
+//            }
+//        } catch (InterruptedException e) {}
 
+        while (true) {
+            executeStateMethod();
+        }
+
+    }
+
+    private void executeStateMethod() {
+        stateMachine.execute(state);
     }
 
     @Override
@@ -125,13 +144,35 @@ public class DefaultController implements Runnable, Controller{
         ADD_MONEY
     }
 
-    private enum State {
+    public enum State {
+        FIRST_LAUNCH,
         READY,
         WORKING_WITH_USER,
         WORKING_WITH_BANK
     }
 
-    private class StateMachine {
+    private class StateMachine implements ControllerStateMachine{
 
+        @Override
+        public void execute(State state) {
+            switch (state) {
+                case FIRST_LAUNCH:
+                    prepare();
+                    break;
+                case READY:
+                    break;
+                case WORKING_WITH_BANK:
+                    break;
+                case WORKING_WITH_USER:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void prepare() {
+            state = State.READY;
+            view.update();
+        }
     }
 }

@@ -16,6 +16,11 @@ public class DefaultView implements View {
     }
 
     @Override
+    public void update() {
+
+    }
+
+    @Override
     public void run() {
         SwingUtilities.invokeLater(WINDOW);
     }
