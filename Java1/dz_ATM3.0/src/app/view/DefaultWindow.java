@@ -1,9 +1,11 @@
 package app.view;
 
+import app.model.ModelData;
 import app.view.forms.NewForm;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class DefaultWindow extends JFrame implements Runnable {
 
@@ -35,6 +37,10 @@ public class DefaultWindow extends JFrame implements Runnable {
 //                key.wait();
 //            }
 //        } catch (InterruptedException e) {}
+    }
+
+    public void updateContent(ArrayList<ModelData> data) {
+        mainForm.updateContent(data);
     }
 
     private void showMainFrame() {

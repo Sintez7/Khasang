@@ -6,8 +6,9 @@ import app.controller.exceptions.IllegalRequestSumException;
 import app.controller.exceptions.IllegalRequestTypeException;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
-import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
+
+import java.util.ArrayList;
 
 public interface Model extends Runnable{
 
@@ -16,4 +17,6 @@ public interface Model extends Runnable{
     boolean ejectCard() throws CardBusyException;
 
     IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
+
+    ArrayList<ModelData> getMessages();
 }

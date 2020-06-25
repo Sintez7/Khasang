@@ -1,6 +1,9 @@
 package app.view.forms;
 
+import app.model.ModelData;
+
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class NewForm {
     private JPanel rootPanel;
@@ -47,6 +50,15 @@ public class NewForm {
 
     public NewForm() {
 
+    }
+
+    public void updateContent(ArrayList<ModelData> data) {
+
+        StringBuilder temp = new StringBuilder();
+        for (ModelData m : data) {
+            temp.append(m.getMessage()).append("\n");
+        }
+        modelInfoTextPane.setText(temp.toString());
     }
 
     public JPanel getRootPanel() {

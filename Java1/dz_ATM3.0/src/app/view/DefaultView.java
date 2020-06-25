@@ -17,7 +17,7 @@ public class DefaultView implements View {
 
     @Override
     public void update() {
-
+        WINDOW.updateContent(controller.getModelData());
     }
 
     @Override

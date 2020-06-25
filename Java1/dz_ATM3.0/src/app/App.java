@@ -17,6 +17,7 @@ import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 import app.view.DefaultView;
 import app.view.View;
+import app.view.forms.JFXWindow;
 
 public class App {
 
@@ -34,8 +35,8 @@ public class App {
 
     private IATM atm;
 
-    public void start() {
-        initModules();
+    public void start(String[] args) {
+        initModules(args);
 //        mainCycle();
         new Thread(controller).start();
         new Thread(model).start();
@@ -44,7 +45,7 @@ public class App {
         runRandomTests();
     }
 
-    private void initModules() {
+    private void initModules(String[] args) {
         uBank = new UniversalBank();
         commonBank = new SomeCommonBank();
 
@@ -57,7 +58,9 @@ public class App {
         atm = new ATM(uBank);
 
         model = new DefaultModel(atm);
-        view = new DefaultView();
+        View mainWindow = new JFXWindow();
+        ((JFXWindow) mainWindow).myLaunch(args);
+        view = mainWindow;
         controller = new DefaultController(model, atm, view);
     }
 

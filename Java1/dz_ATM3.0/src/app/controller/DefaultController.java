@@ -7,11 +7,14 @@ import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
 import app.controller.exceptions.IllegalRequestTypeException;
 import app.model.Model;
+import app.model.ModelData;
 import app.model.bank.BankRequest;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 import app.view.View;
+
+import java.util.ArrayList;
 
 public class DefaultController implements Runnable, Controller {
 
@@ -128,6 +131,11 @@ public class DefaultController implements Runnable, Controller {
     @Override
     public Object getControllerKey() {
         return controllerMainKey;
+    }
+
+    @Override
+    public ArrayList<ModelData> getModelData() {
+        return model.getMessages();
     }
 
     enum RequestState {
