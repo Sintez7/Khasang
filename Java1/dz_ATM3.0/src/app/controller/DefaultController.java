@@ -6,6 +6,7 @@ import app.controller.exceptions.AtmIsBusyException;
 import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
 import app.controller.exceptions.IllegalRequestTypeException;
+import app.model.DefaultModelData;
 import app.model.Model;
 import app.model.ModelData;
 import app.model.bank.BankRequest;
@@ -51,9 +52,9 @@ public class DefaultController implements Runnable, Controller {
 //            }
 //        } catch (InterruptedException e) {}
 
-        while (true) {
-            executeStateMethod();
-        }
+//        while (true) {
+//            executeStateMethod();
+//        }
 
     }
 
@@ -83,7 +84,7 @@ public class DefaultController implements Runnable, Controller {
     }
 
     @Override
-    public synchronized IBankResponse queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException {
+    public synchronized ModelData queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException {
         switch (order.getType()) {
             case PAYMENT:
                 return executeRequest(initPaymentRequest(order));
@@ -100,8 +101,8 @@ public class DefaultController implements Runnable, Controller {
         }
     }
 
-    private IBankResponse executeRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
-        return model.queueRequest(request);
+    private ModelData executeRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+        return new DefaultModelData(model.queueRequest(request), "");
     }
 
     private IBankRequest initPaymentRequest(Order order) {
@@ -180,7 +181,7 @@ public class DefaultController implements Runnable, Controller {
 
         private void prepare() {
             state = State.READY;
-            view.update();
+            view.update(null);
         }
     }
 }

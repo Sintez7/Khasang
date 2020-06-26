@@ -23,7 +23,7 @@ public interface Controller extends Runnable {
     boolean ejectCard() throws CardBusyException;
 
      // synchronized
-    IBankResponse queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException;
+    ModelData queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException;
 
     Object getControllerKey();
 

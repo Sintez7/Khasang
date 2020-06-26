@@ -1,6 +1,7 @@
 package app.view.forms;
 
 import app.controller.Controller;
+import app.model.ModelData;
 import app.view.View;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 public class JFXWindow extends Application implements View {
 
+    static private JFXWindowController windowController;
     private Controller controller;
 
     @Override
@@ -27,6 +29,8 @@ public class JFXWindow extends Application implements View {
                 System.exit(0);
             }
         });
+        windowController.setMainClass(this);
+
         primaryStage.setTitle("JFXWindow");
         primaryStage.setScene(new Scene(root, 600, 800));
         primaryStage.show();
@@ -37,9 +41,21 @@ public class JFXWindow extends Application implements View {
         this.controller = controller;
     }
 
-    @Override
-    public void update() {
+    public static void setWindowController(JFXWindowController controller) {
+        windowController = controller;
+    }
 
+    @Override
+    public void update(ModelData data) {
+        if (data != null) {
+            updateText(data);
+        } else {
+
+        }
+    }
+
+    private void updateText(ModelData data) {
+        windowController.updateText(data.getBankResponse().getMessage() + data.getMessage());
     }
 
     @Override
@@ -49,5 +65,21 @@ public class JFXWindow extends Application implements View {
 
     public void myLaunch(String[] args) {
         launch(args);
+    }
+
+    public void processOkBtn() {
+
+    }
+
+    public void processCancelBtn() {
+
+    }
+
+    public void processStarBtn() {
+
+    }
+
+    public void processFenceBtn() {
+
     }
 }

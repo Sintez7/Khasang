@@ -1,6 +1,7 @@
 package app.view;
 
 import app.controller.Controller;
+import app.model.ModelData;
 import app.view.forms.NewForm;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class DefaultView implements View {
     }
 
     @Override
-    public void update() {
+    public void update(ModelData data) {
         WINDOW.updateContent(controller.getModelData());
     }
 
