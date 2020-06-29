@@ -53,7 +53,7 @@ public class App {
         System.err.println("joining viewThread");
         synchronized (monitor) {
             try {
-                viewThread.join();
+                monitor.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
