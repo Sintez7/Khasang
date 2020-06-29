@@ -11,11 +11,11 @@ import app.model.Model;
 import app.model.ModelData;
 import app.model.bank.BankRequest;
 import app.model.bank.IBankRequest;
-import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 import app.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultController implements Runnable, Controller {
 
@@ -29,6 +29,8 @@ public class DefaultController implements Runnable, Controller {
     private IATM atm;
     private IBankRequest currentRequest;
     private RequestState currentRequestState;
+
+    private List<ICard> cardsList = new ArrayList<>();
 
     public DefaultController(Model model, IATM atm, View view) {
         this.model = model;
@@ -137,6 +139,21 @@ public class DefaultController implements Runnable, Controller {
     @Override
     public ArrayList<ModelData> getModelData() {
         return model.getMessages();
+    }
+
+    @Override
+    public void setCards(ArrayList<ICard> cardsList) {
+        this.cardsList = cardsList;
+    }
+
+    @Override
+    public List<ICard> getCards() {
+        return cardsList;
+    }
+
+    @Override
+    public void addCard(ICard card) {
+        view.addCard(card);
     }
 
     enum RequestState {

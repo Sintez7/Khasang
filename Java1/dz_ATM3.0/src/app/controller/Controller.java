@@ -5,10 +5,12 @@ import app.controller.exceptions.*;
 import app.model.ModelData;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
+import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface Controller extends Runnable {
 
@@ -28,4 +30,10 @@ public interface Controller extends Runnable {
     Object getControllerKey();
 
     ArrayList<ModelData> getModelData();
+
+    void setCards(ArrayList<ICard> cardsList);
+
+    List<ICard> getCards();
+
+    void addCard(ICard card);
 }

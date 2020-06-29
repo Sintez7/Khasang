@@ -13,11 +13,14 @@ import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
 import app.model.bank.banks.SomeCommonBank;
 import app.model.bank.banks.UniversalBank;
+import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 import app.view.DefaultView;
 import app.view.View;
 import app.view.forms.JFXWindow;
+
+import java.util.ArrayList;
 
 public class App {
 
@@ -35,12 +38,33 @@ public class App {
 
     private IATM atm;
 
+    public static String[] args;
+    public static final Object monitor = new Object();
+
     public void start(String[] args) {
+        this.args = args;
         initModules(args);
 //        mainCycle();
         new Thread(controller).start();
         new Thread(model).start();
-        new Thread(view).start();
+        Thread viewThread = new Thread(view);
+        viewThread.start();
+
+        System.err.println("joining viewThread");
+        synchronized (monitor) {
+            try {
+                viewThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.err.println("viewThread joined");
+
+        controller.addCard(uCard);
+        controller.addCard(uCreditCard);
+        controller.addCard(commonCard);
+        controller.addCard(commonCreditCard);
+        System.err.println("cards added");
 
         runRandomTests();
     }
@@ -56,12 +80,16 @@ public class App {
         commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
 
         atm = new ATM(uBank);
+        System.err.println("created start modules");
 
         model = new DefaultModel(atm);
-        View mainWindow = new JFXWindow();
-        ((JFXWindow) mainWindow).myLaunch(args);
-        view = mainWindow;
+        System.err.println("created Model");
+        //        ((JFXWindow) mainWindow).myLaunch(args);
+        view = new JFXWindow();
+        System.err.println("viewThreadStarted");
         controller = new DefaultController(model, atm, view);
+        System.err.println("controller created");
+
     }
 
     private void runRandomTests() {

@@ -1,3 +1,4 @@
+
 package app.view;
 
 import app.controller.Controller;
@@ -6,8 +7,8 @@ import app.view.forms.NewForm;
 
 import javax.swing.*;
 
-public class DefaultView implements View {
-
+public class DefaultView{
+/*
     private static final DefaultWindow WINDOW = new DefaultWindow();
     private Controller controller;
 
@@ -25,4 +26,6 @@ public class DefaultView implements View {
     public void run() {
         SwingUtilities.invokeLater(WINDOW);
     }
+
+ */
 }

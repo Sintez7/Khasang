@@ -3,10 +3,18 @@ package app.view.forms;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import app.App;
+import app.model.bank.card.ICard;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 public class JFXWindowController {
 
@@ -67,7 +75,14 @@ public class JFXWindowController {
     @FXML
     private Button btnClear;
 
+    @FXML
+    private BorderPane cardsWindow;
+
+    @FXML
+    private ListView<ICard> cardsField;
+
     private JFXWindow mainClass;
+    private ObservableList<ICard> cardsList = FXCollections.observableArrayList();
 
     @FXML
     void initialize() {
@@ -88,6 +103,17 @@ public class JFXWindowController {
 //        assert btnCancel != null : "fx:id=\"btnCancel\" was not injected: check your FXML file 'sample.fxml'.";
 //        assert btnErase != null : "fx:id=\"btnErase\" was not injected: check your FXML file 'sample.fxml'.";
         JFXWindow.setWindowController(this);
+        cardsField.setCellFactory(new Callback<ListView<ICard>, ListCell<ICard>>() {
+            @Override
+            public ListCell<ICard> call(ListView<ICard> iCardListView) {
+                return new CardCell();
+            }
+        });
+        cardsField.setItems(cardsList);
+
+        synchronized (App.monitor) {
+            App.monitor.notifyAll();
+        }
     }
 
     public void setMainClass (JFXWindow mainWindow) {
@@ -134,5 +160,28 @@ public class JFXWindowController {
         String temp = labelText.getText();
         temp += ((Button)event.getSource()).getAccessibleText();
         updateText(temp);
+    }
+
+    public void addCard(ICard card) {
+        cardsList.add(card);
+        cardsField.refresh();
+    }
+
+//    private class CardCellFactory extends CellF{
+//
+//    }
+
+    private class CardCell extends ListCell<ICard> {
+
+        @Override
+        protected void updateItem(ICard iCard, boolean b) {
+            super.updateItem(iCard, b);
+
+            if (iCard != null) {
+                setText(iCard.toString());
+            } else {
+                System.err.println("iCard is null");
+            }
+        }
     }
 }
