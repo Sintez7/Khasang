@@ -2,6 +2,9 @@ package app.view.forms;
 
 import app.App;
 import app.controller.Controller;
+import app.controller.exceptions.AtmIsBusyException;
+import app.controller.exceptions.CardBusyException;
+import app.model.MenuOption;
 import app.model.ModelData;
 import app.model.bank.card.ICard;
 import app.view.View;
@@ -11,10 +14,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.List;
 
 import static app.App.args;
 
@@ -23,7 +28,7 @@ public class JFXWindow extends Application implements View {
     public static final Object viewMonitor = new Object();
 
     static private JFXWindowController windowController;
-    private Controller controller;
+    private volatile Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -47,7 +52,7 @@ public class JFXWindow extends Application implements View {
     }
 
     @Override
-    public void setController(Controller controller) {
+    public synchronized void setController(Controller controller) {
         this.controller = controller;
     }
 
@@ -56,12 +61,16 @@ public class JFXWindow extends Application implements View {
     }
 
     @Override
-    public void update(ModelData data) {
-        if (data != null) {
-            updateText(data);
+    public void update(List<MenuOption> options) {
+        if (options != null) {
+            showOptions(options);
         } else {
 
         }
+    }
+
+    private void showOptions(List<MenuOption> options) {
+        windowController.showOptions(options);
     }
 
     @Override
@@ -96,5 +105,66 @@ public class JFXWindow extends Application implements View {
 
     public void processFenceBtn() {
 
+    }
+
+    public String ejectCard() {
+
+        String result = "";
+
+        if (controller == null) {
+            controller = App.getController();
+        }
+
+        try {
+            if (controller.ejectCard()) {
+                result = "Card successfully ejected";
+            } else {
+                result = "Card slot is already empty";
+            }
+        } catch (CardBusyException e) {
+            result = "Card is busy, please wait";
+        }
+        return result;
+    }
+
+    public String insertCard(ICard card) {
+
+        String result = "";
+
+        if (controller == null) {
+            controller = App.getController();
+        }
+
+        try {
+            if (controller.insertCard(card)) {
+                result = "Card\n" + card.toString() + "\ninserted";
+            } else {
+                result = "ATM is already occupied with another card";
+            }
+        } catch (AtmIsBusyException e) {
+            result = "ATM is busy, please wait";
+        }
+        return result;
+    }
+
+    public void loadCenterComponent(AnchorPane centerScreenAnchor, String component) {
+        try {
+//            Parent root = FXMLLoader.load(getClass().getResource(component));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(component));
+            loader.setRoot(centerScreenAnchor);
+            AnchorPane newPane = loader.load();
+
+            // Set the loaded FXML file as the content of our main right-side pane
+            centerScreenAnchor.getChildren().setAll(newPane);
+
+            // Reset the anchors
+//            AnchorPane.setBottomAnchor(newPane, 0.0);
+//            AnchorPane.setLeftAnchor(newPane, 0.0);
+//            AnchorPane.setRightAnchor(newPane, 0.0);
+//            AnchorPane.setTopAnchor(newPane, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

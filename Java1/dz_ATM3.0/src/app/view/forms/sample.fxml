@@ -56,7 +56,11 @@
       <children>
             <BorderPane prefHeight="237.0" prefWidth="640.0">
                <center>
-                  <Label fx:id="labelText" accessibleText="text1" alignment="CENTER" contentDisplay="CENTER" prefHeight="114.0" prefWidth="318.0" text="Label" BorderPane.alignment="CENTER" />
+                  <AnchorPane fx:id="centerScreenAnchor" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label fx:id="labelText" accessibleText="text1" alignment="CENTER" contentDisplay="CENTER" prefHeight="114.0" prefWidth="318.0" text="Label" />
+                     </children>
+                  </AnchorPane>
                </center>
             </BorderPane>
             <Button fx:id="btn1" accessibleText="1" layoutX="141.0" layoutY="247.0" mnemonicParsing="false" onAction="#processNumberBtn" text="1" />
@@ -82,7 +86,7 @@
                <right>
                   <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <center>
-                        <Label text="cardInfoLabel" BorderPane.alignment="CENTER" />
+                        <Label fx:id="cardInfoLabel" text="cardInfoLabel" BorderPane.alignment="CENTER" />
                      </center>
                   </BorderPane>
                </right>
@@ -90,6 +94,8 @@
                   <ListView fx:id="cardsField" prefHeight="200.0" prefWidth="425.0" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
+            <Button fx:id="insertCardBtn" layoutX="137.0" layoutY="441.0" mnemonicParsing="false" onAction="#insertCardBtn" text="Instert Card" />
+            <Button fx:id="ejectCardBtn" layoutX="258.0" layoutY="441.0" mnemonicParsing="false" onAction="#ejectCardBtn" text="Eject Card" />
       </children>
     </AnchorPane>
   </children>

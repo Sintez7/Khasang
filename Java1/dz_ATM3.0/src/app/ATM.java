@@ -25,6 +25,8 @@ public class ATM implements IATM {
 
     @Override
     public boolean ejectCurrentCard() {
+        System.err.println("entered ejectCurrentCard method");
+        System.err.println(currentCard);
         if (currentCard == null){
             return false;
         } else {

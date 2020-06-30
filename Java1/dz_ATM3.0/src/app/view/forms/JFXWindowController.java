@@ -1,19 +1,18 @@
 package app.view.forms;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import app.App;
+import app.model.MenuOption;
 import app.model.bank.card.ICard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Callback;
 
 public class JFXWindowController {
@@ -23,6 +22,9 @@ public class JFXWindowController {
 
     @FXML
     private URL location;
+
+    @FXML
+    private AnchorPane centerScreenAnchor;
 
     @FXML
     private Label labelText;
@@ -81,8 +83,19 @@ public class JFXWindowController {
     @FXML
     private ListView<ICard> cardsField;
 
+    @FXML
+    private Button insertCardBtn;
+
+    @FXML
+    private Button ejectCardBtn;
+
+    @FXML
+    private Label cardInfoLabel;
+
     private JFXWindow mainClass;
     private ObservableList<ICard> cardsList = FXCollections.observableArrayList();
+    private ICard selectedCard;
+    private ICard chosenCard;
 
     @FXML
     void initialize() {
@@ -114,6 +127,8 @@ public class JFXWindowController {
         synchronized (App.monitor) {
             App.monitor.notifyAll();
         }
+
+        selectedCard = null;
     }
 
     public void setMainClass (JFXWindow mainWindow) {
@@ -147,7 +162,8 @@ public class JFXWindowController {
 
     @FXML
     void processStarBtn(ActionEvent event) {
-        mainClass.processStarBtn();
+//        mainClass.processStarBtn();
+        mainClass.loadCenterComponent(centerScreenAnchor, "mainMenuComponent.fxml");
     }
 
     @FXML
@@ -162,14 +178,33 @@ public class JFXWindowController {
         updateText(temp);
     }
 
-    public void addCard(ICard card) {
-        cardsList.add(card);
-        cardsField.refresh();
+    @FXML
+    void ejectCardBtn(ActionEvent event) {
+        if (selectedCard != null) {
+            String temp = mainClass.ejectCard();
+            updateText(temp);
+        }
     }
 
-//    private class CardCellFactory extends CellF{
-//
-//    }
+    @FXML
+    void insertCardBtn(ActionEvent event) {
+        if (selectedCard != null) {
+            String temp = mainClass.insertCard(selectedCard);
+            updateCardInfoLabel(temp);
+        }
+    }
+
+    private void updateCardInfoLabel(String temp) {
+        cardInfoLabel.setText(temp);
+    }
+
+    public void addCard(ICard card) {
+        cardsList.add(card);
+    }
+
+    public void showOptions(List<MenuOption> options) {
+//        mainClass.loadCenterComponent(centerScreenAnchor, "cardComponent.fxml");
+    }
 
     private class CardCell extends ListCell<ICard> {
 
@@ -179,6 +214,7 @@ public class JFXWindowController {
 
             if (iCard != null) {
                 setText(iCard.toString());
+                selectedCard = iCard;
             } else {
                 System.err.println("iCard is null");
             }

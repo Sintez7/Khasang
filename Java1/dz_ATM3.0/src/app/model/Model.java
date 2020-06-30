@@ -19,4 +19,6 @@ public interface Model extends Runnable{
     IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
 
     ArrayList<ModelData> getMessages();
+
+    boolean processOkBtn();
 }

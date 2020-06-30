@@ -24,9 +24,9 @@ import java.util.ArrayList;
 
 public class App {
 
-    private Model model;
-    private View view;
-    private Controller controller;
+    private volatile Model model;
+    private volatile View view;
+    private volatile static Controller controller;
 
     private IBank uBank;
     private IBank commonBank;
@@ -60,6 +60,9 @@ public class App {
         }
         System.err.println("viewThread joined");
 
+//        view.setController(controller);
+//        System.err.println("setted controller for view");
+
         controller.addCard(uCard);
         controller.addCard(uCreditCard);
         controller.addCard(commonCard);
@@ -67,6 +70,18 @@ public class App {
         System.err.println("cards added");
 
         runRandomTests();
+
+        synchronized (monitor) {
+            try {
+                monitor.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static synchronized Controller getController() {
+        return controller;
     }
 
     private void initModules(String[] args) {
@@ -86,10 +101,9 @@ public class App {
         System.err.println("created Model");
         //        ((JFXWindow) mainWindow).myLaunch(args);
         view = new JFXWindow();
-        System.err.println("viewThreadStarted");
+        System.err.println("view created");
         controller = new DefaultController(model, atm, view);
         System.err.println("controller created");
-
     }
 
     private void runRandomTests() {

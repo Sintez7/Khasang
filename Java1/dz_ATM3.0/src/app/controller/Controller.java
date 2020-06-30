@@ -36,4 +36,8 @@ public interface Controller extends Runnable {
     List<ICard> getCards();
 
     void addCard(ICard card);
+
+    boolean processOkBtn();
+
+    boolean processCancelBth();
 }

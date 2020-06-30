@@ -25,10 +25,8 @@ public class DefaultController implements Runnable, Controller {
 
     private ControllerStateMachine stateMachine = null;
 
-    private State state = null;
     private IATM atm;
     private IBankRequest currentRequest;
-    private RequestState currentRequestState;
 
     private List<ICard> cardsList = new ArrayList<>();
 
@@ -36,8 +34,6 @@ public class DefaultController implements Runnable, Controller {
         this.model = model;
         this.atm = atm;
         this.view = view;
-        stateMachine = new StateMachine();
-        state = State.FIRST_LAUNCH;
     }
 
     public void setStateMachine(ControllerStateMachine stateMachine) {
@@ -48,20 +44,16 @@ public class DefaultController implements Runnable, Controller {
 
     @Override
     public void run() {
-//        try {
-//            synchronized (controllerMainKey) {
-//                controllerMainKey.wait();
-//            }
-//        } catch (InterruptedException e) {}
+        try {
+            synchronized (controllerMainKey) {
+                controllerMainKey.wait();
+            }
+        } catch (InterruptedException e) {}
 
 //        while (true) {
 //            executeStateMethod();
 //        }
 
-    }
-
-    private void executeStateMethod() {
-        stateMachine.execute(state);
     }
 
     @Override
@@ -71,18 +63,7 @@ public class DefaultController implements Runnable, Controller {
 
     @Override
     public boolean ejectCard() throws CardBusyException {
-        return false;
-    }
-
-    private RequestState checkRequest() {
-        if (currentRequest.getSum() == 0.0) {
-            return RequestState.MISSING_SUM;
-        }
-        if (currentRequest.getType() == null) {
-            return RequestState.MISSING_TYPE;
-        }
-
-        return RequestState.READY;
+        return model.ejectCard();
     }
 
     @Override
@@ -156,49 +137,13 @@ public class DefaultController implements Runnable, Controller {
         view.addCard(card);
     }
 
-    enum RequestState {
-        MISSING_TYPE,
-        MISSING_SUM,
-        READY
+    @Override
+    public boolean processOkBtn() {
+        return model.processOkBtn();
     }
 
-    enum RequestType {
-        PAYMENT,
-        BALANCE,
-        SHOW_HISTORY,
-        SHOW_CREDIT,
-        ADD_MONEY
-    }
-
-    public enum State {
-        FIRST_LAUNCH,
-        READY,
-        WORKING_WITH_USER,
-        WORKING_WITH_BANK
-    }
-
-    private class StateMachine implements ControllerStateMachine{
-
-        @Override
-        public void execute(State state) {
-            switch (state) {
-                case FIRST_LAUNCH:
-                    prepare();
-                    break;
-                case READY:
-                    break;
-                case WORKING_WITH_BANK:
-                    break;
-                case WORKING_WITH_USER:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void prepare() {
-            state = State.READY;
-            view.update(null);
-        }
+    @Override
+    public boolean processCancelBth() {
+        return false;
     }
 }
