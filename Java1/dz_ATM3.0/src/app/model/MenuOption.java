@@ -2,5 +2,11 @@ package app.model;
 
 public interface MenuOption {
     String getDescription();
-    int getUserInput();
+    Type getType();
+    MenuOption getOption();
+
+    enum Type {
+        WITHDRAW,
+        BALANCE
+    }
 }

@@ -9,6 +9,7 @@ import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface Model extends Runnable{
 
@@ -21,4 +22,8 @@ public interface Model extends Runnable{
     ArrayList<ModelData> getMessages();
 
     boolean processOkBtn();
+
+    void confirmMenuOptionSelect(MenuOption option);
+
+    List<MenuOption> getMenuOptions();
 }

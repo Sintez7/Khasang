@@ -2,11 +2,8 @@ package app.controller;
 
 import app.Order;
 import app.controller.exceptions.*;
+import app.model.MenuOption;
 import app.model.ModelData;
-import app.model.bank.IBankRequest;
-import app.model.bank.IBankResponse;
-import app.model.bank.card.Card;
-import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 
 import java.util.ArrayList;
@@ -40,4 +37,8 @@ public interface Controller extends Runnable {
     boolean processOkBtn();
 
     boolean processCancelBth();
+
+    List<MenuOption> getMenuOptions();
+
+    void confirmMenuOptionSelect(MenuOption option);
 }

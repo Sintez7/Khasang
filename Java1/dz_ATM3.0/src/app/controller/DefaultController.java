@@ -7,6 +7,7 @@ import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
 import app.controller.exceptions.IllegalRequestTypeException;
 import app.model.DefaultModelData;
+import app.model.MenuOption;
 import app.model.Model;
 import app.model.ModelData;
 import app.model.bank.BankRequest;
@@ -145,5 +146,15 @@ public class DefaultController implements Runnable, Controller {
     @Override
     public boolean processCancelBth() {
         return false;
+    }
+
+    @Override
+    public List<MenuOption> getMenuOptions() {
+        return model.getMenuOptions();
+    }
+
+    @Override
+    public void confirmMenuOptionSelect(MenuOption option) {
+        model.confirmMenuOptionSelect(option);
     }
 }

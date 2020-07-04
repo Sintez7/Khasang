@@ -1,15 +1,14 @@
 package app.view.forms;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import app.App;
-import app.model.MenuOption;
 import app.model.bank.card.ICard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -202,8 +201,13 @@ public class JFXWindowController {
         cardsList.add(card);
     }
 
-    public void showOptions(List<MenuOption> options) {
-//        mainClass.loadCenterComponent(centerScreenAnchor, "cardComponent.fxml");
+    public void okBtnToSelectOption() {
+        btnOk.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                mainClass.chooseOption();
+            }
+        });
     }
 
     private class CardCell extends ListCell<ICard> {

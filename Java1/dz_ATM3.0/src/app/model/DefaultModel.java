@@ -5,8 +5,11 @@ import app.controller.exceptions.*;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
+import app.model.menuOptions.Balance;
+import app.model.menuOptions.WithdrawMoney;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultModel implements Model {
 
@@ -15,6 +18,8 @@ public class DefaultModel implements Model {
     private StateMachine sm = new StateMachine(new PreparingState());
 
     private ArrayList<ModelData> data;
+
+    private int chosenMenuOption;
 
     public DefaultModel (IATM atm) {
         this.atm = atm;
@@ -34,6 +39,19 @@ public class DefaultModel implements Model {
     public boolean processOkBtn() {
         sm.execute(Command.OK);
         return true;
+    }
+
+    @Override
+    public void confirmMenuOptionSelect(MenuOption option) {
+        sm.execute(option);
+    }
+
+    @Override
+    public List<MenuOption> getMenuOptions() {
+        List<MenuOption> temp = new ArrayList<>();
+        temp.add(new WithdrawMoney());
+        temp.add(new Balance());
+        return temp;
     }
 
     @Override
@@ -77,13 +95,19 @@ public class DefaultModel implements Model {
             prevState = currentState;
             currentState = currentState.execute(command);
         }
+
+        void execute(MenuOption option) {
+            prevState = currentState;
+            currentState = currentState.execute(option);
+        }
     }
 
     enum Command {
         INIT,
         OK,
         CANCEL,
-        CARD_INSERTED
+        CARD_INSERTED,
+        CONFIRM_MENU_OPTION_SELECTION
     }
 
     enum StateType {
@@ -106,6 +130,7 @@ public class DefaultModel implements Model {
         String message = "";
 
         abstract State execute(Command command);
+        abstract State execute(MenuOption option);
 
         public StateType getType() {
             return type;
@@ -130,6 +155,11 @@ public class DefaultModel implements Model {
         State execute(Command command) {
             return new ReadyState().setMessage(WELCOME_MSG);
         }
+
+        @Override
+        State execute(MenuOption option) {
+            return null;
+        }
     }
 
     private class ReadyState extends State {
@@ -151,6 +181,11 @@ public class DefaultModel implements Model {
                     message = UNKNOWN_COMMAND_MSG;
                     return this;
             }
+        }
+
+        @Override
+        State execute(MenuOption option) {
+            return null;
         }
 
         private State processCardInserted() {
@@ -176,10 +211,15 @@ public class DefaultModel implements Model {
 
         @Override
         State execute(Command command) {
-            switch (command) {
-                case OK:
-                    return processOkCommand();
-                case CANCEL:
+            return null;
+        }
+
+        @Override
+        State execute(MenuOption option) {
+            switch (option.getType()) {
+                case WITHDRAW:
+                    return processWithdrawOption();
+                case BALANCE:
 //                    return processCancelCommand();
                 default:
                     message = UNKNOWN_COMMAND_MSG;
@@ -187,7 +227,20 @@ public class DefaultModel implements Model {
             }
         }
 
-        private State processOkCommand() {
+        private State processWithdrawOption() {
+            return new WithdrawState();
+        }
+    }
+
+    class WithdrawState extends State {
+
+        @Override
+        State execute(Command command) {
+            return null;
+        }
+
+        @Override
+        State execute(MenuOption option) {
             return null;
         }
     }

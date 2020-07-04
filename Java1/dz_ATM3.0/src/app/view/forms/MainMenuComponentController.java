@@ -28,6 +28,14 @@ public class MainMenuComponentController {
     private ListView<MenuOption> menuListView;
 
     private ObservableList<MenuOption> optionsList = FXCollections.observableArrayList();
+    private JFXWindow mainClass;
+
+    public static volatile MainMenuComponentController self;
+
+    public MainMenuComponentController() {
+        initialize();
+        self = this;
+    }
 
     @FXML
     void initialize() {
@@ -41,6 +49,15 @@ public class MainMenuComponentController {
             }
         });
         menuListView.setItems(optionsList);
+        JFXWindow.setMenuController(this);
+    }
+
+    void setMainClass (JFXWindow mainClass) {
+        this.mainClass = mainClass;
+    }
+
+    void addMenuOption(MenuOption option) {
+        optionsList.add(option);
     }
 
     private class MenuOptionCell extends ListCell<MenuOption>{
@@ -51,6 +68,7 @@ public class MainMenuComponentController {
 
             if (option != null) {
                 setText(option.getDescription());
+                mainClass.setSelectedOption(option);
             } else {
                 System.err.println("option is null");
             }

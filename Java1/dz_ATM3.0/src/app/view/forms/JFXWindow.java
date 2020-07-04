@@ -28,7 +28,9 @@ public class JFXWindow extends Application implements View {
     public static final Object viewMonitor = new Object();
 
     static private JFXWindowController windowController;
+    static private MainMenuComponentController menuController;
     private volatile Controller controller;
+    private MenuOption selectedOption;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -60,6 +62,10 @@ public class JFXWindow extends Application implements View {
         windowController = controller;
     }
 
+    public static void setMenuController(MainMenuComponentController controller) {
+        menuController = controller;
+    }
+
     @Override
     public void update(List<MenuOption> options) {
         if (options != null) {
@@ -67,10 +73,6 @@ public class JFXWindow extends Application implements View {
         } else {
 
         }
-    }
-
-    private void showOptions(List<MenuOption> options) {
-        windowController.showOptions(options);
     }
 
     @Override
@@ -149,13 +151,14 @@ public class JFXWindow extends Application implements View {
 
     public void loadCenterComponent(AnchorPane centerScreenAnchor, String component) {
         try {
-//            Parent root = FXMLLoader.load(getClass().getResource(component));
+            Parent root = FXMLLoader.load(getClass().getResource(component));
             FXMLLoader loader = new FXMLLoader(getClass().getResource(component));
             loader.setRoot(centerScreenAnchor);
             AnchorPane newPane = loader.load();
+//            AnchorPane newPane2 = root;
 
             // Set the loaded FXML file as the content of our main right-side pane
-            centerScreenAnchor.getChildren().setAll(newPane);
+            centerScreenAnchor.getChildren().setAll(root);
 
             // Reset the anchors
 //            AnchorPane.setBottomAnchor(newPane, 0.0);
@@ -166,5 +169,29 @@ public class JFXWindow extends Application implements View {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (controller == null) {
+            controller = App.getController();
+        }
+
+        showOptions(controller.getMenuOptions());
+    }
+
+    private void showOptions(List<MenuOption> options) {
+        windowController.okBtnToSelectOption();
+        if (menuController == null) {
+            menuController = MainMenuComponentController.self;
+        }
+        for (MenuOption option : controller.getMenuOptions()) {
+            menuController.addMenuOption(option);
+        }
+    }
+
+    public void chooseOption() {
+        controller.confirmMenuOptionSelect(selectedOption);
+    }
+
+    public void setSelectedOption(MenuOption option) {
+        selectedOption = option;
     }
 }
