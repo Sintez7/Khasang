@@ -57,7 +57,7 @@ public class MainMenuScreenController {
     }
 
     private void userChose() {
-        Service.userChose();
+        Service.callNext();
     }
 
     synchronized public Selected getSelected() {

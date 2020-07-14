@@ -12,6 +12,8 @@ public class Service {
     public static KeyboardControllerAdapter keyboardAdapter;
     public static MainMenuScreenController mainMenuScreenController;
     public static AddMoneyScreenController addMoneyScreenController;
+    public static FinalScreenController finalScreenController;
+    public static WithdrawalScreenController withdrawalScreenController;
 
     synchronized public static Main getMain() {
         return main;
@@ -41,6 +43,22 @@ public class Service {
         , 2000 + (Math.round(Math.random() * 1000)));
     }
 
+//    synchronized public static void cardChosen() {
+//        Platform.runLater(() -> main.next());
+//    }
+//
+//    synchronized public static void userChose() {
+//        Platform.runLater(() -> main.next());
+//    }
+//
+//    public static void addMoneyOperation() {
+//        Platform.runLater(() -> main.next());
+//    }
+
+    synchronized public static void callNext() {
+        Platform.runLater(() -> main.next());
+    }
+
     synchronized public static void setKeyboardAdapter(KeyboardControllerAdapter adapter) {
         keyboardAdapter = adapter;
     }
@@ -49,16 +67,8 @@ public class Service {
         return keyboardAdapter;
     }
 
-    synchronized public static void cardChosen() {
-        Platform.runLater(() -> main.next());
-    }
-
     synchronized public static void setMainMenuScreenController(MainMenuScreenController controller) {
         mainMenuScreenController = controller;
-    }
-
-    synchronized public static void userChose() {
-        Platform.runLater(() -> main.next());
     }
 
     synchronized public static MainMenuScreenController getMMSController() {
@@ -71,5 +81,21 @@ public class Service {
 
     synchronized public static AddMoneyScreenController getAMSController() {
         return addMoneyScreenController;
+    }
+
+    synchronized public static FinalScreenController getFSController() {
+        return finalScreenController;
+    }
+
+    synchronized public static void setFSController(FinalScreenController controller) {
+        finalScreenController = controller;
+    }
+
+    synchronized public static void addWSController(WithdrawalScreenController controller) {
+        withdrawalScreenController = controller;
+    }
+
+    synchronized public static WithdrawalScreenController getWSController() {
+        return withdrawalScreenController;
     }
 }

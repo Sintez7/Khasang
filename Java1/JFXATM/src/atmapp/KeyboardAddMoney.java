@@ -3,7 +3,7 @@ package atmapp;
 public class KeyboardAddMoney extends KeyboardController {
     @Override
     public void btnOkAction() {
-        super.btnOkAction();
+        Service.callNext();
     }
 
     @Override

@@ -4,8 +4,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 public class AddMoneyScreenController {
+
+    private static final String TEXT = "FOR TESTING PURPOSES ONLY!\n";
 
     @FXML
     private ResourceBundle resources;
@@ -14,23 +17,41 @@ public class AddMoneyScreenController {
     private URL location;
 
     @FXML
-    void add100(ActionEvent event) {
+    private Label label;
 
-    }
-
-    @FXML
-    void add1000(ActionEvent event) {
-
-    }
+    private int sum = 0;
 
     @FXML
     void add50(ActionEvent event) {
+        addSum(50);
+    }
 
+    @FXML
+    void add100(ActionEvent event) {
+        addSum(100);
     }
 
     @FXML
     void add500(ActionEvent event) {
+        addSum(500);
+    }
 
+    @FXML
+    void add1000(ActionEvent event) {
+        addSum(1000);
+    }
+
+    private void addSum(int sum) {
+        this.sum += sum;
+        updateLabel();
+    }
+
+    private void updateLabel() {
+        label.setText(TEXT + "current sum: " + sum);
+    }
+
+    public int getSum() {
+        return sum;
     }
 
     @FXML
