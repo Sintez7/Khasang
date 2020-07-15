@@ -24,9 +24,8 @@ import java.util.ArrayList;
 
 public class App {
 
-    private volatile Model model;
-    private volatile View view;
-    private volatile static Controller controller;
+    private Model model;
+    private View view;
 
     private IBank uBank;
     private IBank commonBank;
@@ -38,17 +37,14 @@ public class App {
 
     private IATM atm;
 
-    public static String[] args;
     public static final Object monitor = new Object();
 
-    public void start(String[] args) {
-        this.args = args;
-        initModules(args);
+    public void start() {
 //        mainCycle();
-        new Thread(controller).start();
-        new Thread(model).start();
-        Thread viewThread = new Thread(view);
-        viewThread.start();
+//        new Thread(controller).start();
+//        new Thread(model).start();
+//        Thread viewThread = new Thread(view);
+//        viewThread.start();
 
         System.err.println("joining viewThread");
         synchronized (monitor) {
@@ -80,11 +76,7 @@ public class App {
         }
     }
 
-    public static synchronized Controller getController() {
-        return controller;
-    }
-
-    private void initModules(String[] args) {
+    private void initModules() {
         uBank = new UniversalBank();
         commonBank = new SomeCommonBank();
 

@@ -1,31 +1,11 @@
-
 package app.view;
 
 import app.controller.Controller;
-import app.model.ModelData;
-import app.view.forms.NewForm;
+import app.model.MenuOption;
+import app.model.bank.card.ICard;
 
-import javax.swing.*;
+import java.util.List;
 
-public class DefaultView{
-/*
-    private static final DefaultWindow WINDOW = new DefaultWindow();
-    private Controller controller;
+public class DefaultView extends BaseView {
 
-    @Override
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    @Override
-    public void update(ModelData data) {
-        WINDOW.updateContent(controller.getModelData());
-    }
-
-    @Override
-    public void run() {
-        SwingUtilities.invokeLater(WINDOW);
-    }
-
- */
 }

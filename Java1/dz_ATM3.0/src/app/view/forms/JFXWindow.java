@@ -36,12 +36,9 @@ public class JFXWindow extends Application implements View {
     public void start(Stage primaryStage) throws IOException {
 //        launch();
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent t) {
-                Platform.exit();
-                System.exit(0);
-            }
+        primaryStage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
         });
         windowController.setMainClass(this);
 
