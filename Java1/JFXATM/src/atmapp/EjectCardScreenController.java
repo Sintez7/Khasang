@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class ShowCreditController {
+public class EjectCardScreenController {
 
     @FXML
     private ResourceBundle resources;
@@ -18,7 +18,7 @@ public class ShowCreditController {
 
     @FXML
     void initialize() {
-        assert textLabel != null : "fx:id=\"textLabel\" was not injected: check your FXML file 'showCredit.fxml'.";
+        assert textLabel != null : "fx:id=\"textLabel\" was not injected: check your FXML file 'ejectCardScreen.fxml'.";
 
     }
 }

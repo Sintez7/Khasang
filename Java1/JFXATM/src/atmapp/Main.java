@@ -167,15 +167,15 @@ public class Main extends Application {
                 case ADD_MONEY:
                     return addMoney();
                 case SHOW_CREDIT:
-                    return new ShowCredit();
+                    return showCredit();
                 case BALANCE:
-                    return new Balance();
+                    return balance();
                 case EJECT_CARD:
-                    return new EjectCard();
+                    return ejectCard();
                 case WITHDRAWAL:
                     return withdrawal();
                 case SHOW_HISTORY:
-                    return new ShowHistory();
+                    return showHistory();
                 default:
                     System.err.println("Unknown Selection");
                     return null;
@@ -189,11 +189,39 @@ public class Main extends Application {
             return new AddMoney();
         }
 
+        private State showCredit() {
+            loadUpperScreen("showCredit.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+            return new ShowCredit();
+        }
+
+        private State balance() {
+            loadUpperScreen("balanceScreen.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+            return new Balance();
+        }
+
+        private State ejectCard() {
+            loadUpperScreen("ejectCardScreen.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+            return new EjectCard();
+        }
+
         private State withdrawal() {
             Service.getKeyboardAdapter().setActualController(new KeyboardWithdrawal());
             Service.getKeyboardAdapter().enableControls();
             loadUpperScreen("withdrawalScreen.fxml");
             return new Withdrawal();
+        }
+
+        private State showHistory() {
+            loadUpperScreen("showHistoryScreen.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+            return new ShowHistory();
         }
     }
 
@@ -205,6 +233,7 @@ public class Main extends Application {
 
             loadUpperScreen("finalScreen.fxml");
 
+            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
@@ -214,6 +243,7 @@ public class Main extends Application {
         protected State execute() {
             System.err.println("ShowCredit.execute()");
             loadUpperScreen("finalScreen.fxml");
+            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
@@ -223,6 +253,7 @@ public class Main extends Application {
         protected State execute() {
             System.err.println("Balance.execute()");
             loadUpperScreen("finalScreen.fxml");
+            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
@@ -231,7 +262,10 @@ public class Main extends Application {
         @Override
         protected State execute() {
             System.err.println("EjectCard.execute()");
-            loadUpperScreen("finalScreen.fxml");
+            loadUpperScreen("cardSelectionScreen.fxml");
+            Service.getCardSSController().addCard(new DebitCard());
+            Service.getCardSSController().addCard(new CreditCard());
+            Service.getKeyboardAdapter().enableControls();
             return new FinalScreen();
         }
     }
@@ -241,6 +275,7 @@ public class Main extends Application {
         protected State execute() {
             System.err.println("Withdrawal.execute()");
             loadUpperScreen("finalScreen.fxml");
+            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
@@ -250,6 +285,7 @@ public class Main extends Application {
         protected State execute() {
             System.err.println("ShowHistory.execute()");
             loadUpperScreen("finalScreen.fxml");
+            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
@@ -258,12 +294,16 @@ public class Main extends Application {
         @Override
         protected State execute() {
             if (Service.getFSController().getContinue()) {
+                Service.getKeyboardAdapter().disableControls();
                 loadUpperScreen("mainMenuScreen.fxml");
                 return new MainMenu();
             } else {
+                System.err.println("return to cardSelectionScreen");
                 Service.getKeyboardAdapter().setActualController(new KeyboardCardSelect());
                 Service.getKeyboardAdapter().enableControls();
                 loadUpperScreen("cardSelectionScreen.fxml");
+                Service.getCardSSController().addCard(new DebitCard());
+                Service.getCardSSController().addCard(new CreditCard());
                 return new CardSelection();
             }
         }
