@@ -1,5 +1,7 @@
 package app.model;
 
+import app.IATM;
+import app.controller.Controller;
 import app.controller.exceptions.AtmIsBusyException;
 import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
@@ -11,7 +13,7 @@ import app.model.bank.card.ICard;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface Model extends Runnable{
+public interface Model {
 
     boolean insertCard(ICard card) throws AtmIsBusyException;
 
@@ -26,4 +28,8 @@ public interface Model extends Runnable{
     void confirmMenuOptionSelect(MenuOption option);
 
     List<MenuOption> getMenuOptions();
+
+    Model setController(Controller controller);
+
+    Model setATM(IATM atm);
 }

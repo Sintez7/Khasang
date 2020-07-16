@@ -21,8 +21,6 @@ import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.util.List;
 
-import static app.App.args;
-
 public class JFXWindow extends Application implements View {
 
     public static final Object viewMonitor = new Object();
@@ -148,14 +146,15 @@ public class JFXWindow extends Application implements View {
 
     public void loadCenterComponent(AnchorPane centerScreenAnchor, String component) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(component));
+//            Parent root = FXMLLoader.load(getClass().getResource(component));
             FXMLLoader loader = new FXMLLoader(getClass().getResource(component));
             loader.setRoot(centerScreenAnchor);
+            loader.setController(new MainMenuComponentController(this));
             AnchorPane newPane = loader.load();
 //            AnchorPane newPane2 = root;
 
             // Set the loaded FXML file as the content of our main right-side pane
-            centerScreenAnchor.getChildren().setAll(root);
+//            centerScreenAnchor.getChildren().setAll(root);
 
             // Reset the anchors
 //            AnchorPane.setBottomAnchor(newPane, 0.0);

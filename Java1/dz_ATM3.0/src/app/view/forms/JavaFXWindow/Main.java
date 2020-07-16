@@ -1,4 +1,4 @@
-package atmapp;
+package app.view.forms.JavaFXWindow;
 
 import atmapp.model.card.Card;
 import atmapp.model.card.CreditCard;
@@ -101,7 +101,7 @@ public class Main extends Application {
 
     private class StateMachine {
 
-        private State currentState = null;
+        private State currentState;
 
 
         StateMachine() {

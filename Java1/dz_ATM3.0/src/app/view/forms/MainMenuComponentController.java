@@ -32,7 +32,7 @@ public class MainMenuComponentController {
 
     public static volatile MainMenuComponentController self;
 
-    public MainMenuComponentController() {
+    public MainMenuComponentController(JFXWindow jfxWindow) {
         initialize();
         self = this;
     }

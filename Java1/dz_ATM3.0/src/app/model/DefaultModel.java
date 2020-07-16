@@ -1,6 +1,7 @@
 package app.model;
 
 import app.IATM;
+import app.controller.Controller;
 import app.controller.exceptions.*;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
@@ -11,7 +12,7 @@ import app.model.menuOptions.WithdrawMoney;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultModel implements Model {
+public class DefaultModel extends BaseModel {
 
     private final Object modelMainKey = new Object();
     private IATM atm;
@@ -21,9 +22,7 @@ public class DefaultModel implements Model {
 
     private int chosenMenuOption;
 
-    public DefaultModel (IATM atm) {
-        this.atm = atm;
-        sm.execute(Command.INIT);
+    public DefaultModel () {
     }
 
     public void addData(ModelData message) {
@@ -52,15 +51,6 @@ public class DefaultModel implements Model {
         temp.add(new WithdrawMoney());
         temp.add(new Balance());
         return temp;
-    }
-
-    @Override
-    public void run() {
-        try {
-            synchronized (modelMainKey) {
-                modelMainKey.wait();
-            }
-        } catch (InterruptedException e) {}
     }
 
     @Override

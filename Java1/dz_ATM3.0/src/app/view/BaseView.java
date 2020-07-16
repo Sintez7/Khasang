@@ -8,15 +8,15 @@ import java.util.List;
 
 public abstract class BaseView implements View {
 
+    protected Controller controller;
+
     @Override
     public void setController(Controller controller) {
-
+        this.controller = controller;
     }
 
     @Override
-    public void update(List<MenuOption> options) {
-
-    }
+    public abstract void update(List<MenuOption> options);
 
     @Override
     public void addCard(ICard card) {

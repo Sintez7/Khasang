@@ -1,0 +1,121 @@
+@startuml
+
+class Loader {
+    new App.start()
+}
+
+
+
+package app {
+
+Loader -down->App
+
+    class App{
+        Model model
+        View view
+        Controller controller
+        ModulesFactory mf
+        init()
+        start()
+    }
+
+    package modules {
+
+        interface Model
+        interface View
+        interface Controller
+
+        App -[hidden]-> ModulesBuilder
+
+        class ModelAdapter implements Model {
+                BaseModel actualModel
+                setActualModel(BaseModel)
+                sendToActual()
+            }
+
+            class ViewAdapter implements View {
+                BaseView actualView
+                setActualView(BaseView)
+                sendToActual()
+            }
+
+            class ControllerAdapter implements Controller {
+                BaseController actualController
+                setActualController(BaseController)
+                sendToActual()
+            }
+
+            package modulesBuilder {
+            ModulesBuilder -[hidden]- ControllerBuilder
+            ModulesBuilder -[hidden]- ModelBuilder
+            ModulesBuilder -[hidden]- ViewBuilder
+                class ModulesBuilder {
+                    ControllerFactory cf = new ControllerFactory
+                    ModelFactory mf = new ModelFactory
+                    ViewFactory vf = new ViewFactory
+
+                    BaseController getControllerBuilder()
+                    BaseModel getModelBuilder()
+                    BaseView getViewBuilder()
+                }
+
+                class ControllerBuilder {
+
+                    dataForBuild
+                    settersForData()
+                    BaseController buildController(BaseControllerImpl)
+                }
+
+                class ViewBuilder {
+                    dataForBuild
+                    settersForData()
+                    BaseView buildView(BaseViewImpl)
+                }
+
+                class ModelBuilder {
+                    dataForBuild
+                    settersForData()
+                    BaseModel buildModel(BaseModelImpl)
+                }
+            }
+
+            package implementations{
+                abstract class BaseModel{
+                                data
+                                methods()
+                            }
+
+                class ActualModel extends BaseModel {
+                    implementationOfBaseMethods()
+                    someOverrideMethods()
+                     }
+
+                abstract class BaseView {
+                    data
+                    methods()
+                }
+
+                class ActualView extends BaseView {
+                    implementationOfBaseMethods()
+                    someOverrideMethods()
+                }
+
+                abstract class BaseController {
+                    data
+                    methods()
+                }
+
+                class ActualController extends BaseController {
+                    implementationOfBaseMethods()
+                    someOverrideMethods()
+                }
+            }
+
+
+    }
+}
+
+
+
+
+@enduml

@@ -18,11 +18,9 @@ import app.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultController implements Runnable, Controller {
+public class DefaultController extends BaseController {
 
     private final Object controllerMainKey = new Object();
-    private final Model model;
-    private final View view;
 
     private ControllerStateMachine stateMachine = null;
 
@@ -31,30 +29,11 @@ public class DefaultController implements Runnable, Controller {
 
     private List<ICard> cardsList = new ArrayList<>();
 
-    public DefaultController(Model model, IATM atm, View view) {
-        this.model = model;
-        this.atm = atm;
-        this.view = view;
+    public DefaultController() {
     }
 
     public void setStateMachine(ControllerStateMachine stateMachine) {
         this.stateMachine = stateMachine;
-    }
-
-
-
-    @Override
-    public void run() {
-        try {
-            synchronized (controllerMainKey) {
-                controllerMainKey.wait();
-            }
-        } catch (InterruptedException e) {}
-
-//        while (true) {
-//            executeStateMethod();
-//        }
-
     }
 
     @Override

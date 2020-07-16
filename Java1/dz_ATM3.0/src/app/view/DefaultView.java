@@ -8,4 +8,8 @@ import java.util.List;
 
 public class DefaultView extends BaseView {
 
+    @Override
+    public void update(List<MenuOption> options) {
+
+    }
 }

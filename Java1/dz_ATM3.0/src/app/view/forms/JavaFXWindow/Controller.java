@@ -1,4 +1,4 @@
-package atmapp;
+package app.view.forms.JavaFXWindow;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-package atmapp;
+package app.view.forms.JavaFXWindow;
 
 public abstract class KeyboardController {
 
