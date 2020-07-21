@@ -50,6 +50,7 @@ public class ModulesBuilder {
         controller.setModel(model).setView(view);
 
         builded = true;
+        changed = false;
     }
 
     public Controller getController() {
@@ -85,6 +86,7 @@ public class ModulesBuilder {
 
     public ModulesBuilder setATM(ATM atm) {
         this.atm = atm;
+        changed();
         return this;
     }
 }

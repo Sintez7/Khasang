@@ -15,21 +15,23 @@ import java.util.List;
 
 public interface Model {
 
-    boolean insertCard(ICard card) throws AtmIsBusyException;
-
-    boolean ejectCard() throws CardBusyException;
-
-    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
-
-    ArrayList<ModelData> getMessages();
-
-    boolean processOkBtn();
-
-    void confirmMenuOptionSelect(MenuOption option);
-
-    List<MenuOption> getMenuOptions();
-
     Model setController(Controller controller);
 
     Model setATM(IATM atm);
+
+//    boolean insertCard(ICard card) throws AtmIsBusyException;
+//
+//    boolean ejectCard() throws CardBusyException;
+//
+//    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
+//
+//    ArrayList<ModelData> getMessages();
+//
+//    boolean processOkBtn();
+//
+//    void confirmMenuOptionSelect(MenuOption option);
+//
+//    List<MenuOption> getMenuOptions();
+//
+
 }

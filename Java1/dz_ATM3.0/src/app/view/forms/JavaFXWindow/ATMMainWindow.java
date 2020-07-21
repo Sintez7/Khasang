@@ -1,14 +1,9 @@
 package app.view.forms.JavaFXWindow;
 
-import atmapp.model.card.Card;
-import atmapp.model.card.CreditCard;
-import atmapp.model.card.DebitCard;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -17,9 +12,9 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
-public class Main extends Application {
+public class ATMMainWindow extends Application {
 
-    private static Main main;
+    private static ATMMainWindow ATMMainWindow;
 
     private AnchorPane upperScreenAnchor;
     private AnchorPane lowerScreenAnchor;
@@ -29,9 +24,22 @@ public class Main extends Application {
 //        launch(args);
 //    }
 
-    public Main() {
-        main = this;
-        Service.setMain(this);
+    public ATMMainWindow() {
+        ATMMainWindow = this;
+        Service.setATMMainWindow(this);
+    }
+
+    public static ATMMainWindow getInstance() {
+        if (ATMMainWindow != null) {
+            return ATMMainWindow;
+        } else {
+            System.err.println("main is null, creating new");
+            return new ATMMainWindow();
+        }
+    }
+
+    public void callLaunch() {
+        launch();
     }
 
     @Override
@@ -48,6 +56,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 400, 800));
         sm = new StateMachine();
         primaryStage.show();
+
     }
 
     private void loadUpperScreen(String s) {
@@ -62,6 +71,7 @@ public class Main extends Application {
             upperScreenLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("tried to load: " + s);
         }
         System.err.println("loaded");
     }
@@ -75,15 +85,6 @@ public class Main extends Application {
             lowerScreenLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static Main getInstance() {
-        if (main != null) {
-            return main;
-        } else {
-            System.err.println("main is null");
-            return null;
         }
     }
 
@@ -141,8 +142,8 @@ public class Main extends Application {
         protected State execute() {
             loadUpperScreen("cardSelectionScreen.fxml");
             Service.getKeyboardAdapter().setActualController(new KeyboardCardSelect());
-            Service.getCardSSController().addCard(new DebitCard());
-            Service.getCardSSController().addCard(new CreditCard());
+//            Service.getCardSSController().addCard(new DebitCard());
+//            Service.getCardSSController().addCard(new CreditCard());
             Service.keyboardAdapter.enableControls();
             return new CardSelection();
         }
@@ -263,8 +264,8 @@ public class Main extends Application {
         protected State execute() {
             System.err.println("EjectCard.execute()");
             loadUpperScreen("cardSelectionScreen.fxml");
-            Service.getCardSSController().addCard(new DebitCard());
-            Service.getCardSSController().addCard(new CreditCard());
+//            Service.getCardSSController().addCard(new DebitCard());
+//            Service.getCardSSController().addCard(new CreditCard());
             Service.getKeyboardAdapter().enableControls();
             return new FinalScreen();
         }
@@ -302,8 +303,8 @@ public class Main extends Application {
                 Service.getKeyboardAdapter().setActualController(new KeyboardCardSelect());
                 Service.getKeyboardAdapter().enableControls();
                 loadUpperScreen("cardSelectionScreen.fxml");
-                Service.getCardSSController().addCard(new DebitCard());
-                Service.getCardSSController().addCard(new CreditCard());
+//                Service.getCardSSController().addCard(new DebitCard());
+//                Service.getCardSSController().addCard(new CreditCard());
                 return new CardSelection();
             }
         }

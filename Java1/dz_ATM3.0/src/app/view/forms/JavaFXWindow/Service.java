@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 public class Service {
 
-    public static Main main;
+    public static ATMMainWindow ATMMainWindow;
     public static CardSelectionScreenController cardSSController;
     public static KeyboardControllerAdapter keyboardAdapter;
     public static MainMenuScreenController mainMenuScreenController;
@@ -15,12 +15,12 @@ public class Service {
     public static FinalScreenController finalScreenController;
     public static WithdrawalScreenController withdrawalScreenController;
 
-    synchronized public static Main getMain() {
-        return main;
+    synchronized public static ATMMainWindow getATMMainWindow() {
+        return ATMMainWindow;
     }
 
-    synchronized public static void setMain(Main main) {
-        Service.main = main;
+    synchronized public static void setATMMainWindow(ATMMainWindow ATMMainWindow) {
+        Service.ATMMainWindow = ATMMainWindow;
     }
 
     synchronized public static void setCardSelectionScreenController(CardSelectionScreenController controller) {
@@ -37,7 +37,7 @@ public class Service {
             @Override
             public void run() {
                 System.err.println("timer");
-                Platform.runLater(() -> main.next());
+                Platform.runLater(() -> ATMMainWindow.next());
             }
         }
         , 2000 + (Math.round(Math.random() * 1000)));
@@ -56,7 +56,7 @@ public class Service {
 //    }
 
     synchronized public static void callNext() {
-        Platform.runLater(() -> main.next());
+        Platform.runLater(() -> ATMMainWindow.next());
     }
 
     synchronized public static void setKeyboardAdapter(KeyboardControllerAdapter adapter) {

@@ -1,5 +1,6 @@
 package app.view;
 
+import app.User;
 import app.controller.Controller;
 import app.model.MenuOption;
 import app.model.bank.card.ICard;
@@ -16,10 +17,5 @@ public abstract class BaseView implements View {
     }
 
     @Override
-    public abstract void update(List<MenuOption> options);
-
-    @Override
-    public void addCard(ICard card) {
-
-    }
+    public abstract void startUp(User user);
 }

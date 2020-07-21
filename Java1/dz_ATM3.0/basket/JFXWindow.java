@@ -21,7 +21,7 @@ import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.util.List;
 
-public class JFXWindow extends Application implements View {
+public class JFXWindow extends Application {
 
     public static final Object viewMonitor = new Object();
 
@@ -32,7 +32,6 @@ public class JFXWindow extends Application implements View {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-//        launch();
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();
@@ -48,11 +47,6 @@ public class JFXWindow extends Application implements View {
 //        }
     }
 
-    @Override
-    public synchronized void setController(Controller controller) {
-        this.controller = controller;
-    }
-
     public static void setWindowController(JFXWindowController controller) {
         windowController = controller;
     }
@@ -61,27 +55,8 @@ public class JFXWindow extends Application implements View {
         menuController = controller;
     }
 
-    @Override
-    public void update(List<MenuOption> options) {
-        if (options != null) {
-            showOptions(options);
-        } else {
-
-        }
-    }
-
-    @Override
-    public void addCard(ICard card) {
-        windowController.addCard(card);
-    }
-
     private void updateText(ModelData data) {
         windowController.updateText(data.getBankResponse().getMessage() + data.getMessage());
-    }
-
-    @Override
-    public void run() {
-        launch(args);
     }
 
     public void myLaunch(String[] args) {

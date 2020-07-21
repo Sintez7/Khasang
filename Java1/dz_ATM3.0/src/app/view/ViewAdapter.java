@@ -1,5 +1,6 @@
 package app.view;
 
+import app.User;
 import app.controller.Controller;
 import app.model.MenuOption;
 import app.model.bank.card.ICard;
@@ -33,20 +34,25 @@ public class ViewAdapter implements View {
     }
 
     @Override
-    public void update(List<MenuOption> options) {
-        if (actualView != null) {
-            actualView.update(options);
-        } else {
-            System.err.println("actualView is null!");
-        }
+    public void startUp(User user) {
+        actualView.startUp(user);
     }
 
-    @Override
-    public void addCard(ICard card) {
-        if (actualView != null) {
-            actualView.addCard(card);;
-        } else {
-            System.err.println("actualView is null!");
-        }
-    }
+//    @Override
+//    public void update(List<MenuOption> options) {
+//        if (actualView != null) {
+//            actualView.update(options);
+//        } else {
+//            System.err.println("actualView is null!");
+//        }
+//    }
+//
+//    @Override
+//    public void addCard(ICard card) {
+//        if (actualView != null) {
+//            actualView.addCard(card);;
+//        } else {
+//            System.err.println("actualView is null!");
+//        }
+//    }
 }

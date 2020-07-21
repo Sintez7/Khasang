@@ -30,40 +30,40 @@ public class ModelAdapter implements Model {
         this.actualModel = actualModel;
     }
 
-    @Override
-    public boolean insertCard(ICard card) throws AtmIsBusyException {
-        return actualModel.insertCard(card);
-    }
-
-    @Override
-    public boolean ejectCard() throws CardBusyException {
-        return actualModel.ejectCard();
-    }
-
-    @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
-        return actualModel.queueRequest(request);
-    }
-
-    @Override
-    public ArrayList<ModelData> getMessages() {
-        return actualModel.getMessages();
-    }
-
-    @Override
-    public boolean processOkBtn() {
-        return actualModel.processOkBtn();
-    }
-
-    @Override
-    public void confirmMenuOptionSelect(MenuOption option) {
-        actualModel.confirmMenuOptionSelect(option);
-    }
-
-    @Override
-    public List<MenuOption> getMenuOptions() {
-        return actualModel.getMenuOptions();
-    }
+//    @Override
+//    public boolean insertCard(ICard card) throws AtmIsBusyException {
+//        return actualModel.insertCard(card);
+//    }
+//
+//    @Override
+//    public boolean ejectCard() throws CardBusyException {
+//        return actualModel.ejectCard();
+//    }
+//
+//    @Override
+//    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+//        return actualModel.queueRequest(request);
+//    }
+//
+//    @Override
+//    public ArrayList<ModelData> getMessages() {
+//        return actualModel.getMessages();
+//    }
+//
+//    @Override
+//    public boolean processOkBtn() {
+//        return actualModel.processOkBtn();
+//    }
+//
+//    @Override
+//    public void confirmMenuOptionSelect(MenuOption option) {
+//        actualModel.confirmMenuOptionSelect(option);
+//    }
+//
+//    @Override
+//    public List<MenuOption> getMenuOptions() {
+//        return actualModel.getMenuOptions();
+//    }
 
     @Override
     public Model setController(Controller controller) {

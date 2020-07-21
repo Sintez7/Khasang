@@ -6,6 +6,7 @@ import app.model.bank.banks.SomeCommonBank;
 import app.model.bank.banks.UniversalBank;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
+import app.view.DefaultView;
 
 public class App {
 
@@ -32,6 +33,23 @@ public class App {
 
         mb.setActualController(new DefaultController());
         mb.setActualModel(new DefaultModel());
+        mb.setActualView(new DefaultView());
+
+        mb.build();
+
+        ICard uCard = uBank.initNewCard(CardType.DEBIT);
+        ICard uCreditCard = uBank.initNewCard(CardType.CREDIT);
+
+        ICard commonCard = commonBank.initNewCard(CardType.DEBIT);
+        ICard commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
+
+        User user = new User();
+        user.addCard(uCard);
+        user.addCard(uCreditCard);
+        user.addCard(commonCard);
+        user.addCard(commonCreditCard);
+
+        mb.getController().startUp(user);
     }
 
     public void start() {

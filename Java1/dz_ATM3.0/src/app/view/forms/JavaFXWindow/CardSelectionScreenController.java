@@ -3,7 +3,7 @@ package app.view.forms.JavaFXWindow;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import atmapp.model.card.Card;
+import app.model.bank.card.ICard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,18 +22,18 @@ public class CardSelectionScreenController {
     private URL location;
 
     @FXML
-    private ListView<Card> cardsContainer;
+    private ListView<ICard> cardsContainer;
 
-    private ObservableList<Card> cardsList = FXCollections.observableArrayList();
+    private ObservableList<ICard> cardsList = FXCollections.observableArrayList();
 
-    private Card selectedCard;
+    private ICard selectedCard;
 
     @FXML
     void initialize() {
         Service.setCardSelectionScreenController(this);
-        cardsContainer.setCellFactory(new Callback<ListView<Card>, ListCell<Card>>() {
+        cardsContainer.setCellFactory(new Callback<ListView<ICard>, ListCell<ICard>>() {
             @Override
-            public ListCell<Card> call(ListView<Card> cardListView) {
+            public ListCell<ICard> call(ListView<ICard> cardListView) {
                 return new CardCell();
             }
         });
@@ -41,11 +41,11 @@ public class CardSelectionScreenController {
         cardsContainer.setItems(cardsList);
     }
 
-    synchronized public void addCard(Card card) {
+    synchronized public void addCard(ICard card) {
         cardsList.add(card);
     }
 
-    synchronized public Card getSelectedCard() {
+    synchronized public ICard getSelectedCard() {
         return selectedCard;
     }
 
@@ -53,14 +53,14 @@ public class CardSelectionScreenController {
 
     }
 
-    private class CardCell extends ListCell<Card> {
+    private class CardCell extends ListCell<ICard> {
         @Override
-        protected void updateItem(Card card, boolean b) {
+        protected void updateItem(ICard card, boolean b) {
             super.updateItem(card, b);
 
             if (card != null) {
                 setPrefHeight(Region.USE_COMPUTED_SIZE);
-                setText(card.getCardInfo());
+                setText(card.getCardInfo().toString());
                 selectedCard = card;
             }
         }

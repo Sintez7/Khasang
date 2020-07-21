@@ -1,5 +1,6 @@
 package app.view;
 
+import app.User;
 import app.controller.Controller;
 import app.model.MenuOption;
 import app.model.ModelData;
@@ -10,7 +11,6 @@ import java.util.List;
 public interface View{
 
     void setController(Controller controller);
-    void update(List<MenuOption> options);
 
-    void addCard(ICard card);
+    void startUp(User user);
 }

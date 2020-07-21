@@ -29,48 +29,48 @@ public class DefaultModel extends BaseModel {
         data.add(message);
     }
 
-    @Override
-    public ArrayList<ModelData> getMessages() {
-        return data;
-    }
-
-    @Override
-    public boolean processOkBtn() {
-        sm.execute(Command.OK);
-        return true;
-    }
-
-    @Override
-    public void confirmMenuOptionSelect(MenuOption option) {
-        sm.execute(option);
-    }
-
-    @Override
-    public List<MenuOption> getMenuOptions() {
-        List<MenuOption> temp = new ArrayList<>();
-        temp.add(new WithdrawMoney());
-        temp.add(new Balance());
-        return temp;
-    }
-
-    @Override
-    public boolean insertCard(ICard card) throws AtmIsBusyException {
-        boolean temp = atm.insertCard(card);
-        if (temp) {
-            sm.execute(Command.CARD_INSERTED);
-        }
-        return temp;
-    }
-
-    @Override
-    public boolean ejectCard() throws CardBusyException {
-        return atm.ejectCurrentCard();
-    }
-
-    @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
-        return atm.queueOrder(request);
-    }
+//    @Override
+//    public ArrayList<ModelData> getMessages() {
+//        return data;
+//    }
+//
+//    @Override
+//    public boolean processOkBtn() {
+//        sm.execute(Command.OK);
+//        return true;
+//    }
+//
+//    @Override
+//    public void confirmMenuOptionSelect(MenuOption option) {
+//        sm.execute(option);
+//    }
+//
+//    @Override
+//    public List<MenuOption> getMenuOptions() {
+//        List<MenuOption> temp = new ArrayList<>();
+//        temp.add(new WithdrawMoney());
+//        temp.add(new Balance());
+//        return temp;
+//    }
+//
+//    @Override
+//    public boolean insertCard(ICard card) throws AtmIsBusyException {
+//        boolean temp = atm.insertCard(card);
+//        if (temp) {
+//            sm.execute(Command.CARD_INSERTED);
+//        }
+//        return temp;
+//    }
+//
+//    @Override
+//    public boolean ejectCard() throws CardBusyException {
+//        return atm.ejectCurrentCard();
+//    }
+//
+//    @Override
+//    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+//        return atm.queueOrder(request);
+//    }
 
     private class StateMachine {
 

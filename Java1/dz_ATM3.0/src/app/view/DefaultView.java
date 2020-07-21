@@ -1,15 +1,17 @@
 package app.view;
 
-import app.controller.Controller;
-import app.model.MenuOption;
+import app.User;
 import app.model.bank.card.ICard;
-
-import java.util.List;
+import app.view.forms.JavaFXWindow.ATMMainWindow;
 
 public class DefaultView extends BaseView {
 
-    @Override
-    public void update(List<MenuOption> options) {
+    private ATMMainWindow mainWindow;
 
+    @Override
+    public void startUp(User user) {
+
+        mainWindow = ATMMainWindow.getInstance();
+        mainWindow.callLaunch();
     }
 }
