@@ -12,6 +12,6 @@ public class DefaultView extends BaseView {
     public void startUp(User user) {
 
         mainWindow = ATMMainWindow.getInstance();
-        mainWindow.callLaunch();
+        mainWindow.callLaunch(user);
     }
 }

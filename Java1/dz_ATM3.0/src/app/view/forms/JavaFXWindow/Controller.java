@@ -5,8 +5,6 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
-import app.view.forms.JavaFXWindow.ATMMainWindow;
-
 
 public class Controller {
 
@@ -27,10 +25,10 @@ public class Controller {
 
     @FXML
     void initialize() {
-        ATMMainWindow ATMMainWindow = app.view.forms.JavaFXWindow.ATMMainWindow.getInstance();
-        System.err.println(ATMMainWindow);
-        ATMMainWindow.setUpperScreenAnchor(upperScreenAnchor);
-        ATMMainWindow.setLowerScreenAnchor(lowerScreenAnchor);
+        ATMMainWindow mainWindow = ATMMainWindow.getInstance();
+        System.err.println(mainWindow);
+        mainWindow.setUpperScreenAnchor(upperScreenAnchor);
+        mainWindow.setLowerScreenAnchor(lowerScreenAnchor);
     }
 
     @FXML

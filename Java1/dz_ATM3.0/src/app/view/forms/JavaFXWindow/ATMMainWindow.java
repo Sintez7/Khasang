@@ -1,5 +1,6 @@
 package app.view.forms.JavaFXWindow;
 
+import app.User;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -19,6 +20,7 @@ public class ATMMainWindow extends Application {
     private AnchorPane upperScreenAnchor;
     private AnchorPane lowerScreenAnchor;
     private StateMachine sm;
+    private User user;
 
 //    public static void main(String[] args) {
 //        launch(args);
@@ -38,7 +40,8 @@ public class ATMMainWindow extends Application {
         }
     }
 
-    public void callLaunch() {
+    public void callLaunch(User user) {
+        this.user = user;
         launch();
     }
 
@@ -121,6 +124,10 @@ public class ATMMainWindow extends Application {
         protected State execute() {
             System.err.println("Default execute method!");
             return null;
+        }
+
+        protected State eject() {
+            return new EjectCard();
         }
     }
 
