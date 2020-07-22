@@ -3,6 +3,7 @@ package app.view.forms.JavaFXWindow;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import app.User;
 import app.model.bank.card.ICard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,6 +42,12 @@ public class CardSelectionScreenController {
         cardsContainer.setItems(cardsList);
     }
 
+    synchronized void loadUserCards(User user) {
+        cardsList.addAll(user.getUserCards());
+//        System.err.println(cardsList);
+//        System.err.println(user);
+    }
+
     synchronized public void addCard(ICard card) {
         cardsList.add(card);
     }
@@ -59,7 +66,7 @@ public class CardSelectionScreenController {
             super.updateItem(card, b);
 
             if (card != null) {
-                setPrefHeight(Region.USE_COMPUTED_SIZE);
+//                setPrefHeight(Region.USE_COMPUTED_SIZE);
                 setText(card.getCardInfo().toString());
                 selectedCard = card;
             }

@@ -16,6 +16,10 @@ public abstract class BaseView implements View {
         this.controller = controller;
     }
 
+    public Controller getController() {
+        return controller;
+    }
+
     @Override
     public abstract void startUp(User user);
 }

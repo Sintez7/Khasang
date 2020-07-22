@@ -1,6 +1,7 @@
 package app.view.forms.JavaFXWindow;
 
 import app.User;
+import app.controller.Controller;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -15,35 +16,42 @@ import java.io.IOException;
 
 public class ATMMainWindow extends Application {
 
-    private static ATMMainWindow ATMMainWindow;
+    private static volatile ATMMainWindow atmMainWindow;
+    private static final String CARD_SELECTION_SCREEN = "cardSelectionScreen.fxml";
+    private static User user;
+    private static Controller controller;
 
     private AnchorPane upperScreenAnchor;
     private AnchorPane lowerScreenAnchor;
     private StateMachine sm;
-    private User user;
 
 //    public static void main(String[] args) {
 //        launch(args);
 //    }
 
     public ATMMainWindow() {
-        ATMMainWindow = this;
+        atmMainWindow = this;
         Service.setATMMainWindow(this);
     }
 
     public static ATMMainWindow getInstance() {
-        if (ATMMainWindow != null) {
-            return ATMMainWindow;
+        if (atmMainWindow != null) {
+            return atmMainWindow;
         } else {
             System.err.println("main is null, creating new");
             return new ATMMainWindow();
         }
     }
 
-    public void callLaunch(User user) {
-        this.user = user;
+    public static void callLaunch(User u, Controller c) {
+        user = u;
+        controller = c;
         launch();
     }
+
+//    synchronized public void callLaunch() {
+//        launch();
+//    }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -58,6 +66,7 @@ public class ATMMainWindow extends Application {
         });
         primaryStage.setScene(new Scene(root, 400, 800));
         sm = new StateMachine();
+
         primaryStage.show();
 
     }
@@ -91,11 +100,31 @@ public class ATMMainWindow extends Application {
         }
     }
 
-    public void setUpperScreenAnchor(AnchorPane pane) {
+    synchronized private void loadCardSelectionScreen() {
+        System.err.println("upper screen loading");
+        FXMLLoader upperScreenLoader = new FXMLLoader();
+        if (upperScreenLoader.getRoot() != upperScreenAnchor) {
+            upperScreenLoader.setRoot(upperScreenAnchor);
+        }
+        CardSelectionScreenController controller = new CardSelectionScreenController();
+        upperScreenLoader.setLocation(getClass().getResource(CARD_SELECTION_SCREEN));
+        controller.loadUserCards(user);
+        upperScreenLoader.setController(controller);
+        upperScreenAnchor.getChildren().clear();
+        try {
+            upperScreenLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("tried to load: " + CARD_SELECTION_SCREEN);
+        }
+        System.err.println("loaded");
+    }
+
+    void setUpperScreenAnchor(AnchorPane pane) {
         upperScreenAnchor = pane;
     }
 
-    public void setLowerScreenAnchor(AnchorPane pane) {
+    void setLowerScreenAnchor(AnchorPane pane) {
         lowerScreenAnchor = pane;
     }
 
@@ -114,8 +143,19 @@ public class ATMMainWindow extends Application {
         }
 
         synchronized public void execute() {
-//            Service.getKeyboardAdapter().disableControls();
             currentState = currentState.execute();
+            if (currentState == null) {
+                System.err.println("null state, returning to CardSelectionScreen_executeMethod");
+                currentState = new CardSelection();
+            }
+        }
+
+        synchronized public void eject() {
+            currentState = currentState.eject();
+            if (currentState == null) {
+                System.err.println("null state, returning to CardSelectionScreen_ejectMethod");
+                currentState = new CardSelection();
+            }
         }
     }
 
@@ -132,173 +172,179 @@ public class ATMMainWindow extends Application {
     }
 
     private class Starting extends State {
-        @Override
-        protected State execute() {
+
+        public Starting() {
             loadKeyboard();
             System.err.println("keyboard loaded");
-            loadUpperScreen("welcomeScreen.fxml");
-            System.err.println("welcomeScreen loaded");
-            Service.keyboardAdapter.disableControls();
             Service.callStarted();
+        }
+
+        @Override
+        protected State execute() {
             return new Welcome();
+        }
+
+        @Override
+        protected State eject() {
+            System.err.println("cannot eject card from welcome screen!");
+            return null;
         }
     }
 
     private class Welcome extends State {
+
+        public Welcome() {
+            Service.keyboardAdapter.disableControls();
+            loadUpperScreen("welcomeScreen.fxml");
+            System.err.println("welcomeScreen loaded");
+        }
+
         @Override
         protected State execute() {
-            loadUpperScreen("cardSelectionScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardCardSelect());
-//            Service.getCardSSController().addCard(new DebitCard());
-//            Service.getCardSSController().addCard(new CreditCard());
-            Service.keyboardAdapter.enableControls();
             return new CardSelection();
         }
     }
 
     private class CardSelection extends State {
+
+        public CardSelection() {
+            Service.keyboardAdapter.enableControls();
+            loadCardSelectionScreen();
+            Service.getKeyboardAdapter().setActualController(new KeyboardCardSelect());
+        }
+
         @Override
         protected State execute() {
-            Service.keyboardAdapter.disableControls();
-            // здесь должен быть код для АТМа, на принятие карты
-
-            loadUpperScreen("mainMenuScreen.fxml");
-
             return new MainMenu();
         }
     }
 
     private class MainMenu extends State {
+
+        public MainMenu() {
+            loadUpperScreen("mainMenuScreen.fxml");
+        }
+
         @Override
         protected State execute() {
             switch (Service.getMMSController().getSelected()) {
                 case ADD_MONEY:
-                    return addMoney();
+                    return new AddMoney();
                 case SHOW_CREDIT:
-                    return showCredit();
+                    return new ShowCredit();
                 case BALANCE:
-                    return balance();
+                    return new Balance();
                 case EJECT_CARD:
-                    return ejectCard();
+                    return new EjectCard();
                 case WITHDRAWAL:
-                    return withdrawal();
+                    return new Withdrawal();
                 case SHOW_HISTORY:
-                    return showHistory();
+                    return new ShowHistory();
                 default:
                     System.err.println("Unknown Selection");
                     return null;
             }
         }
-
-        private State addMoney() {
-            loadUpperScreen("addMoneyScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
-            return new AddMoney();
-        }
-
-        private State showCredit() {
-            loadUpperScreen("showCredit.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
-            return new ShowCredit();
-        }
-
-        private State balance() {
-            loadUpperScreen("balanceScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
-            return new Balance();
-        }
-
-        private State ejectCard() {
-            loadUpperScreen("ejectCardScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
-            return new EjectCard();
-        }
-
-        private State withdrawal() {
-            Service.getKeyboardAdapter().setActualController(new KeyboardWithdrawal());
-            Service.getKeyboardAdapter().enableControls();
-            loadUpperScreen("withdrawalScreen.fxml");
-            return new Withdrawal();
-        }
-
-        private State showHistory() {
-            loadUpperScreen("showHistoryScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
-            return new ShowHistory();
-        }
     }
 
     private class AddMoney extends State {
+
+        public AddMoney() {
+            loadUpperScreen("addMoneyScreen.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+        }
+
         @Override
         protected State execute() {
 //            Service.getAMSController().getSum();
             // операции по добавлению денег на счёт пользователя
-
-            loadUpperScreen("finalScreen.fxml");
-
-            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
 
     private class ShowCredit extends State {
+
+        public ShowCredit() {
+            loadUpperScreen("showCredit.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+        }
+
         @Override
         protected State execute() {
             System.err.println("ShowCredit.execute()");
-            loadUpperScreen("finalScreen.fxml");
-            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
 
     private class Balance extends State {
+
+        public Balance() {
+            loadUpperScreen("balanceScreen.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+        }
+
         @Override
         protected State execute() {
             System.err.println("Balance.execute()");
-            loadUpperScreen("finalScreen.fxml");
-            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
 
     private class EjectCard extends State {
+
+        public EjectCard() {
+            loadUpperScreen("ejectCardScreen.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+        }
+
         @Override
         protected State execute() {
             System.err.println("EjectCard.execute()");
-            loadUpperScreen("cardSelectionScreen.fxml");
-//            Service.getCardSSController().addCard(new DebitCard());
-//            Service.getCardSSController().addCard(new CreditCard());
-            Service.getKeyboardAdapter().enableControls();
             return new FinalScreen();
         }
     }
 
     private class Withdrawal extends State {
+
+        public Withdrawal() {
+            Service.getKeyboardAdapter().setActualController(new KeyboardWithdrawal());
+            Service.getKeyboardAdapter().enableControls();
+            loadUpperScreen("withdrawalScreen.fxml");
+        }
+
         @Override
         protected State execute() {
             System.err.println("Withdrawal.execute()");
-            loadUpperScreen("finalScreen.fxml");
-            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
 
     private class ShowHistory extends State {
+
+        public ShowHistory() {
+            loadUpperScreen("showHistoryScreen.fxml");
+            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
+            Service.getKeyboardAdapter().enableControls();
+        }
+
         @Override
         protected State execute() {
             System.err.println("ShowHistory.execute()");
-            loadUpperScreen("finalScreen.fxml");
-            Service.getKeyboardAdapter().disableControls();
             return new FinalScreen();
         }
     }
 
     private class FinalScreen extends State {
+
+        public FinalScreen() {
+            loadUpperScreen("finalScreen.fxml");
+            Service.getKeyboardAdapter().disableControls();
+        }
+
         @Override
         protected State execute() {
             if (Service.getFSController().getContinue()) {

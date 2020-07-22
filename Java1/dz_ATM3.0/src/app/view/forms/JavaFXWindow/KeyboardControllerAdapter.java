@@ -121,7 +121,9 @@ public class KeyboardControllerAdapter {
     }
 
     public void btnFenceAction() {
-        actualController.btnFenceAction();
+//        actualController.btnFenceAction();
+        ATMMainWindow main = ATMMainWindow.getInstance();
+        main.next();
     }
 
     public void btnOkAction() {

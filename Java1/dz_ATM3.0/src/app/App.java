@@ -49,7 +49,7 @@ public class App {
         user.addCard(commonCard);
         user.addCard(commonCreditCard);
 
-        mb.getController().startUp(user);
+        mb.startUp(user);
     }
 
     public void start() {

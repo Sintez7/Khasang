@@ -89,4 +89,8 @@ public class ModulesBuilder {
         changed();
         return this;
     }
+
+    public void startUp(User user) {
+        controller.startUp(user);
+    }
 }

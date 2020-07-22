@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 
-public class Controller {
+public class MainController {
 
     @FXML
     private ResourceBundle resources;

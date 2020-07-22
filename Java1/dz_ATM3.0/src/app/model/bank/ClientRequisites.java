@@ -47,4 +47,15 @@ public class ClientRequisites {
     public void setBank(IBank bank) {
         this.bank = bank;
     }
+
+    @Override
+    public String toString() {
+        return "Card requisites:\n" +
+                "cardNumber: " + cardNumber + "\n" +
+                "cardCode: " + cardCode + "\n" +
+                "clientScriptedDNACode: " + clientScriptedDNACode + "\n" +
+                "quantumSign: " + quantumSign + "\n" +
+                "bankOwner: " + bank + "\n"
+                ;
+    }
 }
