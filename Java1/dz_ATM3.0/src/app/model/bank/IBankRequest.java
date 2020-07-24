@@ -9,7 +9,7 @@ public interface IBankRequest {
     BankRequest.Type getType();
 
     enum Type {
-        PAYMENT,
+        WITHDRAWAL,
         BALANCE,
         SHOW_HISTORY,
         SHOW_CREDIT,

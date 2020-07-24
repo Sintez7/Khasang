@@ -16,7 +16,7 @@ public class DefaultModel extends BaseModel {
 
     private final Object modelMainKey = new Object();
     private IATM atm;
-    private StateMachine sm = new StateMachine(new PreparingState());
+//    private StateMachine sm = new StateMachine(new PreparingState());
 
     private ArrayList<ModelData> data;
 
@@ -25,9 +25,9 @@ public class DefaultModel extends BaseModel {
     public DefaultModel () {
     }
 
-    public void addData(ModelData message) {
-        data.add(message);
-    }
+//    public void addData(ModelData message) {
+//        data.add(message);
+//    }
 
 //    @Override
 //    public ArrayList<ModelData> getMessages() {
@@ -71,26 +71,26 @@ public class DefaultModel extends BaseModel {
 //    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
 //        return atm.queueOrder(request);
 //    }
-
-    private class StateMachine {
-
-        State prevState = null;
-        State currentState;
-
-        StateMachine (State state) {
-            currentState = state;
-        }
-
-        void execute(Command command) {
-            prevState = currentState;
-            currentState = currentState.execute(command);
-        }
-
-        void execute(MenuOption option) {
-            prevState = currentState;
-            currentState = currentState.execute(option);
-        }
-    }
+//
+//    private class StateMachine {
+//
+//        State prevState = null;
+//        State currentState;
+//
+//        StateMachine (State state) {
+//            currentState = state;
+//        }
+//
+//        void execute(Command command) {
+//            prevState = currentState;
+//            currentState = currentState.execute(command);
+//        }
+//
+//        void execute(MenuOption option) {
+//            prevState = currentState;
+//            currentState = currentState.execute(option);
+//        }
+//    }
 
     enum Command {
         INIT,
@@ -111,127 +111,127 @@ public class DefaultModel extends BaseModel {
 
     }
 
-    private abstract class State {
-        static final String UNKNOWN_COMMAND_MSG = "Unknown Command";
-        static final String ATM_READY_MSG = "ATM is ready! \nPlease insert Card.";
-        static final String WELCOME_MSG = "Welcome! Please insert card.";
-
-        StateType type = StateType.PREPARING;
-        String message = "";
-
-        abstract State execute(Command command);
-        abstract State execute(MenuOption option);
-
-        public StateType getType() {
-            return type;
-        }
-        public String getMessage() {
-            return message;
-        }
-
-        State setMessage(String msg) {
-            message = msg;
-            return this;
-        }
-    }
-
-    class PreparingState extends State {
-
-        PreparingState() {
-            type = StateType.PREPARING;
-        }
-
-        @Override
-        State execute(Command command) {
-            return new ReadyState().setMessage(WELCOME_MSG);
-        }
-
-        @Override
-        State execute(MenuOption option) {
-            return null;
-        }
-    }
-
-    private class ReadyState extends State {
-
-        ReadyState() {
-            type = StateType.READY;
-        }
-
-        @Override
-        State execute(Command command) {
-            switch (command) {
-                case OK:
-                    return processOkCommand();
-                case CANCEL:
-                    return processCancelCommand();
-                case CARD_INSERTED:
-                    return processCardInserted();
-                default:
-                    message = UNKNOWN_COMMAND_MSG;
-                    return this;
-            }
-        }
-
-        @Override
-        State execute(MenuOption option) {
-            return null;
-        }
-
-        private State processCardInserted() {
-            return new MainMenuState();
-        }
-
-        private State processOkCommand() {
-            message = ATM_READY_MSG;
-            return this;
-        }
-
-        private State processCancelCommand() {
-            message = ATM_READY_MSG;
-            return this;
-        }
-    }
-
-    class MainMenuState extends State {
-
-        MainMenuState() {
-            type = StateType.WORKING_MAIN_MENU;
-        }
-
-        @Override
-        State execute(Command command) {
-            return null;
-        }
-
-        @Override
-        State execute(MenuOption option) {
-            switch (option.getType()) {
-                case WITHDRAW:
-                    return processWithdrawOption();
-                case BALANCE:
+//    private abstract class State {
+//        static final String UNKNOWN_COMMAND_MSG = "Unknown Command";
+//        static final String ATM_READY_MSG = "ATM is ready! \nPlease insert Card.";
+//        static final String WELCOME_MSG = "Welcome! Please insert card.";
+//
+//        StateType type = StateType.PREPARING;
+//        String message = "";
+//
+//        abstract State execute(Command command);
+//        abstract State execute(MenuOption option);
+//
+//        public StateType getType() {
+//            return type;
+//        }
+//        public String getMessage() {
+//            return message;
+//        }
+//
+//        State setMessage(String msg) {
+//            message = msg;
+//            return this;
+//        }
+//    }
+//
+//    class PreparingState extends State {
+//
+//        PreparingState() {
+//            type = StateType.PREPARING;
+//        }
+//
+//        @Override
+//        State execute(Command command) {
+//            return new ReadyState().setMessage(WELCOME_MSG);
+//        }
+//
+//        @Override
+//        State execute(MenuOption option) {
+//            return null;
+//        }
+//    }
+//
+//    private class ReadyState extends State {
+//
+//        ReadyState() {
+//            type = StateType.READY;
+//        }
+//
+//        @Override
+//        State execute(Command command) {
+//            switch (command) {
+//                case OK:
+//                    return processOkCommand();
+//                case CANCEL:
 //                    return processCancelCommand();
-                default:
-                    message = UNKNOWN_COMMAND_MSG;
-                    return this;
-            }
-        }
-
-        private State processWithdrawOption() {
-            return new WithdrawState();
-        }
-    }
-
-    class WithdrawState extends State {
-
-        @Override
-        State execute(Command command) {
-            return null;
-        }
-
-        @Override
-        State execute(MenuOption option) {
-            return null;
-        }
-    }
+//                case CARD_INSERTED:
+//                    return processCardInserted();
+//                default:
+//                    message = UNKNOWN_COMMAND_MSG;
+//                    return this;
+//            }
+//        }
+//
+//        @Override
+//        State execute(MenuOption option) {
+//            return null;
+//        }
+//
+//        private State processCardInserted() {
+//            return new MainMenuState();
+//        }
+//
+//        private State processOkCommand() {
+//            message = ATM_READY_MSG;
+//            return this;
+//        }
+//
+//        private State processCancelCommand() {
+//            message = ATM_READY_MSG;
+//            return this;
+//        }
+//    }
+//
+//    class MainMenuState extends State {
+//
+//        MainMenuState() {
+//            type = StateType.WORKING_MAIN_MENU;
+//        }
+//
+//        @Override
+//        State execute(Command command) {
+//            return null;
+//        }
+//
+//        @Override
+//        State execute(MenuOption option) {
+//            switch (option.getType()) {
+//                case WITHDRAW:
+//                    return processWithdrawOption();
+//                case BALANCE:
+////                    return processCancelCommand();
+//                default:
+//                    message = UNKNOWN_COMMAND_MSG;
+//                    return this;
+//            }
+//        }
+//
+//        private State processWithdrawOption() {
+//            return new WithdrawState();
+//        }
+//    }
+//
+//    class WithdrawState extends State {
+//
+//        @Override
+//        State execute(Command command) {
+//            return null;
+//        }
+//
+//        @Override
+//        State execute(MenuOption option) {
+//            return null;
+//        }
+//    }
 }

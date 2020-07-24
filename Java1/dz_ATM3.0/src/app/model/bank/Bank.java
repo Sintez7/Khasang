@@ -57,8 +57,8 @@ public abstract class Bank implements IBank {
     public IBankResponse processRequest(ClientRequisites costumer, IBankRequest request) {
         IBankResponse result = null;
         switch (request.getType()) {
-            case PAYMENT:
-                result = queuePaymentRequest(costumer, request);
+            case WITHDRAWAL:
+                result = queueWithdrawalRequest(costumer, request);
                 break;
             case BALANCE:
                 result = queueGetCardBalance(costumer);
@@ -76,7 +76,7 @@ public abstract class Bank implements IBank {
         return result;
     }
 
-    public IBankResponse queuePaymentRequest(ClientRequisites costumer, IBankRequest request) {
+    public IBankResponse queueWithdrawalRequest(ClientRequisites costumer, IBankRequest request) {
         IBankResponse result = null;
         CardType cardType = getClient(costumer).getCard().getCardType();
         switch (cardType) {

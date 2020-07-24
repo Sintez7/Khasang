@@ -76,4 +76,14 @@ public class ModelAdapter implements Model {
         this.atm = atm;
         return this;
     }
+
+    @Override
+    public boolean cardChosen(ICard card) {
+        return actualModel.cardChosen(card);
+    }
+
+    @Override
+    public boolean ejectCard() {
+        return actualModel.ejectCard();
+    }
 }

@@ -6,6 +6,8 @@ import app.controller.exceptions.*;
 import app.model.MenuOption;
 import app.model.Model;
 import app.model.ModelData;
+import app.model.bank.IBankRequest;
+import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 import app.view.View;
 
@@ -53,4 +55,10 @@ public interface Controller {
     Controller setView(View view);
 
     void startUp(User user);
+
+    boolean cardChosen(ICard card) throws AtmIsBusyException;
+
+    boolean ejectCard();
+
+    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
 }

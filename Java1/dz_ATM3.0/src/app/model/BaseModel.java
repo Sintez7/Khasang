@@ -64,4 +64,24 @@ public class BaseModel implements Model {
         this.atm = atm;
         return this;
     }
+
+    @Override
+    public boolean cardChosen(ICard card) {
+        try {
+            return atm.insertCard(card);
+        } catch (AtmIsBusyException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean ejectCard() {
+        return atm.ejectCurrentCard();
+    }
+
+    @Override
+    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException {
+        return atm.queueOrder(request);
+    }
 }

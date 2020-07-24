@@ -9,6 +9,8 @@ import app.controller.exceptions.IllegalRequestTypeException;
 import app.model.MenuOption;
 import app.model.Model;
 import app.model.ModelData;
+import app.model.bank.IBankRequest;
+import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 import app.view.View;
 
@@ -105,5 +107,20 @@ public class ControllerAdapter implements Controller {
     @Override
     public void startUp(User user) {
         actualController.startUp(user);
+    }
+
+    @Override
+    public boolean cardChosen(ICard card) throws AtmIsBusyException{
+        return actualController.cardChosen(card) ;
+    }
+
+    @Override
+    public boolean ejectCard() {
+        return actualController.ejectCard();
+    }
+
+    @Override
+    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+        return actualController.queueRequest(request);
     }
 }

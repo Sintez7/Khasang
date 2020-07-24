@@ -13,6 +13,7 @@ import app.model.Model;
 import app.model.ModelData;
 import app.model.bank.BankRequest;
 import app.model.bank.IBankRequest;
+import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 import app.view.View;
 
@@ -47,6 +48,21 @@ public class BaseController implements Controller {
     @Override
     public void startUp(User user) {
         view.startUp(user);
+    }
+
+    @Override
+    public boolean cardChosen(ICard card) throws AtmIsBusyException{
+        return model.cardChosen(card);
+    }
+
+    @Override
+    public boolean ejectCard() {
+        return model.ejectCard();
+    }
+
+    @Override
+    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+        return model.queueRequest(request);
     }
 
 //    public void setStateMachine(ControllerStateMachine stateMachine) {

@@ -12,5 +12,4 @@ public interface IATM {
     boolean ejectCurrentCard();
 
     IBankResponse queueOrder(IBankRequest request);
-
 }

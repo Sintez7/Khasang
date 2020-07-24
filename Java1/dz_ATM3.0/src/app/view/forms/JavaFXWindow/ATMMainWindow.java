@@ -2,6 +2,13 @@ package app.view.forms.JavaFXWindow;
 
 import app.User;
 import app.controller.Controller;
+import app.controller.exceptions.AtmIsBusyException;
+import app.controller.exceptions.IllegalRequestSumException;
+import app.controller.exceptions.IllegalRequestTypeException;
+import app.model.bank.BankRequest;
+import app.model.bank.IBankRequest;
+import app.model.bank.IBankResponse;
+import app.model.bank.card.ICard;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -16,14 +23,18 @@ import java.io.IOException;
 
 public class ATMMainWindow extends Application {
 
-    private static volatile ATMMainWindow atmMainWindow;
+    private static ATMMainWindow atmMainWindow;
     private static final String CARD_SELECTION_SCREEN = "cardSelectionScreen.fxml";
+    private static final String WITHDRAWAL_SCREEN = "withdrawalScreen.fxml";
     private static User user;
     private static Controller controller;
 
     private AnchorPane upperScreenAnchor;
     private AnchorPane lowerScreenAnchor;
     private StateMachine sm;
+    private KeyboardControllerAdapter keyboard;
+    private CardSelectionScreenController csController;
+    private WithdrawalScreenController wsController;
 
 //    public static void main(String[] args) {
 //        launch(args);
@@ -31,15 +42,15 @@ public class ATMMainWindow extends Application {
 
     public ATMMainWindow() {
         atmMainWindow = this;
-        Service.setATMMainWindow(this);
+//        Service.setATMMainWindow(this);
     }
 
-    public static ATMMainWindow getInstance() {
+    synchronized public static ATMMainWindow getInstance() {
         if (atmMainWindow != null) {
             return atmMainWindow;
         } else {
-            System.err.println("main is null, creating new");
-            return new ATMMainWindow();
+            System.err.println("main is null");
+            return null;
         }
     }
 
@@ -48,10 +59,6 @@ public class ATMMainWindow extends Application {
         controller = c;
         launch();
     }
-
-//    synchronized public void callLaunch() {
-//        launch();
-//    }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -92,6 +99,8 @@ public class ATMMainWindow extends Application {
         FXMLLoader lowerScreenLoader = new FXMLLoader();
         lowerScreenLoader.setRoot(lowerScreenAnchor);
         lowerScreenLoader.setLocation(getClass().getResource("keyboard.fxml"));
+        keyboard = new KeyboardControllerAdapter(new BlankKeyboardController());
+        lowerScreenLoader.setController(keyboard);
         lowerScreenAnchor.getChildren().clear();
         try {
             lowerScreenLoader.load();
@@ -109,6 +118,8 @@ public class ATMMainWindow extends Application {
         CardSelectionScreenController controller = new CardSelectionScreenController();
         upperScreenLoader.setLocation(getClass().getResource(CARD_SELECTION_SCREEN));
         controller.loadUserCards(user);
+        controller.setMainWindow(this);
+        csController = controller;
         upperScreenLoader.setController(controller);
         upperScreenAnchor.getChildren().clear();
         try {
@@ -116,6 +127,27 @@ public class ATMMainWindow extends Application {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("tried to load: " + CARD_SELECTION_SCREEN);
+        }
+        System.err.println("loaded");
+    }
+
+    private void loadWithdrawalScreen() {
+        System.err.println("upper screen loading");
+        FXMLLoader loader = new FXMLLoader();
+        if (loader.getRoot() != upperScreenAnchor) {
+            loader.setRoot(upperScreenAnchor);
+        }
+        WithdrawalScreenController controller = new WithdrawalScreenController();
+        loader.setLocation(getClass().getResource(WITHDRAWAL_SCREEN));
+        controller.setMainWindow(this);
+        wsController = controller;
+        loader.setController(controller);
+        upperScreenAnchor.getChildren().clear();
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("tried to load: " + WITHDRAWAL_SCREEN);
         }
         System.err.println("loaded");
     }
@@ -128,6 +160,17 @@ public class ATMMainWindow extends Application {
         lowerScreenAnchor = pane;
     }
 
+    public void cardChosen() {
+        try {
+            if (controller.cardChosen(csController.getSelectedCard())) {
+                next();
+            }
+        } catch (AtmIsBusyException e) {
+            System.err.println("ATM currently busy with another card!_ATMMainWindow");
+            e.printStackTrace();
+        }
+    }
+
     synchronized public void next() {
         sm.execute();
     }
@@ -135,7 +178,7 @@ public class ATMMainWindow extends Application {
     private class StateMachine {
 
         private State currentState;
-
+        private State prevState;
 
         StateMachine() {
             currentState = new Starting();
@@ -143,6 +186,7 @@ public class ATMMainWindow extends Application {
         }
 
         synchronized public void execute() {
+            prevState = currentState;
             currentState = currentState.execute();
             if (currentState == null) {
                 System.err.println("null state, returning to CardSelectionScreen_executeMethod");
@@ -151,6 +195,7 @@ public class ATMMainWindow extends Application {
         }
 
         synchronized public void eject() {
+            prevState = currentState;
             currentState = currentState.eject();
             if (currentState == null) {
                 System.err.println("null state, returning to CardSelectionScreen_ejectMethod");
@@ -167,7 +212,12 @@ public class ATMMainWindow extends Application {
         }
 
         protected State eject() {
-            return new EjectCard();
+            if (controller.ejectCard()) {
+                return new CardEjected();
+            } else {
+                System.err.println("ATM is already vacant");
+                return this;
+            }
         }
     }
 
@@ -186,7 +236,7 @@ public class ATMMainWindow extends Application {
 
         @Override
         protected State eject() {
-            System.err.println("cannot eject card from welcome screen!");
+            System.err.println("cannot eject card from starting screen!");
             return null;
         }
     }
@@ -194,7 +244,7 @@ public class ATMMainWindow extends Application {
     private class Welcome extends State {
 
         public Welcome() {
-            Service.keyboardAdapter.disableControls();
+            keyboard.disableControls();
             loadUpperScreen("welcomeScreen.fxml");
             System.err.println("welcomeScreen loaded");
         }
@@ -208,9 +258,9 @@ public class ATMMainWindow extends Application {
     private class CardSelection extends State {
 
         public CardSelection() {
-            Service.keyboardAdapter.enableControls();
+            keyboard.enableControls();
             loadCardSelectionScreen();
-            Service.getKeyboardAdapter().setActualController(new KeyboardCardSelect());
+            keyboard.setActualController(new KeyboardCardSelect(ATMMainWindow.getInstance()));
         }
 
         @Override
@@ -223,6 +273,7 @@ public class ATMMainWindow extends Application {
 
         public MainMenu() {
             loadUpperScreen("mainMenuScreen.fxml");
+            keyboard.disableControls();
         }
 
         @Override
@@ -251,8 +302,8 @@ public class ATMMainWindow extends Application {
 
         public AddMoney() {
             loadUpperScreen("addMoneyScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
+            keyboard.setActualController(new KeyboardAddMoney());
+            keyboard.enableControls();
         }
 
         @Override
@@ -267,8 +318,8 @@ public class ATMMainWindow extends Application {
 
         public ShowCredit() {
             loadUpperScreen("showCredit.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
+            keyboard.setActualController(new KeyboardAddMoney());
+            keyboard.enableControls();
         }
 
         @Override
@@ -282,8 +333,8 @@ public class ATMMainWindow extends Application {
 
         public Balance() {
             loadUpperScreen("balanceScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
+            keyboard.setActualController(new KeyboardAddMoney());
+            keyboard.enableControls();
         }
 
         @Override
@@ -297,28 +348,38 @@ public class ATMMainWindow extends Application {
 
         public EjectCard() {
             loadUpperScreen("ejectCardScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
+            keyboard.setActualController(new KeyboardAddMoney());
+            keyboard.enableControls();
         }
 
         @Override
         protected State execute() {
             System.err.println("EjectCard.execute()");
-            return new FinalScreen();
+            return eject();
         }
     }
 
     private class Withdrawal extends State {
 
         public Withdrawal() {
-            Service.getKeyboardAdapter().setActualController(new KeyboardWithdrawal());
-            Service.getKeyboardAdapter().enableControls();
-            loadUpperScreen("withdrawalScreen.fxml");
+            keyboard.setActualController(new KeyboardWithdrawal());
+            keyboard.enableControls();
+            loadWithdrawalScreen();
         }
 
         @Override
         protected State execute() {
             System.err.println("Withdrawal.execute()");
+            IBankRequest request = new BankRequest(IBankRequest.Type.WITHDRAWAL);
+            request.setSum(wsController.getSum());
+            try {
+                IBankResponse result = controller.queueRequest(request);
+            } catch (IllegalRequestTypeException e) {
+                e.printStackTrace();
+            } catch (IllegalRequestSumException e) {
+                System.err.println("IllegalRequestSumException");
+                e.printStackTrace();
+            }
             return new FinalScreen();
         }
     }
@@ -327,8 +388,8 @@ public class ATMMainWindow extends Application {
 
         public ShowHistory() {
             loadUpperScreen("showHistoryScreen.fxml");
-            Service.getKeyboardAdapter().setActualController(new KeyboardAddMoney());
-            Service.getKeyboardAdapter().enableControls();
+            keyboard.setActualController(new KeyboardAddMoney());
+            keyboard.enableControls();
         }
 
         @Override
@@ -338,26 +399,33 @@ public class ATMMainWindow extends Application {
         }
     }
 
+    private class CardEjected extends State {
+
+        public CardEjected() {
+            loadUpperScreen("cardEjectedScreen.fxml");
+            keyboard.setActualController(new KeyboardAddMoney());
+            keyboard.enableControls();
+        }
+
+        @Override
+        protected State execute() {
+            return new CardSelection();
+        }
+    }
+
     private class FinalScreen extends State {
 
         public FinalScreen() {
             loadUpperScreen("finalScreen.fxml");
-            Service.getKeyboardAdapter().disableControls();
+            keyboard.disableControls();
         }
 
         @Override
         protected State execute() {
             if (Service.getFSController().getContinue()) {
-                Service.getKeyboardAdapter().disableControls();
-                loadUpperScreen("mainMenuScreen.fxml");
                 return new MainMenu();
             } else {
                 System.err.println("return to cardSelectionScreen");
-                Service.getKeyboardAdapter().setActualController(new KeyboardCardSelect());
-                Service.getKeyboardAdapter().enableControls();
-                loadUpperScreen("cardSelectionScreen.fxml");
-//                Service.getCardSSController().addCard(new DebitCard());
-//                Service.getCardSSController().addCard(new CreditCard());
                 return new CardSelection();
             }
         }

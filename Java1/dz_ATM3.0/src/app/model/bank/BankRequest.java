@@ -9,15 +9,15 @@ public class BankRequest implements IBankRequest {
         this.type = type;
     }
 
-    public double getSum() {
-        return sum;
+    public Type getType() {
+        return type;
     }
 
     public void setSum(double sum) {
         this.sum = sum;
     }
 
-    public Type getType() {
-        return type;
+    public double getSum() {
+        return sum;
     }
 }

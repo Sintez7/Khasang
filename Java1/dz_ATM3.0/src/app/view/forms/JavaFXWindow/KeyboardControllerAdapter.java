@@ -67,9 +67,13 @@ public class KeyboardControllerAdapter {
 
     private KeyboardController actualController;
 
+    public KeyboardControllerAdapter(KeyboardController actualController) {
+        setActualController(actualController);
+    }
+
     @FXML
     void initialize() {
-        Service.setKeyboardAdapter(this);
+//        Service.setKeyboardAdapter(this);
     }
 
     public void setActualController(KeyboardController actualController) {

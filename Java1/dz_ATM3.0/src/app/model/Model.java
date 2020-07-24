@@ -19,6 +19,12 @@ public interface Model {
 
     Model setATM(IATM atm);
 
+    boolean cardChosen(ICard card);
+
+    boolean ejectCard();
+
+    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException;
+
 //    boolean insertCard(ICard card) throws AtmIsBusyException;
 //
 //    boolean ejectCard() throws CardBusyException;

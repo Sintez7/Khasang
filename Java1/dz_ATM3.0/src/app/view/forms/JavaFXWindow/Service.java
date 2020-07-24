@@ -7,21 +7,13 @@ import java.util.TimerTask;
 
 public class Service {
 
-    public static ATMMainWindow ATMMainWindow;
+    public static ATMMainWindow atmMainWindow;
     public static CardSelectionScreenController cardSSController;
     public static KeyboardControllerAdapter keyboardAdapter;
     public static MainMenuScreenController mainMenuScreenController;
     public static AddMoneyScreenController addMoneyScreenController;
     public static FinalScreenController finalScreenController;
     public static WithdrawalScreenController withdrawalScreenController;
-
-    synchronized public static ATMMainWindow getATMMainWindow() {
-        return ATMMainWindow;
-    }
-
-    synchronized public static void setATMMainWindow(ATMMainWindow ATMMainWindow) {
-        Service.ATMMainWindow = ATMMainWindow;
-    }
 
     synchronized public static void setCardSelectionScreenController(CardSelectionScreenController controller) {
         cardSSController = controller;
@@ -37,26 +29,14 @@ public class Service {
             @Override
             public void run() {
                 System.err.println("timer");
-                Platform.runLater(() -> ATMMainWindow.next());
+                Platform.runLater(() -> ATMMainWindow.getInstance().next());
             }
         }
         , 2000 + (Math.round(Math.random() * 1000)));
     }
 
-//    synchronized public static void cardChosen() {
-//        Platform.runLater(() -> main.next());
-//    }
-//
-//    synchronized public static void userChose() {
-//        Platform.runLater(() -> main.next());
-//    }
-//
-//    public static void addMoneyOperation() {
-//        Platform.runLater(() -> main.next());
-//    }
-
     synchronized public static void callNext() {
-        Platform.runLater(() -> ATMMainWindow.next());
+        Platform.runLater(() -> ATMMainWindow.getInstance().next());
     }
 
     synchronized public static void setKeyboardAdapter(KeyboardControllerAdapter adapter) {
