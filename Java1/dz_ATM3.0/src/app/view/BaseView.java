@@ -4,10 +4,11 @@ import app.User;
 import app.controller.Controller;
 import app.model.MenuOption;
 import app.model.bank.card.ICard;
+import app.view.forms.JavaFXWindow.ATMMainWindow;
 
 import java.util.List;
 
-public abstract class BaseView implements View {
+public class BaseView implements View {
 
     protected Controller controller;
 
@@ -21,5 +22,8 @@ public abstract class BaseView implements View {
     }
 
     @Override
-    public abstract void startUp(User user);
+    public void startUp(User user) {
+//        mainWindow.callLaunch(user);
+        ATMMainWindow.callLaunch(user, controller);
+    }
 }

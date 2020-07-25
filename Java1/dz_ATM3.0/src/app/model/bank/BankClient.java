@@ -60,12 +60,24 @@ public class BankClient {
                 operationsHistory.add(operation);
                 balance.addMoney(sum);
                 break;
+            case DENIED_WITHDRAWAL:
+                operation = new BankClientOperations(BankClientOperations.Type.DENIED_WITHDRAWAL, sum);
+                operation.setOperatedCard(card);
+                operationsHistory.add(operation);
+                break;
         }
     }
 
-    public void showHistory() {
+    public List<String> getHistory() {
+//        StringBuilder builder = new StringBuilder();
+//        for (BankClientOperations op : operationsHistory) {
+//            builder.append(op);
+//        }
+
+        List<String> result = new ArrayList<>();
         for (BankClientOperations op : operationsHistory) {
-            op.show();
+            result.add(op.toString());
         }
+        return result;
     }
 }

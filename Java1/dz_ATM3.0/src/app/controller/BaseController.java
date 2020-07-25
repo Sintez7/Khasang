@@ -3,10 +3,7 @@ package app.controller;
 import app.IATM;
 import app.Order;
 import app.User;
-import app.controller.exceptions.AtmIsBusyException;
-import app.controller.exceptions.CardBusyException;
-import app.controller.exceptions.IllegalRequestSumException;
-import app.controller.exceptions.IllegalRequestTypeException;
+import app.controller.exceptions.*;
 import app.model.DefaultModelData;
 import app.model.MenuOption;
 import app.model.Model;
@@ -61,7 +58,7 @@ public class BaseController implements Controller {
     }
 
     @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException, TimeoutException {
         return model.queueRequest(request);
     }
 

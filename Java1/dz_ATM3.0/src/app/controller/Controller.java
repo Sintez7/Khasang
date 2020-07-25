@@ -60,5 +60,5 @@ public interface Controller {
 
     boolean ejectCard();
 
-    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
+    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException, TimeoutException;
 }

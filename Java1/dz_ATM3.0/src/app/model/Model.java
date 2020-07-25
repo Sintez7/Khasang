@@ -3,15 +3,12 @@ package app.model;
 import app.IATM;
 import app.controller.Controller;
 import app.controller.exceptions.AtmIsBusyException;
-import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
 import app.controller.exceptions.IllegalRequestTypeException;
+import app.controller.exceptions.TimeoutException;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public interface Model {
 
@@ -19,11 +16,11 @@ public interface Model {
 
     Model setATM(IATM atm);
 
-    boolean cardChosen(ICard card);
+    boolean cardChosen(ICard card) throws AtmIsBusyException;
 
     boolean ejectCard();
 
-    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException;
+    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException, TimeoutException;
 
 //    boolean insertCard(ICard card) throws AtmIsBusyException;
 //

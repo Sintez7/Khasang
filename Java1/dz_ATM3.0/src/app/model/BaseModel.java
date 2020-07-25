@@ -2,10 +2,7 @@ package app.model;
 
 import app.IATM;
 import app.controller.Controller;
-import app.controller.exceptions.AtmIsBusyException;
-import app.controller.exceptions.CardBusyException;
-import app.controller.exceptions.IllegalRequestSumException;
-import app.controller.exceptions.IllegalRequestTypeException;
+import app.controller.exceptions.*;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
@@ -66,13 +63,8 @@ public class BaseModel implements Model {
     }
 
     @Override
-    public boolean cardChosen(ICard card) {
-        try {
-            return atm.insertCard(card);
-        } catch (AtmIsBusyException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public boolean cardChosen(ICard card) throws AtmIsBusyException{
+        return atm.insertCard(card);
     }
 
     @Override
@@ -81,7 +73,7 @@ public class BaseModel implements Model {
     }
 
     @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException {
+    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException, TimeoutException {
         return atm.queueOrder(request);
     }
 }

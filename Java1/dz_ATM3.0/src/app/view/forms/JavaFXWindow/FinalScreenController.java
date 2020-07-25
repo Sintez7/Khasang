@@ -32,7 +32,7 @@ public class FinalScreenController {
     }
 
     private void callNext() {
-        Service.callNext();
+        ATMMainWindow.getInstance().next();
     }
 
     public boolean getContinue() {
@@ -41,6 +41,6 @@ public class FinalScreenController {
 
     @FXML
     void initialize() {
-        Service.setFSController(this);
+        ATMMainWindow.getInstance().registerFSController(this);
     }
 }

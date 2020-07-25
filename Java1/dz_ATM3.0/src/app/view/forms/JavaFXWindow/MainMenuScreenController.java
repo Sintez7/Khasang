@@ -53,11 +53,11 @@ public class MainMenuScreenController {
 
     @FXML
     void initialize() {
-        Service.setMainMenuScreenController(this);
+        ATMMainWindow.getInstance().registerMMSController(this);
     }
 
     private void userChose() {
-        Service.callNext();
+        ATMMainWindow.getInstance().next();
     }
 
     synchronized public Selected getSelected() {

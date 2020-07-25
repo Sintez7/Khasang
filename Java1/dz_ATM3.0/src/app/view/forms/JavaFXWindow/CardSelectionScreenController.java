@@ -40,6 +40,7 @@ public class CardSelectionScreenController {
         });
 
         cardsContainer.setItems(cardsList);
+        cardsContainer.getSelectionModel().selectFirst();
     }
 
     synchronized void loadUserCards(User user) {

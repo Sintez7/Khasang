@@ -57,10 +57,13 @@ public class WithdrawalScreenController {
 
     @FXML
     void initialize() {
-//        Service.addWSController(this);
     }
 
     public void setMainWindow(ATMMainWindow mainWindow) {
         this.mainWindow = mainWindow;
+    }
+
+    public void notifyZeroSum() {
+        textLabel.setText("Сумма не введена!");
     }
 }

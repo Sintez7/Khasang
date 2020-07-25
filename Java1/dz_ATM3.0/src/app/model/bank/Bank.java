@@ -10,11 +10,11 @@ import java.util.Random;
 public abstract class Bank implements IBank {
 
     private static final String NO_MONEY_WITHDRAWAL_MESSAGE = "На балансе недостаточно средств";
-    private static final String ACCEPTED_MESSAGE = "Payment request accepted";
-    private static final String ACCEPTED_AS_CREDIT_MESSAGE = "Payment request accepted as credit";
-    private static final String BALANCE_MESSAGE = "Current balance is: ";
-    private static final String CREDIT_MESSAGE = "Current credit is: -";
-    private static final String MONEY_ADDED_MESSAGE = "Money added!";
+    private static final String ACCEPTED_MESSAGE = "Снятие наличных одобрено";
+    private static final String ACCEPTED_AS_CREDIT_MESSAGE = "Снятие наличных одобрено как кредит";
+    private static final String BALANCE_MESSAGE = "Текущий баланс: ";
+    private static final String CREDIT_MESSAGE = "Текущий кредит: -";
+    private static final String MONEY_ADDED_MESSAGE = "Баланс пополнен";
 
     IBankDataBase db;
     CardFactory cardFactory;
@@ -64,7 +64,7 @@ public abstract class Bank implements IBank {
                 result = queueGetCardBalance(costumer);
                 break;
             case SHOW_HISTORY:
-                showCardHistory(costumer);
+                result = showCardHistory(costumer);
                 break;
             case SHOW_CREDIT:
                 result = showCredit(costumer);
@@ -146,6 +146,7 @@ public abstract class Bank implements IBank {
         BankResponse response;
         BankClient client = getClient(costumer);
         if (client.getBalance() < sum) {
+            client.queueOperation(BankClientOperations.Type.DENIED_WITHDRAWAL, sum);
             response = new BankResponse(BankResponse.Type.DENIED, NO_MONEY_WITHDRAWAL_MESSAGE);
         } else {
             client.queueOperation(BankClientOperations.Type.WITHDRAWAL, sum);
@@ -159,6 +160,7 @@ public abstract class Bank implements IBank {
         BankClient client = getClient(costumer);
         if (client.getBalance() < sum) {
             if (creditOperationPossible(client, sum)) {
+                client.queueOperation(BankClientOperations.Type.DENIED_WITHDRAWAL, sum);
                 response = new BankResponse(BankResponse.Type.DENIED, NO_MONEY_WITHDRAWAL_MESSAGE);
             } else {
                 client.queueOperation(BankClientOperations.Type.WITHDRAWAL, sum);
@@ -183,9 +185,8 @@ public abstract class Bank implements IBank {
 
     @Override
     public IBankResponse showCardHistory(ClientRequisites costumer) {
-        IBankResponse result = new BankResponse(BankResponse.Type.HISTORY);
-        getClient(costumer).showHistory();
-        return result;
+        //        getClient(costumer).showHistory();
+        return new BankResponse(BankResponse.Type.HISTORY, getClient(costumer).getHistory());
     }
 
     private IBankResponse addMoney(ClientRequisites costumer, IBankRequest request) {

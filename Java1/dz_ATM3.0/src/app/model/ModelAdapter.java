@@ -78,12 +78,17 @@ public class ModelAdapter implements Model {
     }
 
     @Override
-    public boolean cardChosen(ICard card) {
+    public boolean cardChosen(ICard card) throws AtmIsBusyException{
         return actualModel.cardChosen(card);
     }
 
     @Override
     public boolean ejectCard() {
         return actualModel.ejectCard();
+    }
+
+    @Override
+    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException {
+        return actualModel.queueRequest(request);
     }
 }

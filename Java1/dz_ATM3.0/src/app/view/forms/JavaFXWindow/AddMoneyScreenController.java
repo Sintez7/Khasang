@@ -56,6 +56,10 @@ public class AddMoneyScreenController {
 
     @FXML
     void initialize() {
-        Service.setAddMoneyScreenController(this);
+        ATMMainWindow.getInstance().registerAMController(this);
+    }
+
+    public void notifyZeroSum() {
+        label.setText("Пополнение баланса на 0 невозможно!");
     }
 }

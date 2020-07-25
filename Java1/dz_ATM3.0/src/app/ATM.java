@@ -1,6 +1,7 @@
 package app;
 
 import app.controller.exceptions.AtmIsBusyException;
+import app.controller.exceptions.TimeoutException;
 import app.model.bank.*;
 import app.model.bank.card.ICard;
 
@@ -36,11 +37,18 @@ public class ATM implements IATM {
     }
 
     @Override
-    public IBankResponse queueOrder(IBankRequest request) {
-        return delegateToMainBank(request);
+    public IBankResponse queueOrder(IBankRequest request) throws TimeoutException {
+        IBankResponse result;
+//        result = () -> {
+//            return new BankResponse(BankResponse.Type.ACCEPTED);
+//        };
+//        return delegateToMainBank(request);
+
     }
 
-    private IBankResponse delegateToMainBank(IBankRequest request) {
+    synchronized private IBankResponse delegateToMainBank(IBankRequest request) {
         return mainBank.queue(currentCard.getCardInfo(), request);
     }
+
+    private class MyQueue extends
 }
