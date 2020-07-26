@@ -48,6 +48,7 @@ public class BankResponse implements IBankResponse {
         BALANCE,
         HISTORY,
         SHOW_CREDIT,
-        ACCEPTED_MONEY_ADDITION
+        ACCEPTED_MONEY_ADDITION,
+        TIMED_OUT
     }
 }

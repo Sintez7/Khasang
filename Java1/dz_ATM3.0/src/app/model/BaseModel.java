@@ -1,5 +1,6 @@
 package app.model;
 
+import app.ATM;
 import app.IATM;
 import app.controller.Controller;
 import app.controller.exceptions.*;
@@ -73,7 +74,21 @@ public class BaseModel implements Model {
     }
 
     @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException, TimeoutException {
-        return atm.queueOrder(request);
+    public void queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException {
+        atm.queueOrder(request);
+    }
+
+    @Override
+    public void callbackResults(IBankResponse result) {
+        controller.callbackResult(result);
+    }
+
+    @Override
+    public void requestTimedOut() {
+        atm.requestTimedOut();
+    }
+
+    private void callTimeout() {
+        controller.callTimeout();
     }
 }

@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ATMMainWindow extends Application {
 
@@ -30,7 +32,7 @@ public class ATMMainWindow extends Application {
     private static final String WITHDRAWAL_SCREEN = "withdrawalScreen.fxml";
     private static final String RESULT_SCREEN = "resultScreen.fxml";
     private static final String SHOW_HISTORY_SCREEN = "showHistoryScreen.fxml";
-    private static final String QUEUE_SCREEN = "queueScreen";
+    private static final String QUEUE_SCREEN = "queueScreen.fxml";
     private static User user;
     private static Controller controller;
 
@@ -65,7 +67,7 @@ public class ATMMainWindow extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("mainframe.fxml"));
         primaryStage.setTitle("JFXATM");
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -192,7 +194,7 @@ public class ATMMainWindow extends Application {
             loader.load();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("tried to load: " + SHOW_HISTORY_SCREEN  );
+            System.err.println("tried to load: " + SHOW_HISTORY_SCREEN);
         }
 //        controller.loadResult(result);
         System.err.println("loaded");
@@ -237,6 +239,10 @@ public class ATMMainWindow extends Application {
         sm.queued(response);
     }
 
+    synchronized public void callTimeout() {
+        sm.callTimeout();
+    }
+
     private class StateMachine {
 
         private State currentState;
@@ -256,19 +262,15 @@ public class ATMMainWindow extends Application {
             }
         }
 
-        public void queued(IBankResponse response) {
+        synchronized public void queued(IBankResponse response) {
             prevState = currentState;
             currentState = currentState.queued(response);
         }
 
-//        synchronized public void eject() {
-//            prevState = currentState;
-//            currentState = currentState.eject();
-//            if (currentState == null) {
-//                System.err.println("null state, returning to CardSelectionScreen_ejectMethod");
-//                currentState = new CardSelection();
-//            }
-//        }
+        synchronized public void callTimeout() {
+            prevState = currentState;
+            currentState = currentState.callTimeout();
+        }
     }
 
     private class State {
@@ -287,12 +289,13 @@ public class ATMMainWindow extends Application {
             }
         }
 
-        synchronized protected void queueRequest(IBankRequest request) {
-            controller.queueRequest(request);
-        }
-
         synchronized public State queued(IBankResponse response) {
             System.err.println("default queued method");
+            return this;
+        }
+
+        synchronized public State callTimeout() {
+            System.err.println("default callTimeout method");
             return this;
         }
     }
@@ -388,8 +391,10 @@ public class ATMMainWindow extends Application {
                 IBankRequest request = new BankRequest(IBankRequest.Type.ADD_MONEY);
                 request.setSum(amController.getSum());
                 try {
-                    IBankResponse result = controller.queueRequest(request);
-                    return new ResultScreen(result);
+//                    IBankResponse result = controller.queueRequest(request);
+//                    return new ResultScreen(result);
+                    controller.queueRequest(request);
+                    return new QueueScreen();
                 } catch (IllegalRequestTypeException e) {
                     System.err.println("IllegalRequestTypeException");
                     e.printStackTrace();
@@ -466,20 +471,18 @@ public class ATMMainWindow extends Application {
             if (wsController.getSum() > 0) {
                 IBankRequest request = new BankRequest(IBankRequest.Type.WITHDRAWAL);
                 request.setSum(wsController.getSum());
-//                try {
-//                    queueRequest(request);
-////                    return new ResultScreen(result);
-//                    return this;
-//                } catch (IllegalRequestTypeException e) {
-//                    System.err.println("IllegalRequestTypeException");
-//                    e.printStackTrace();
-//                } catch (IllegalRequestSumException e) {
-//                    System.err.println("IllegalRequestSumException");
-//                    e.printStackTrace();
-//                }
-
-                queueRequest(request);
-                return new QueueScreen();
+                try {
+                    controller.queueRequest(request);
+                    return new QueueScreen();
+                } catch (IllegalRequestTypeException e) {
+                    System.err.println("IllegalRequestTypeException");
+                    e.printStackTrace();
+                    return this;
+                } catch (IllegalRequestSumException e) {
+                    System.err.println("IllegalRequestSumException");
+                    e.printStackTrace();
+                    return this;
+                }
             } else {
                 System.err.println("0 in sum_Withdrawal");
                 wsController.notifyZeroSum();
@@ -495,15 +498,12 @@ public class ATMMainWindow extends Application {
 //            loadHistoryScreen();
             keyboard.setActualController(new KeyboardAddMoney());
             keyboard.enableControls();
-        }
 
-        @Override
-        protected State execute() {
-            System.err.println("ShowHistory.execute()");
             IBankRequest request = new BankRequest(IBankRequest.Type.SHOW_HISTORY);
             try {
-                IBankResponse result = controller.queueRequest(request);
-                return new ResultScreen(result);
+//                IBankResponse result = controller.queueRequest(request);
+//                return new ResultScreen(result);
+                controller.queueRequest(request);
             } catch (IllegalRequestTypeException e) {
                 System.err.println("IllegalRequestTypeException_showHistory.execute()");
                 e.printStackTrace();
@@ -511,7 +511,26 @@ public class ATMMainWindow extends Application {
                 System.err.println("IllegalRequestSumException_showHistory.execute()");
                 e.printStackTrace();
             }
-            return new FinalScreen();
+//            next();
+        }
+
+        @Override
+        protected State execute() {
+            System.err.println("ShowHistory.execute()");
+//            IBankRequest request = new BankRequest(IBankRequest.Type.SHOW_HISTORY);
+//            try {
+////                IBankResponse result = controller.queueRequest(request);
+////                return new ResultScreen(result);
+//                controller.queueRequest(request);
+//                return new QueueScreen();
+//            } catch (IllegalRequestTypeException e) {
+//                System.err.println("IllegalRequestTypeException_showHistory.execute()");
+//                e.printStackTrace();
+//            } catch (IllegalRequestSumException e) {
+//                System.err.println("IllegalRequestSumException_showHistory.execute()");
+//                e.printStackTrace();
+//            }
+            return new QueueScreen();
         }
     }
 
@@ -546,13 +565,38 @@ public class ATMMainWindow extends Application {
         public synchronized State queued(IBankResponse response) {
             return new ResultScreen(response);
         }
+
+        @Override
+        public synchronized State callTimeout() {
+            return new Timeout();
+        }
     }
 
-    private class ResultScreen extends State{
+    private class ResultScreen extends State {
 
         public ResultScreen(IBankResponse result) {
             keyboard.enableControls();
             loadResultScreen(result);
+        }
+
+        @Override
+        protected State execute() {
+            return new FinalScreen();
+        }
+    }
+
+    private class Timeout extends State {
+
+        public Timeout() {
+            keyboard.disableControls();
+            loadUpperScreen("timeoutScreen.fxml");
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(() -> ATMMainWindow.getInstance().next());
+                }
+            }, 3000);
         }
 
         @Override

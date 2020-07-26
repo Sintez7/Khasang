@@ -120,7 +120,17 @@ public class ControllerAdapter implements Controller {
     }
 
     @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
-        return actualController.queueRequest(request);
+    public void queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+        actualController.queueRequest(request);
+    }
+
+    @Override
+    public void callTimeout() {
+        actualController.callTimeout();
+    }
+
+    @Override
+    public void callbackResult(IBankResponse result) {
+        actualController.callbackResult(result);
     }
 }

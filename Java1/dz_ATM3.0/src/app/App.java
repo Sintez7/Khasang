@@ -29,11 +29,12 @@ public class App {
         UniversalBank uBank = new UniversalBank();
         SomeCommonBank commonBank = new SomeCommonBank();
 
-        mb.setATM(new ATM(uBank));
-
         mb.setActualController(new DefaultController());
-        mb.setActualModel(new DefaultModel());
+        DefaultModel dModel = new DefaultModel();
+        mb.setActualModel(dModel);
         mb.setActualView(new DefaultView());
+
+        mb.setATM(new ATM(uBank, dModel));
 
         mb.build();
 

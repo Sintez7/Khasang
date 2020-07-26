@@ -88,7 +88,17 @@ public class ModelAdapter implements Model {
     }
 
     @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException {
-        return actualModel.queueRequest(request);
+    public void queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException {
+        actualModel.queueRequest(request);
+    }
+
+    @Override
+    public void callbackResults(IBankResponse result) {
+        actualModel.callbackResults(result);
+    }
+
+    @Override
+    public void requestTimedOut() {
+        actualModel.requestTimedOut();
     }
 }

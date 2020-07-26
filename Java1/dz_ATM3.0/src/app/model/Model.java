@@ -20,7 +20,11 @@ public interface Model {
 
     boolean ejectCard();
 
-    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException, TimeoutException;
+    void queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException;
+
+    void callbackResults(IBankResponse result);
+
+    void requestTimedOut();
 
 //    boolean insertCard(ICard card) throws AtmIsBusyException;
 //

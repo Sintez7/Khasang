@@ -1,17 +1,24 @@
 package app;
 
 import app.controller.exceptions.AtmIsBusyException;
-import app.controller.exceptions.TimeoutException;
+import app.model.DefaultModel;
+import app.model.Model;
 import app.model.bank.*;
 import app.model.bank.card.ICard;
 
 public class ATM implements IATM {
 
+    private static final long TIMEOUT_DELAY = 6000;
+
     private IBank mainBank;
     private ICard currentCard;
+    private Model model;
 
-    public ATM(IBank bank) {
+    public Object monitor = new Object();
+
+    public ATM(IBank bank, Model model) {
         mainBank = bank;
+        this.model = model;
     }
 
     @Override
@@ -37,18 +44,23 @@ public class ATM implements IATM {
     }
 
     @Override
-    public IBankResponse queueOrder(IBankRequest request) throws TimeoutException {
-        IBankResponse result;
-//        result = () -> {
-//            return new BankResponse(BankResponse.Type.ACCEPTED);
-//        };
-//        return delegateToMainBank(request);
+    public void queueOrder(IBankRequest request) {
 
+        delegateToMainBank(request);
     }
 
-    synchronized private IBankResponse delegateToMainBank(IBankRequest request) {
-        return mainBank.queue(currentCard.getCardInfo(), request);
+    @Override
+    public void callbackResult(IBankResponse result) {
+        model.callbackResults(result);
     }
 
-    private class MyQueue extends
+    @Override
+    public void requestTimedOut() {
+        mainBank.requestTimedOut();
+    }
+
+    synchronized void delegateToMainBank(IBankRequest request) {
+        mainBank.queue(currentCard.getCardInfo(), request, this);
+    }
+
 }

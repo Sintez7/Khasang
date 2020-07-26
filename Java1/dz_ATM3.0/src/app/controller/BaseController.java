@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.ATM;
 import app.IATM;
 import app.Order;
 import app.User;
@@ -16,6 +17,8 @@ import app.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BaseController implements Controller {
 
@@ -58,8 +61,47 @@ public class BaseController implements Controller {
     }
 
     @Override
-    public IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException, TimeoutException {
-        return model.queueRequest(request);
+    public void queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
+        MyQueue task = new MyQueue(request);
+        task.start();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                model.requestTimedOut();
+                callTimeout();
+            }
+        }, 5000);
+    }
+
+    @Override
+    public void callTimeout() {
+        view.callTimeout();
+    }
+
+    @Override
+    public void callbackResult(IBankResponse result) {
+        view.callbackResult(result);
+    }
+
+    private class MyQueue extends Thread {
+
+        IBankRequest request;
+
+        public MyQueue(IBankRequest request) {
+            this.request = request;
+        }
+
+        @Override
+        public void run() {
+            try {
+                model.queueRequest(request);
+            } catch (IllegalRequestSumException e) {
+                e.printStackTrace();
+            } catch (IllegalRequestTypeException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 //    public void setStateMachine(ControllerStateMachine stateMachine) {

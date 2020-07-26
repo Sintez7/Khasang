@@ -12,5 +12,9 @@ public interface IATM {
 
     boolean ejectCurrentCard();
 
-    IBankResponse queueOrder(IBankRequest request) throws TimeoutException;
+    void queueOrder(IBankRequest request);
+
+    void callbackResult(IBankResponse result);
+
+    void requestTimedOut();
 }

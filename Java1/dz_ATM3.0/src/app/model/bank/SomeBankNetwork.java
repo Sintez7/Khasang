@@ -1,5 +1,7 @@
 package app.model.bank;
 
+import app.IATM;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +13,11 @@ public class SomeBankNetwork {
         bankList.add(bank);
     }
 
-    public static IBankResponse redirectRequest(ClientRequisites client, IBankRequest request) {
+    public static IBankResponse redirectRequest(ClientRequisites client, IBankRequest request, IATM atm) {
         IBankResponse result = null;
         for (IBank bank : bankList) {
             if (client.getBank().getBankName().equals(bank.getBankName())) {
-                result = bank.queue(client, request);
+                result = bank.queue(client, request, atm);
             }
         }
         return result;

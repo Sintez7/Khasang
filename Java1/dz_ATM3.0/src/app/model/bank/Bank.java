@@ -1,11 +1,14 @@
 package app.model.bank;
 
+import app.IATM;
 import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 import app.model.bank.dataBases.IBankDataBase;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class Bank implements IBank {
 
@@ -19,6 +22,11 @@ public abstract class Bank implements IBank {
     IBankDataBase db;
     CardFactory cardFactory;
     private String bankName;
+    private boolean requestTimedOut;
+    private final Object requestMonitor = new Object();
+
+    IBankResponse thisResult;
+    IATM atm;
 
     public Bank() {
         initForTests();
@@ -37,6 +45,7 @@ public abstract class Bank implements IBank {
     public void setBankName(String bankName) {
         this.bankName = bankName;
     }
+
     public void setDataBase(IBankDataBase db) {
         this.db = db;
     }
@@ -44,14 +53,49 @@ public abstract class Bank implements IBank {
     public abstract String setName();
 
     @Override
-    public IBankResponse queue(ClientRequisites costumer, IBankRequest request) {
+    public IBankResponse queue(ClientRequisites costumer, IBankRequest request, IATM atm) {
+        this.atm = atm;
+        requestTimedOut = false;
+        startTimer();
+
         IBankResponse result;
-        if (costumer.getBank().getBankName().equals(this.getBankName())) {
-            result = processRequest(costumer, request);
-        } else {
-            result = delegateRequest(costumer, request);
+
+        synchronized (requestMonitor) {
+            if (!requestTimedOut) {
+                if (costumer.getBank().getBankName().equals(this.getBankName())) {
+                    result = processRequest(costumer, request);
+                } else {
+                    result = delegateRequest(costumer, request, atm);
+                }
+            } else {
+                result = new BankResponse(BankResponse.Type.TIMED_OUT);
+            }
         }
+
+        thisResult = result;
         return result;
+    }
+
+    protected void startTimer() {
+        synchronized (requestMonitor) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    sendResult();
+                }
+            }, Math.round(Math.random() * 10000));
+        }
+
+    }
+
+    protected void sendResult() {
+        atm.callbackResult(thisResult);
+    }
+
+    @Override
+    public void requestTimedOut() {
+        requestTimedOut = true;
     }
 
     public IBankResponse processRequest(ClientRequisites costumer, IBankRequest request) {
@@ -91,8 +135,8 @@ public abstract class Bank implements IBank {
         return result;
     }
 
-    private IBankResponse delegateRequest(ClientRequisites costumer, IBankRequest request) {
-        return SomeBankNetwork.redirectRequest(costumer, request);
+    private IBankResponse delegateRequest(ClientRequisites costumer, IBankRequest request, IATM atm) {
+        return SomeBankNetwork.redirectRequest(costumer, request, atm);
     }
 
     @Override

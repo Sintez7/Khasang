@@ -3,6 +3,7 @@ package app.view;
 import app.User;
 import app.controller.Controller;
 import app.model.MenuOption;
+import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 
 import java.util.List;
@@ -36,6 +37,16 @@ public class ViewAdapter implements View {
     @Override
     public void startUp(User user) {
         actualView.startUp(user);
+    }
+
+    @Override
+    public void callbackResult(IBankResponse result) {
+        actualView.callbackResult(result);
+    }
+
+    @Override
+    public void callTimeout() {
+        actualView.callTimeout();
     }
 
 //    @Override
