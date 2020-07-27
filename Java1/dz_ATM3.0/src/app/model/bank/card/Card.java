@@ -9,7 +9,6 @@ public abstract class Card implements ICard {
     private String cardNumber = "";
     private String cardCode = "";
     private String clientScriptedDNACode = "";
-
     private String quantumSign = "";
 
     private CardType cardType;

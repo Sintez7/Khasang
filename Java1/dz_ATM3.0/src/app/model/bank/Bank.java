@@ -25,7 +25,6 @@ public abstract class Bank implements IBank {
     private boolean requestTimedOut;
     private final Object requestMonitor = new Object();
 
-    IBankResponse thisResult;
     IATM atm;
 
     public Bank() {
@@ -56,41 +55,35 @@ public abstract class Bank implements IBank {
     public IBankResponse queue(ClientRequisites costumer, IBankRequest request, IATM atm) {
         this.atm = atm;
         requestTimedOut = false;
-        startTimer();
+//        startTimer();
 
-        IBankResponse result;
-
-        synchronized (requestMonitor) {
-            if (!requestTimedOut) {
-                if (costumer.getBank().getBankName().equals(this.getBankName())) {
-                    result = processRequest(costumer, request);
-                } else {
-                    result = delegateRequest(costumer, request, atm);
-                }
-            } else {
-                result = new BankResponse(BankResponse.Type.TIMED_OUT);
+        System.err.println("Bank " + Thread.currentThread());
+        synchronized (request) {
+            try {
+                System.err.println("request wait start");
+                request.wait((long)(Math.random() * 10000));
+                System.err.println("request wait end");
+            } catch (InterruptedException e) {
+                System.err.println("Bank interrupted");
+                requestTimedOut = true;
+                return null;
             }
         }
 
-        thisResult = result;
-        return result;
-    }
+        IBankResponse result;
 
-    protected void startTimer() {
-        synchronized (requestMonitor) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    sendResult();
-                }
-            }, Math.round(Math.random() * 10000));
+        if (!requestTimedOut) {
+            if (costumer.getBank().getBankName().equals(this.getBankName())) {
+                result = processRequest(costumer, request);
+            } else {
+                result = delegateRequest(costumer, request, atm);
+            }
+        } else {
+            result = new BankResponse(BankResponse.Type.TIMED_OUT);
         }
 
-    }
-
-    protected void sendResult() {
-        atm.callbackResult(thisResult);
+        atm.callbackResult(result);
+        return result;
     }
 
     @Override

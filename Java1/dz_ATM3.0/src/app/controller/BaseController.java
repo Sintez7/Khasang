@@ -25,9 +25,8 @@ public class BaseController implements Controller {
     protected Model model;
     protected View view;
 
-    private IATM atm;
-    private IBankRequest currentRequest;
-    private final Object controllerMainKey = new Object();
+    Timer curTimer;
+    TimerTask curTimerTask;
 
     private ControllerStateMachine stateMachine = null;
 
@@ -64,14 +63,22 @@ public class BaseController implements Controller {
     public void queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException {
         MyQueue task = new MyQueue(request);
         task.start();
+        System.err.println("BaseController " + Thread.currentThread());
         Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        curTimer = timer;
+        TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                model.requestTimedOut();
+                synchronized (request) {
+                    System.err.println("Base Controller timer " + Thread.currentThread());
+                    task.interrupt();
+                    System.err.println("task.interrupt()");
+                }
                 callTimeout();
             }
-        }, 5000);
+        };
+        curTimerTask = timerTask;
+        timer.schedule(timerTask, 7000);
     }
 
     @Override
@@ -81,7 +88,12 @@ public class BaseController implements Controller {
 
     @Override
     public void callbackResult(IBankResponse result) {
-        view.callbackResult(result);
+        if (curTimerTask.cancel()) {
+            System.err.println("timer cancelled");
+            view.callbackResult(result);
+        } else {
+            System.err.println("curTimerTask is false, not sending result to view");
+        }
     }
 
     private class MyQueue extends Thread {

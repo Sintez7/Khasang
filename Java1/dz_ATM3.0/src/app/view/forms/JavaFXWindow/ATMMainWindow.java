@@ -85,7 +85,7 @@ public class ATMMainWindow extends Application {
     }
 
     private void loadUpperScreen(String s) {
-        System.err.println("upper screen loading");
+        System.err.println("upper screen loading: " + s);
         FXMLLoader upperScreenLoader = new FXMLLoader();
         if (upperScreenLoader.getRoot() != upperScreenAnchor) {
             upperScreenLoader.setRoot(upperScreenAnchor);
@@ -177,26 +177,6 @@ public class ATMMainWindow extends Application {
             System.err.println("tried to load: " + RESULT_SCREEN);
         }
         controller.loadResult(result);
-        System.err.println("loaded");
-    }
-
-    private void loadHistoryScreen() {
-        System.err.println("upper screen loading");
-        FXMLLoader loader = new FXMLLoader();
-        if (loader.getRoot() != upperScreenAnchor) {
-            loader.setRoot(upperScreenAnchor);
-        }
-        var controller = new ShowHistoryScreenController();
-        loader.setLocation(getClass().getResource(SHOW_HISTORY_SCREEN));
-        loader.setController(controller);
-        upperScreenAnchor.getChildren().clear();
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("tried to load: " + SHOW_HISTORY_SCREEN);
-        }
-//        controller.loadResult(result);
         System.err.println("loaded");
     }
 
@@ -361,19 +341,66 @@ public class ATMMainWindow extends Application {
                 case ADD_MONEY:
                     return new AddMoney();
                 case SHOW_CREDIT:
-                    return new ShowCredit();
+//                    return new ShowCredit();
+                    return showCredit();
                 case BALANCE:
-                    return new Balance();
+                    return showBalance();
                 case EJECT_CARD:
                     return new EjectCard();
                 case WITHDRAWAL:
                     return new Withdrawal();
                 case SHOW_HISTORY:
-                    return new ShowHistory();
+                    return showHistory();
                 default:
                     System.err.println("Unknown Selection");
                     return null;
             }
+        }
+
+        private State showHistory() {
+//            loadUpperScreen("showHistoryScreen.fxml");
+////            loadHistoryScreen();
+//            keyboard.setActualController(new KeyboardAddMoney());
+//            keyboard.enableControls();
+            IBankRequest request = new BankRequest(IBankRequest.Type.SHOW_HISTORY);
+            try {
+                controller.queueRequest(request);
+            } catch (IllegalRequestTypeException e) {
+                System.err.println("IllegalRequestTypeException_showHistory.execute()");
+                e.printStackTrace();
+            } catch (IllegalRequestSumException e) {
+                System.err.println("IllegalRequestSumException_showHistory.execute()");
+                e.printStackTrace();
+            }
+            return new QueueScreen();
+        }
+
+        private State showCredit() {
+            IBankRequest request = new BankRequest(IBankRequest.Type.SHOW_CREDIT);
+            try {
+                controller.queueRequest(request);
+            } catch (IllegalRequestTypeException e) {
+                System.err.println("IllegalRequestTypeException_showCredit.execute()");
+                e.printStackTrace();
+            } catch (IllegalRequestSumException e) {
+                System.err.println("IllegalRequestSumException_showCredit.execute()");
+                e.printStackTrace();
+            }
+            return new QueueScreen();
+        }
+
+        private State showBalance() {
+            IBankRequest request = new BankRequest(IBankRequest.Type.BALANCE);
+            try {
+                controller.queueRequest(request);
+            } catch (IllegalRequestTypeException e) {
+                System.err.println("IllegalRequestTypeException_showBalance.execute()");
+                e.printStackTrace();
+            } catch (IllegalRequestSumException e) {
+                System.err.println("IllegalRequestSumException_showBalance.execute()");
+                e.printStackTrace();
+            }
+            return new QueueScreen();
         }
     }
 
@@ -391,8 +418,6 @@ public class ATMMainWindow extends Application {
                 IBankRequest request = new BankRequest(IBankRequest.Type.ADD_MONEY);
                 request.setSum(amController.getSum());
                 try {
-//                    IBankResponse result = controller.queueRequest(request);
-//                    return new ResultScreen(result);
                     controller.queueRequest(request);
                     return new QueueScreen();
                 } catch (IllegalRequestTypeException e) {
@@ -575,6 +600,7 @@ public class ATMMainWindow extends Application {
     private class ResultScreen extends State {
 
         public ResultScreen(IBankResponse result) {
+            keyboard.setActualController(new KeyboardAddMoney());
             keyboard.enableControls();
             loadResultScreen(result);
         }
@@ -601,7 +627,8 @@ public class ATMMainWindow extends Application {
 
         @Override
         protected State execute() {
-            return new FinalScreen();
+//            return new FinalScreen();
+            return new MainMenu();
         }
     }
 
