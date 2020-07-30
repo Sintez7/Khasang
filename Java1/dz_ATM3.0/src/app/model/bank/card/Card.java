@@ -1,10 +1,19 @@
 package app.model.bank.card;
 
+/**
+ * Serial
+ * 100010 - 1000 версия атм, 10 версия класса
+ */
+
+
 import app.model.bank.ClientRequisites;
 import app.model.bank.IBank;
 
-public abstract class Card implements ICard {
+import java.io.Serializable;
 
+public abstract class Card implements ICard, Serializable {
+
+    private static final long serialVersionUID = 100010;
     private IBank bank;
     private String cardNumber = "";
     private String cardCode = "";
