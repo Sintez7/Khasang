@@ -5,8 +5,10 @@ import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 
 public class CreditCard extends Card {
-    public CreditCard(IBank bank) {
-        super(bank);
+    private static final long serialVersionUID = 100010;
+
+    public CreditCard(String bankName) {
+        super(bankName);
     }
 
     @Override

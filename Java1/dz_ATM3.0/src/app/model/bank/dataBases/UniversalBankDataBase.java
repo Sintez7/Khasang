@@ -21,6 +21,7 @@ public class UniversalBankDataBase implements IBankDataBase {
         for (BankClient bankClient : db) {
             if (bankClient.getCustomerCardInfo().getClientScriptedDNACode().equals(clientRequisites.getClientScriptedDNACode())){
                 result =  bankClient;
+                break;
             }
         }
         return result;

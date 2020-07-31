@@ -6,7 +6,7 @@ public class ClientRequisites {
     private String cardCode;
     private String clientScriptedDNACode;
     private String quantumSign;
-    private IBank bank;
+    private String bankName;
 
     public String getClientScriptedDNACode() {
         return clientScriptedDNACode;
@@ -40,12 +40,12 @@ public class ClientRequisites {
         this.cardCode = cardCode;
     }
 
-    public IBank getBank() {
-        return bank;
+    public String getBankName() {
+        return bankName;
     }
 
-    public void setBank(IBank bank) {
-        this.bank = bank;
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ClientRequisites {
                 "cardCode: " + cardCode + "\n" +
                 "clientScriptedDNACode: " + clientScriptedDNACode + "\n" +
                 "quantumSign: " + quantumSign + "\n" +
-                "bankOwner: " + bank + "\n"
+                "bankOwner: " + bankName + "\n"
                 ;
     }
 }

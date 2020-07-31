@@ -10,9 +10,9 @@ public class ATM implements IATM {
 
     private static final long TIMEOUT_DELAY = 6000;
 
-    private IBank mainBank;
+    private final IBank mainBank;
     private ICard currentCard;
-    private Model model;
+    private final Model model;
 
     public Object monitor = new Object();
 

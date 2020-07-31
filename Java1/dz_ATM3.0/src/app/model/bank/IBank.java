@@ -13,6 +13,7 @@ public interface IBank {
     IBankResponse showCredit(ClientRequisites costumer);
 
     ICard initNewCard(CardType type);
+    ICard loadCard(String pathToFile);
     String getBankName();
 
     void requestTimedOut();

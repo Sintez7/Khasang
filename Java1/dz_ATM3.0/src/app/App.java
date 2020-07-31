@@ -4,9 +4,15 @@ import app.controller.DefaultController;
 import app.model.DefaultModel;
 import app.model.bank.banks.SomeCommonBank;
 import app.model.bank.banks.UniversalBank;
+import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 import app.view.DefaultView;
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class App {
 
@@ -38,19 +44,45 @@ public class App {
 
         mb.build();
 
-        ICard uCard = uBank.initNewCard(CardType.DEBIT);
-        ICard uCreditCard = uBank.initNewCard(CardType.CREDIT);
+//        ICard uCard = uBank.initNewCard(CardType.DEBIT);
+//        ICard uCreditCard = uBank.initNewCard(CardType.CREDIT);
+//
+//        ICard commonCard = commonBank.initNewCard(CardType.DEBIT);
+//        ICard commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
 
-        ICard commonCard = commonBank.initNewCard(CardType.DEBIT);
-        ICard commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
+//        saveCard((Card) uCard, "./resources/savedCards/savedCard1.txt");
+//        saveCard((Card) uCreditCard, "./resources/savedCards/savedCard2.txt");
+//        saveCard((Card) commonCard, "./resources/savedCards/savedCard3.txt");
+//        saveCard((Card) commonCreditCard, "./resources/savedCards/savedCard4.txt");
+
+        ICard loadedUBankCard = uBank.loadCard("./resources/savedCards/savedCard1.txt");
+        ICard loadedUBankCreditCard = uBank.loadCard("./resources/savedCards/savedCard2.txt");
+
+        ICard loadedCommonCard = commonBank.loadCard("./resources/savedCards/savedCard3.txt");
+        ICard loadedCommonCreditCard = commonBank.loadCard("./resources/savedCards/savedCard4.txt");
+
+//        User user = new User();
+//        user.addCard(uCard);
+//        user.addCard(uCreditCard);
+//        user.addCard(commonCard);
+//        user.addCard(commonCreditCard);
 
         User user = new User();
-        user.addCard(uCard);
-        user.addCard(uCreditCard);
-        user.addCard(commonCard);
-        user.addCard(commonCreditCard);
+        user.addCard(loadedUBankCard);
+        user.addCard(loadedUBankCreditCard);
+        user.addCard(loadedCommonCard);
+        user.addCard(loadedCommonCreditCard);
 
         mb.startUp(user);
+    }
+
+    private void saveCard (Card card, String path) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path)))) {
+            out.writeObject(card);
+            System.err.println("written card");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void start() {

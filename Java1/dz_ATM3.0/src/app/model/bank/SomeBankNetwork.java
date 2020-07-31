@@ -16,7 +16,7 @@ public class SomeBankNetwork {
     public static IBankResponse redirectRequest(ClientRequisites client, IBankRequest request, IATM atm) {
         IBankResponse result = null;
         for (IBank bank : bankList) {
-            if (client.getBank().getBankName().equals(bank.getBankName())) {
+            if (client.getBankName().equals(bank.getBankName())) {
                 result = bank.queue(client, request, atm);
             }
         }
@@ -26,7 +26,7 @@ public class SomeBankNetwork {
     public static IBankResponse redirectGetBalance(ClientRequisites client) {
         IBankResponse result = null;
         for (IBank bank : bankList) {
-            if (client.getBank().getBankName().equals(bank.getBankName())) {
+            if (client.getBankName().equals(bank.getBankName())) {
                 result = bank.requestBalance(client);
             }
         }

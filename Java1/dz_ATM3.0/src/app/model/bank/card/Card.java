@@ -7,14 +7,11 @@ package app.model.bank.card;
 
 
 import app.model.bank.ClientRequisites;
-import app.model.bank.IBank;
 
-import java.io.Serializable;
-
-public abstract class Card implements ICard, Serializable {
+public abstract class Card implements ICard{
 
     private static final long serialVersionUID = 100010;
-    private IBank bank;
+    private String bankName;
     private String cardNumber = "";
     private String cardCode = "";
     private String clientScriptedDNACode = "";
@@ -22,8 +19,8 @@ public abstract class Card implements ICard, Serializable {
 
     private CardType cardType;
 
-    public Card(IBank bank) {
-        this.bank = bank;
+    public Card(String bankName) {
+        this.bankName = bankName;
         setCardType();
     }
 
@@ -82,13 +79,13 @@ public abstract class Card implements ICard, Serializable {
     }
 
     public String getInfoForPrint() {
-        return "Bank owner: " + bank + "\n" +
+        return "Bank owner: " + bankName + "\n" +
                 "Card number: " + cardNumber + "\n" +
                 "Card code " + cardCode;
     }
 
-    public IBank getCardBank() {
-        return bank;
+    public String getCardBankName() {
+        return bankName;
     }
 
     @Override
@@ -98,7 +95,7 @@ public abstract class Card implements ICard, Serializable {
         result.setCardNumber(getCardNumber());
         result.setCardCode(getCardCode());
         result.setQuantumSign(getQuantumSign());
-        result.setBank(getCardBank());
+        result.setBankName(getCardBankName());
         return result;
     }
 

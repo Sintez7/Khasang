@@ -26,8 +26,6 @@ public class ATMMainWindow extends Application {
 
     private static ATMMainWindow atmMainWindow;
 
-    private static final long BANK_RESPONSE_TIMEOUT = 6000;
-
     private static final String CARD_SELECTION_SCREEN = "cardSelectionScreen.fxml";
     private static final String WITHDRAWAL_SCREEN = "withdrawalScreen.fxml";
     private static final String RESULT_SCREEN = "resultScreen.fxml";

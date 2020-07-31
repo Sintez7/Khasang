@@ -5,8 +5,10 @@ import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 
 public class DebitCard extends Card {
-    public DebitCard(IBank bank) {
-        super(bank);
+    private static final long serialVersionUID = 100010;
+
+    public DebitCard(String bankName) {
+        super(bankName);
     }
 
     @Override

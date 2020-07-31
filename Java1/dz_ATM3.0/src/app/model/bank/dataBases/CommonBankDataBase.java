@@ -20,6 +20,7 @@ public class CommonBankDataBase implements IBankDataBase {
         for (BankClient bankClient : db) {
             if (bankClient.getCustomerCardInfo().getCardNumber().equals(clientRequisites.getCardNumber())){
                 result =  bankClient;
+                break;
             }
         }
         return result;
