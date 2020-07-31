@@ -59,7 +59,7 @@ public abstract class Bank implements IBank {
         synchronized (request) {
             try {
                 System.err.println("request wait start");
-                request.wait((long)(Math.random() * 10000));
+                request.wait((long) (Math.random() * 10000));
                 System.err.println("request wait end");
             } catch (InterruptedException e) {
                 System.err.println("Bank interrupted");

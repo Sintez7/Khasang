@@ -76,7 +76,7 @@ public class App {
         mb.startUp(user);
     }
 
-    private void saveCard (Card card, String path) {
+    private void saveCard(Card card, String path) {
         try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path)))) {
             out.writeObject(card);
             System.err.println("written card");
@@ -117,7 +117,6 @@ public class App {
 
 //        view.setController(controller);
 //        System.err.println("setted controller for view");
-
 
 
         runRandomTests();

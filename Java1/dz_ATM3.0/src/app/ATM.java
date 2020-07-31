@@ -22,7 +22,7 @@ public class ATM implements IATM {
     }
 
     @Override
-    public boolean insertCard(ICard card) throws AtmIsBusyException{
+    public boolean insertCard(ICard card) throws AtmIsBusyException {
         if (currentCard == null) {
             currentCard = card;
             return true;
@@ -35,7 +35,7 @@ public class ATM implements IATM {
     public boolean ejectCurrentCard() {
         System.err.println("entered ejectCurrentCard method");
         System.err.println(currentCard);
-        if (currentCard == null){
+        if (currentCard == null) {
             return false;
         } else {
             currentCard = null;

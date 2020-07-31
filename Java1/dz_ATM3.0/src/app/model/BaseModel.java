@@ -64,7 +64,7 @@ public class BaseModel implements Model {
     }
 
     @Override
-    public boolean cardChosen(ICard card) throws AtmIsBusyException{
+    public boolean cardChosen(ICard card) throws AtmIsBusyException {
         return atm.insertCard(card);
     }
 
