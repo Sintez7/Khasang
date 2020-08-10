@@ -1,6 +1,6 @@
 package app;
 
-public class BattleShips implements IGame {
+public class BattleShips implements Game {
 
     private Model model;
     private View view;

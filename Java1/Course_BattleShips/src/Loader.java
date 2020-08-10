@@ -1,10 +1,10 @@
 import app.BattleShips;
-import app.IGame;
+import app.Game;
 
 public class Loader {
 
     public static void main(String[] args) {
-        IGame game = new BattleShips();
+        Game game = new BattleShips();
         game.launch();
     }
 }
