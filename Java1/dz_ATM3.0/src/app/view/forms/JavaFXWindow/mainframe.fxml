@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.forms.JavaFXWindow.MainController">
+   <center>
+      <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" BorderPane.alignment="CENTER">
+         <items>
+            <BorderPane>
+               <center>
+                  <AnchorPane fx:id="upperScreenAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button layoutX="21.0" layoutY="123.0" mnemonicParsing="false" text="Button" />
+                        <Button layoutX="92.0" layoutY="123.0" mnemonicParsing="false" onAction="#action" text="Button" />
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+            <BorderPane>
+               <center>
+                  <AnchorPane fx:id="lowerScreenAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button layoutX="14.0" layoutY="130.0" mnemonicParsing="false" text="Button" />
+                        <Button layoutX="85.0" layoutY="130.0" mnemonicParsing="false" text="Button" />
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+         </items>
+      </SplitPane>
+   </center>
+</BorderPane>

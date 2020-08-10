@@ -1,29 +1,44 @@
 package app.model;
 
+import app.IATM;
+import app.controller.Controller;
 import app.controller.exceptions.AtmIsBusyException;
-import app.controller.exceptions.CardBusyException;
 import app.controller.exceptions.IllegalRequestSumException;
 import app.controller.exceptions.IllegalRequestTypeException;
+import app.controller.exceptions.TimeoutException;
 import app.model.bank.IBankRequest;
 import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface Model {
 
-public interface Model extends Runnable{
+    Model setController(Controller controller);
 
-    boolean insertCard(ICard card) throws AtmIsBusyException;
+    Model setATM(IATM atm);
 
-    boolean ejectCard() throws CardBusyException;
+    boolean cardChosen(ICard card) throws AtmIsBusyException;
 
-    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
+    boolean ejectCard();
 
-    ArrayList<ModelData> getMessages();
+    void queueRequest(IBankRequest request) throws IllegalRequestSumException, IllegalRequestTypeException;
 
-    boolean processOkBtn();
+    void callbackResults(IBankResponse result);
 
-    void confirmMenuOptionSelect(MenuOption option);
+    void requestTimedOut();
 
-    List<MenuOption> getMenuOptions();
+//    boolean insertCard(ICard card) throws AtmIsBusyException;
+//
+//    boolean ejectCard() throws CardBusyException;
+//
+//    IBankResponse queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
+//
+//    ArrayList<ModelData> getMessages();
+//
+//    boolean processOkBtn();
+//
+//    void confirmMenuOptionSelect(MenuOption option);
+//
+//    List<MenuOption> getMenuOptions();
+//
+
 }

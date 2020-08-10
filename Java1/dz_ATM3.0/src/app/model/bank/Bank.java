@@ -1,24 +1,29 @@
 package app.model.bank;
 
+import app.IATM;
 import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 import app.model.bank.dataBases.IBankDataBase;
 
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 
 public abstract class Bank implements IBank {
 
     private static final String NO_MONEY_WITHDRAWAL_MESSAGE = "На балансе недостаточно средств";
-    private static final String ACCEPTED_MESSAGE = "Payment request accepted";
-    private static final String ACCEPTED_AS_CREDIT_MESSAGE = "Payment request accepted as credit";
-    private static final String BALANCE_MESSAGE = "Current balance is: ";
-    private static final String CREDIT_MESSAGE = "Current credit is: -";
-    private static final String MONEY_ADDED_MESSAGE = "Money added!";
+    private static final String ACCEPTED_MESSAGE = "Снятие наличных одобрено";
+    private static final String ACCEPTED_AS_CREDIT_MESSAGE = "Снятие наличных одобрено как кредит";
+    private static final String BALANCE_MESSAGE = "Текущий баланс: ";
+    private static final String CREDIT_MESSAGE = "Текущий кредит: -";
+    private static final String MONEY_ADDED_MESSAGE = "Баланс пополнен";
 
     IBankDataBase db;
     CardFactory cardFactory;
     private String bankName;
+    private boolean requestTimedOut;
+
+    IATM atm;
 
     public Bank() {
         initForTests();
@@ -37,6 +42,7 @@ public abstract class Bank implements IBank {
     public void setBankName(String bankName) {
         this.bankName = bankName;
     }
+
     public void setDataBase(IBankDataBase db) {
         this.db = db;
     }
@@ -44,39 +50,56 @@ public abstract class Bank implements IBank {
     public abstract String setName();
 
     @Override
-    public IBankResponse queue(ClientRequisites costumer, IBankRequest request) {
-        IBankResponse result;
-        if (costumer.getBank().getBankName().equals(this.getBankName())) {
-            result = processRequest(costumer, request);
-        } else {
-            result = delegateRequest(costumer, request);
+    public IBankResponse queue(ClientRequisites costumer, IBankRequest request, IATM atm) {
+        this.atm = atm;
+        requestTimedOut = false;
+//        startTimer();
+
+        System.err.println("Bank " + Thread.currentThread());
+        synchronized (request) {
+            try {
+                System.err.println("request wait start");
+                request.wait((long) (Math.random() * 10000));
+                System.err.println("request wait end");
+            } catch (InterruptedException e) {
+                System.err.println("Bank interrupted");
+                requestTimedOut = true;
+                return null;
+            }
         }
+
+        IBankResponse result;
+
+        if (!requestTimedOut) {
+            if (costumer.getBankName().equals(this.getBankName())) {
+                result = processRequest(costumer, request);
+            } else {
+                result = delegateRequest(costumer, request, atm);
+            }
+        } else {
+            result = new BankResponse(BankResponse.Type.TIMED_OUT);
+        }
+
+        atm.callbackResult(result);
         return result;
+    }
+
+    @Override
+    public void requestTimedOut() {
+        requestTimedOut = true;
     }
 
     public IBankResponse processRequest(ClientRequisites costumer, IBankRequest request) {
-        IBankResponse result = null;
-        switch (request.getType()) {
-            case PAYMENT:
-                result = queuePaymentRequest(costumer, request);
-                break;
-            case BALANCE:
-                result = queueGetCardBalance(costumer);
-                break;
-            case SHOW_HISTORY:
-                showCardHistory(costumer);
-                break;
-            case SHOW_CREDIT:
-                result = showCredit(costumer);
-                break;
-            case ADD_MONEY:
-                result = addMoney(costumer, request);
-                break;
-        }
-        return result;
+        return switch (request.getType()) {
+            case WITHDRAWAL -> queueWithdrawalRequest(costumer, request);
+            case BALANCE -> queueGetCardBalance(costumer);
+            case SHOW_HISTORY -> showCardHistory(costumer);
+            case SHOW_CREDIT -> showCredit(costumer);
+            case ADD_MONEY -> addMoney(costumer, request);
+        };
     }
 
-    public IBankResponse queuePaymentRequest(ClientRequisites costumer, IBankRequest request) {
+    public IBankResponse queueWithdrawalRequest(ClientRequisites costumer, IBankRequest request) {
         IBankResponse result = null;
         CardType cardType = getClient(costumer).getCard().getCardType();
         switch (cardType) {
@@ -91,8 +114,8 @@ public abstract class Bank implements IBank {
         return result;
     }
 
-    private IBankResponse delegateRequest(ClientRequisites costumer, IBankRequest request) {
-        return SomeBankNetwork.redirectRequest(costumer, request);
+    private IBankResponse delegateRequest(ClientRequisites costumer, IBankRequest request, IATM atm) {
+        return SomeBankNetwork.redirectRequest(costumer, request, atm);
     }
 
     @Override
@@ -112,6 +135,39 @@ public abstract class Bank implements IBank {
         return card;
     }
 
+    @Override
+    public ICard loadCard(String pathToFile) {
+//        Card card = cardFactory.createCard(this, type);
+//        initCardStatsTest(card);
+
+        Card card = readCard(pathToFile);
+
+        if (card == null) {
+            System.err.println("loadedCard == null");
+            return null;
+        }
+
+        BankClient client = new BankClient();
+        client.setCard(card);
+        client.setBalance(200);
+        client.setCustomerCardInfo(card.getCardInfo());
+        db.add(client);
+        return card;
+    }
+
+    private Card readCard(String pathToFile) {
+        Card result = null;
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathToFile)))) {
+            result = (Card) in.readObject();
+        } catch (IOException e) {
+            System.err.println("failed to load card");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     private void initCardStatsTest(Card card) {
         // Для тестов назначаем картам случайные значения, чтобы их различать между собой
         card.setClientScriptedDNACode("qwe" + getRandomInt());
@@ -126,7 +182,7 @@ public abstract class Bank implements IBank {
 
     public IBankResponse queueGetCardBalance(ClientRequisites costumer) {
         IBankResponse result;
-        if (costumer.getBank().getBankName().equals(this.getBankName())) {
+        if (costumer.getBankName().equals(this.getBankName())) {
             result = getCardBalance(getClient(costumer));
         } else {
             result = SomeBankNetwork.redirectGetBalance(costumer);
@@ -146,6 +202,7 @@ public abstract class Bank implements IBank {
         BankResponse response;
         BankClient client = getClient(costumer);
         if (client.getBalance() < sum) {
+            client.queueOperation(BankClientOperations.Type.DENIED_WITHDRAWAL, sum);
             response = new BankResponse(BankResponse.Type.DENIED, NO_MONEY_WITHDRAWAL_MESSAGE);
         } else {
             client.queueOperation(BankClientOperations.Type.WITHDRAWAL, sum);
@@ -159,6 +216,7 @@ public abstract class Bank implements IBank {
         BankClient client = getClient(costumer);
         if (client.getBalance() < sum) {
             if (creditOperationPossible(client, sum)) {
+                client.queueOperation(BankClientOperations.Type.DENIED_WITHDRAWAL, sum);
                 response = new BankResponse(BankResponse.Type.DENIED, NO_MONEY_WITHDRAWAL_MESSAGE);
             } else {
                 client.queueOperation(BankClientOperations.Type.WITHDRAWAL, sum);
@@ -183,9 +241,8 @@ public abstract class Bank implements IBank {
 
     @Override
     public IBankResponse showCardHistory(ClientRequisites costumer) {
-        IBankResponse result = new BankResponse(BankResponse.Type.HISTORY);
-        getClient(costumer).showHistory();
-        return result;
+        //        getClient(costumer).showHistory();
+        return new BankResponse(BankResponse.Type.HISTORY, getClient(costumer).getHistory());
     }
 
     private IBankResponse addMoney(ClientRequisites costumer, IBankRequest request) {

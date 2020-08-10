@@ -2,6 +2,8 @@ package app.model.bank.card;
 
 import app.model.bank.ClientRequisites;
 
-public interface ICard {
+import java.io.Serializable;
+
+public interface ICard extends Serializable {
     ClientRequisites getCardInfo();
 }

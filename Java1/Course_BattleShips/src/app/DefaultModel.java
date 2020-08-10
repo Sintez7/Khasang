@@ -4,8 +4,8 @@ import java.util.List;
 
 public class DefaultModel implements Model {
 
-    private List<IShip> ships;
-    private List<IShip> shipsAlive;
+    private List<Ship> ships;
+    private List<Ship> shipsAlive;
 
     @Override
     public boolean isGameEnded() {

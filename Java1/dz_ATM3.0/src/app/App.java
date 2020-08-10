@@ -1,54 +1,109 @@
 package app;
 
-import app.controller.Controller;
 import app.controller.DefaultController;
-import app.controller.exceptions.AtmIsBusyException;
-import app.controller.exceptions.IllegalRequestSumException;
-import app.controller.exceptions.IllegalRequestTypeException;
 import app.model.DefaultModel;
-import app.model.Model;
-import app.model.bank.BankResponse;
-import app.model.bank.IBank;
-import app.model.bank.IBankRequest;
-import app.model.bank.IBankResponse;
 import app.model.bank.banks.SomeCommonBank;
 import app.model.bank.banks.UniversalBank;
 import app.model.bank.card.Card;
 import app.model.bank.card.CardType;
 import app.model.bank.card.ICard;
 import app.view.DefaultView;
-import app.view.View;
-import app.view.forms.JFXWindow;
 
-import java.util.ArrayList;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class App {
 
-    private volatile Model model;
-    private volatile View view;
-    private volatile static Controller controller;
+//    private Model model;
+//    private View view;
+//
+//    private IBank uBank;
+//    private IBank commonBank;
+//
+//    private ICard uCard;
+//    private ICard uCreditCard;
+//    private ICard commonCard;
+//    private ICard commonCreditCard;
 
-    private IBank uBank;
-    private IBank commonBank;
-
-    private ICard uCard;
-    private ICard uCreditCard;
-    private ICard commonCard;
-    private ICard commonCreditCard;
-
-    private IATM atm;
-
-    public static String[] args;
     public static final Object monitor = new Object();
 
-    public void start(String[] args) {
-        this.args = args;
-        initModules(args);
+    public void init() {
+        ModulesBuilder mb = new ModulesBuilder();
+
+        UniversalBank uBank = new UniversalBank();
+        SomeCommonBank commonBank = new SomeCommonBank();
+
+        mb.setActualController(new DefaultController());
+        DefaultModel dModel = new DefaultModel();
+        mb.setActualModel(dModel);
+        mb.setActualView(new DefaultView());
+
+        mb.setATM(new ATM(uBank, dModel));
+
+        mb.build();
+
+//        ICard uCard = uBank.initNewCard(CardType.DEBIT);
+//        ICard uCreditCard = uBank.initNewCard(CardType.CREDIT);
+//
+//        ICard commonCard = commonBank.initNewCard(CardType.DEBIT);
+//        ICard commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
+
+//        saveCard((Card) uCard, "./resources/savedCards/savedCard1.txt");
+//        saveCard((Card) uCreditCard, "./resources/savedCards/savedCard2.txt");
+//        saveCard((Card) commonCard, "./resources/savedCards/savedCard3.txt");
+//        saveCard((Card) commonCreditCard, "./resources/savedCards/savedCard4.txt");
+
+        ICard loadedUBankCard = uBank.loadCard("./resources/savedCards/savedCard1.txt");
+        ICard loadedUBankCreditCard = uBank.loadCard("./resources/savedCards/savedCard2.txt");
+
+        ICard loadedCommonCard = commonBank.loadCard("./resources/savedCards/savedCard3.txt");
+        ICard loadedCommonCreditCard = commonBank.loadCard("./resources/savedCards/savedCard4.txt");
+
+//        User user = new User();
+//        user.addCard(uCard);
+//        user.addCard(uCreditCard);
+//        user.addCard(commonCard);
+//        user.addCard(commonCreditCard);
+
+        User user = new User();
+        user.addCard(loadedUBankCard);
+        user.addCard(loadedUBankCreditCard);
+        user.addCard(loadedCommonCard);
+        user.addCard(loadedCommonCreditCard);
+
+        mb.startUp(user);
+    }
+
+    private void saveCard(Card card, String path) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path)))) {
+            out.writeObject(card);
+            System.err.println("written card");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void start() {
 //        mainCycle();
-        new Thread(controller).start();
-        new Thread(model).start();
-        Thread viewThread = new Thread(view);
-        viewThread.start();
+//        new Thread(controller).start();
+//        new Thread(model).start();
+//        Thread viewThread = new Thread(view);
+//        viewThread.start();
+
+
+//        ICard uCard = uBank.initNewCard(CardType.DEBIT);
+//        ICard uCreditCard = uBank.initNewCard(CardType.CREDIT);
+//
+//        ICard commonCard = commonBank.initNewCard(CardType.DEBIT);
+//        ICard commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
+//
+//        controller.addCard(uCard);
+//        controller.addCard(uCreditCard);
+//        controller.addCard(commonCard);
+//        controller.addCard(commonCreditCard);
+//        System.err.println("cards added");
 
         System.err.println("joining viewThread");
         synchronized (monitor) {
@@ -63,11 +118,6 @@ public class App {
 //        view.setController(controller);
 //        System.err.println("setted controller for view");
 
-        controller.addCard(uCard);
-        controller.addCard(uCreditCard);
-        controller.addCard(commonCard);
-        controller.addCard(commonCreditCard);
-        System.err.println("cards added");
 
         runRandomTests();
 
@@ -80,30 +130,18 @@ public class App {
         }
     }
 
-    public static synchronized Controller getController() {
-        return controller;
-    }
+    private void initModules() {
 
-    private void initModules(String[] args) {
-        uBank = new UniversalBank();
-        commonBank = new SomeCommonBank();
-
-        uCard = uBank.initNewCard(CardType.DEBIT);
-        uCreditCard = uBank.initNewCard(CardType.CREDIT);
-
-        commonCard = commonBank.initNewCard(CardType.DEBIT);
-        commonCreditCard = commonBank.initNewCard(CardType.CREDIT);
-
-        atm = new ATM(uBank);
-        System.err.println("created start modules");
-
-        model = new DefaultModel(atm);
-        System.err.println("created Model");
-        //        ((JFXWindow) mainWindow).myLaunch(args);
-        view = new JFXWindow();
-        System.err.println("view created");
-        controller = new DefaultController(model, atm, view);
-        System.err.println("controller created");
+//        atm = new ATM(uBank);
+//        System.err.println("created start modules");
+//
+//        model = new DefaultModel(atm);
+//        System.err.println("created Model");
+//        //        ((JFXWindow) mainWindow).myLaunch(args);
+//        view = new JFXWindow();
+//        System.err.println("view created");
+//        controller = new DefaultController(model, atm, view);
+//        System.err.println("controller created");
     }
 
     private void runRandomTests() {

@@ -1,0 +1,63 @@
+@startuml
+
+class Game {
+}
+
+class Field {
+    private Player owner;
+    private Cell[][] field;
+    private State state;
+
+    public Field(Player owner);
+    public hit(Coordinate place) throws Lose;
+    private checkStatus() throws Lose;
+}
+
+enum State {
+    READY,
+    PLAYABLE,
+    OK,
+    WAITING
+}
+
+class Cell {
+    private Coordinate place;
+    private Status status;
+
+    public Cell(int x, int y);
+    public void hit() throws HitError;
+    public void affected();
+}
+
+enum Status {
+    FREE,
+    OCCUPIED,
+    HIT
+}
+
+
+class Coordinate {
+    int x;
+    int y;
+}
+
+abstract class Player {
+    private String name;
+
+    public Player(String name);
+    public String getName();
+}
+
+class Human extends Player
+class AI extends Player
+
+
+
+Game *-- Field
+Cell +-- Status
+State -[hidden]- Cell
+Field -[hidden] Coordinate
+Field +-- State
+Coordinate -[hidden] Player
+
+@enduml

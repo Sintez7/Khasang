@@ -1,21 +1,26 @@
 package app.model.bank.card;
 
+/**
+ * Serial
+ * 100010 - 1000 версия атм, 10 версия класса
+ */
+
+
 import app.model.bank.ClientRequisites;
-import app.model.bank.IBank;
 
-public abstract class Card implements ICard {
+public abstract class Card implements ICard{
 
-    private IBank bank;
+    private static final long serialVersionUID = 100010;
+    private String bankName;
     private String cardNumber = "";
     private String cardCode = "";
     private String clientScriptedDNACode = "";
-
     private String quantumSign = "";
 
     private CardType cardType;
 
-    public Card(IBank bank) {
-        this.bank = bank;
+    public Card(String bankName) {
+        this.bankName = bankName;
         setCardType();
     }
 
@@ -74,13 +79,13 @@ public abstract class Card implements ICard {
     }
 
     public String getInfoForPrint() {
-        return "Bank owner: " + bank + "\n" +
+        return "Bank owner: " + bankName + "\n" +
                 "Card number: " + cardNumber + "\n" +
                 "Card code " + cardCode;
     }
 
-    public IBank getCardBank() {
-        return bank;
+    public String getCardBankName() {
+        return bankName;
     }
 
     @Override
@@ -90,7 +95,7 @@ public abstract class Card implements ICard {
         result.setCardNumber(getCardNumber());
         result.setCardCode(getCardCode());
         result.setQuantumSign(getQuantumSign());
-        result.setBank(getCardBank());
+        result.setBankName(getCardBankName());
         return result;
     }
 

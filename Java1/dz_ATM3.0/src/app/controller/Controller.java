@@ -1,44 +1,68 @@
 package app.controller;
 
 import app.Order;
+import app.User;
 import app.controller.exceptions.*;
 import app.model.MenuOption;
+import app.model.Model;
 import app.model.ModelData;
+import app.model.bank.IBankRequest;
+import app.model.bank.IBankResponse;
 import app.model.bank.card.ICard;
+import app.view.View;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface Controller extends Runnable {
+public interface Controller {
 
-    /**
-     * Метод для "вставки" карты в атм.
-     * @param card
-     * @throws AtmIsBusyException если в банкомат
-     * попытаться вставить карту, когда в нём уже есть карта.
-     */
-    boolean insertCard(ICard card) throws AtmIsBusyException;
+//    /**
+//     * Метод для "вставки" карты в атм.
+//     * @param card
+//     * @throws AtmIsBusyException если в банкомат
+//     * попытаться вставить карту, когда в нём уже есть карта.
+//     */
+//    boolean insertCard(ICard card) throws AtmIsBusyException;
+//
+//    boolean ejectCard() throws CardBusyException;
+//
+//     // synchronized
+//    ModelData queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException;
+//
+//    Object getControllerKey();
+//
+//    ArrayList<ModelData> getModelData();
+//
+//    void setCards(ArrayList<ICard> cardsList);
+//
+//    List<ICard> getCards();
+//
+//    void addCard(ICard card);
+//
+//    boolean processOkBtn();
+//
+//    boolean processCancelBth();
+//
+//    List<MenuOption> getMenuOptions();
+//
+//    void confirmMenuOptionSelect(MenuOption option);
+//
 
-    boolean ejectCard() throws CardBusyException;
+    Controller setModel(Model model);
 
-     // synchronized
-    ModelData queueRequest(Order order) throws IllegalRequestTypeException, IllegalRequestSumException;
+    Controller setView(View view);
 
-    Object getControllerKey();
+    void startUp(User user);
 
-    ArrayList<ModelData> getModelData();
+    boolean cardChosen(ICard card) throws AtmIsBusyException;
 
-    void setCards(ArrayList<ICard> cardsList);
+    boolean ejectCard();
 
-    List<ICard> getCards();
+    void queueRequest(IBankRequest request) throws IllegalRequestTypeException, IllegalRequestSumException;
 
-    void addCard(ICard card);
+    void callTimeout();
 
-    boolean processOkBtn();
-
-    boolean processCancelBth();
-
-    List<MenuOption> getMenuOptions();
-
-    void confirmMenuOptionSelect(MenuOption option);
+    void callbackResult(IBankResponse result);
 }

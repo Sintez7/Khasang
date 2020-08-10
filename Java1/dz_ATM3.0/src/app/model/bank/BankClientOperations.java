@@ -56,25 +56,19 @@ public class BankClientOperations {
         this.debtClosedDate = debtClosedDate;
     }
 
-    public void show() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        System.out.println("Operation date: " + dateFormat.format(operationDate.getTime()));
-        System.out.println("Operation type: " + type);
-        System.out.println("Operated card: " + operatedCard);
-        switch (type) {
-            case ADD:
-                System.out.println("Debt closed date: " + dateFormat.format(debtClosedDate.getTime()));
-                System.out.println();
-                break;
-            case WITHDRAWAL:
-                System.out.println("Debt must be closed before: " + dateFormat.format(debtMustBeClosedBefore.getTime()));
-                System.out.println();
-                break;
-        }
-    }
-
     public enum Type {
         ADD,
-        WITHDRAWAL
+        WITHDRAWAL,
+        DENIED_WITHDRAWAL
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        result += "Operation date: " + dateFormat.format(operationDate.getTime()) + "\n";
+        result += "Operation type: " + type + "\n";
+        result += "Operated card: " + operatedCard + "\n";
+        return result;
     }
 }
