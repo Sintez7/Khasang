@@ -1,7 +1,11 @@
 package app;
 
 import app.controller.Controller;
+import app.model.Field;
 import app.model.Model;
+import app.player.AI;
+import app.player.Human;
+import app.player.Player;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,9 +29,13 @@ public class Main extends Application {
 
     private void initModules(Controller controller) {
         Model model = new Model(this);
+        model.setPlayerOne(new Human())
+             .setPlayerTwo(new AI())
+             .setPlayerOneField(new Field())
+             .setPlayerTwoField(new Field());
 
-        controller.setModel(model);
         model.setController(controller);
+        controller.setModel(model);
     }
 
 
