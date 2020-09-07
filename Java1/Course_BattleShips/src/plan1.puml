@@ -46,10 +46,15 @@ abstract class Player {
 
     public Player(String name);
     public String getName();
+    public Coordinate makeMove();
 }
 
-class Human extends Player
-class AI extends Player
+class Human extends Player {
+    @Override public Coordinate makeMove();
+}
+class AI extends Player {
+    @Override public Coordinate makeMove();
+}
 
 
 
