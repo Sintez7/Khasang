@@ -2,25 +2,23 @@ public class Ship {
 
     private final int size;
 
-    private Bias bias;
+    public static final int UP = 1;
+    public static final int RIGHT = 2;
+    public static final int DOWN = 3;
+    public static final int LEFT = 4;
 
-    public Ship(int size, Bias bias) {
+    private int bias;
+
+    public Ship(int size, int bias) {
         this.size = size;
         this.bias = bias;
     }
 
-    public Bias getBias() {
+    public int getBias() {
         return bias;
     }
 
     public int getSize() {
         return size;
-    }
-
-    public enum Bias {
-        UP,
-        DOWN,
-        RIGHT,
-        LEFT
     }
 }
