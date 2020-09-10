@@ -57,7 +57,7 @@ public class Field {
             } else {
                 return false;
             }
-            last.set(actual.x, actual.y);
+            last.set(actual);
         }
         cells = temp;
         return true;
@@ -94,30 +94,39 @@ public class Field {
     }
 
     private boolean isValidPlacement(Point actual, Point last, int[][] field) {
-        if (!(actual.x >= 0 & actual.y >= 0 & actual.x < SIZE & actual.y < SIZE)) {
-            System.out.println("failed at: placement validation 1");
+        if (!isPointInBounds(actual)) {
             return false;
         }
-        if (field[actual.x][actual.y] != FREE) {
-            System.out.println("failed at: placement validation 2");
+        if (!isPointFree(field, actual)) {
             return false;
         }
-
         Point vector = new Point();
         Point current = new Point();
         for (int i = 0; i < 8; i++) {
+            current.set(actual);
             vector.set(SCAN_DIRECTIONS[i][0], SCAN_DIRECTIONS[i][1]);
             current.add(vector);
-            if (current.x != last.x & current.y != last.y) {
-                if (current.x >= 0 & current.y >= 0 & current.x < SIZE & current.y < SIZE) {
-                    if (field[current.x][current.y] != FREE) {
-                        System.out.println("failed at: placement validation 3");
-                        return false;
-                    }
-                }
+            //TODO fix it
+            if (!current.equals(last) && isPointInBounds(current) && isPointFree(field, current)) {
+            } else {
+                return false;
             }
         }
         return true;
+    }
+
+    /*
+    System.out.println("current: \t" + current);
+    System.out.println("actual: \t" + actual);
+    System.out.println("vector: \t" + vector);
+     */
+
+    private boolean isPointInBounds(Point p) {
+        return p.x >= 0 & p.y >= 0 & p.x < SIZE & p.y < SIZE;
+    }
+
+    private boolean isPointFree (int[][] field, Point p) {
+        return field[p.x][p.y] == FREE;
     }
 
     public void printField() {
@@ -137,6 +146,11 @@ public class Field {
         public Point(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        public Point(Point p) {
+            x = p.x;
+            y = p.y;
         }
 
         public Point() {
@@ -171,6 +185,14 @@ public class Field {
         @Override
         public int hashCode() {
             return Objects.hash(x, y);
+        }
+
+        @Override
+        public String toString() {
+            return "Point{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    '}';
         }
     }
 }
