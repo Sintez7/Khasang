@@ -4,8 +4,9 @@ public class Main {
         Field field = new Field();
 //        field.printField();
         System.out.println(field.placeShip(1,1, new Ship(1, Ship.UP)));
+        System.out.println(field.placeShip(1,1, new Ship(1, Ship.UP)));
         field.printField();
-        System.out.println(field.placeShip(10,10, new Ship(1, Ship.UP)));
+        System.out.println(field.placeShip(10,10, new Ship(1, Ship.LEFT)));
         field.printField();
         System.out.println(field.placeShip(2,2, new Ship(1, Ship.UP)));
         field.printField();

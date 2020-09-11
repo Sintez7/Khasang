@@ -1,5 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 
 public class Field {
 
@@ -8,6 +9,7 @@ public class Field {
     private static final int HIT = 2;
 
     private static final int SIZE = 10;
+    private static final List<ActualShip> shipsInPlay = new ArrayList<>();
 
     private static final int[][] SCAN_DIRECTIONS =
             {{0, -1},
@@ -22,23 +24,53 @@ public class Field {
     int[][] cells = new int[SIZE][SIZE];
 
     public Field() {
-        initField(SIZE);
+        initField();
     }
 
-    private void initField(int size) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+    private void initField() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 cells[j][i] = FREE;
             }
         }
     }
 
-    public boolean hit(int x, int y) {
+    public void hit(int x, int y) {
         if (cells[x - 1][y - 1] != HIT) {
-            cells[x - 1][y - 1] = HIT;
-            return true;
+            if (hitPoint(x - 1, y - 1)) {
+                checkLose();
+//                server.hit();
+            }
+//            server.miss();
         } else {
-            return false;
+//            server.pointHit();
+        }
+    }
+
+    private boolean hitPoint(int x, int y) {
+        cells[x][y] = HIT;
+        return hitShip(x, y);
+    }
+
+    private boolean hitShip(int x, int y) {
+        for (ActualShip actualShip : shipsInPlay) {
+            if (actualShip.hit(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void checkLose() {
+        boolean defeated = true;
+        for (ActualShip actualShip : shipsInPlay) {
+            if (actualShip.isAlive()) {
+                defeated = false;
+                break;
+            }
+        }
+        if (defeated) {
+//            server.callDefeated();
         }
     }
 
@@ -49,7 +81,7 @@ public class Field {
         Point last = new Point(-1, -1);
 
         for (int i = 0; i < ship.getSize(); i++) {
-            offset.set(getShipOffset(ship, i));
+            offset.set(ship.getVector().x * i, ship.getVector().y * i);
             Point actual = new Point((x + offset.x) - 1, (y + offset.y) - 1);
 
             if (isValidPlacement(actual, last, temp)) {
@@ -59,6 +91,7 @@ public class Field {
             }
             last.set(actual);
         }
+        shipsInPlay.add(new ActualShip(x, y, ship));
         cells = temp;
         return true;
     }
@@ -69,19 +102,19 @@ public class Field {
 //
 
 
-    private Point getShipOffset(Ship ship, int steps) {
-        return switch (ship.getBias()) {
-            //UP
-            case 1 -> new Point(0, -steps);
-            //RIGHT
-            case 2 -> new Point(steps, 0);
-            //DOWN
-            case 3 -> new Point(0, steps);
-            //LEFT
-            case 4 -> new Point(-steps, 0);
-            default -> null;
-        };
-    }
+//    private Point getShipOffset(Ship ship, int steps) {
+//        return switch (ship.getBias()) {
+//            //UP
+//            case 1 -> new Point(0, -steps);
+//            //RIGHT
+//            case 2 -> new Point(steps, 0);
+//            //DOWN
+//            case 3 -> new Point(0, steps);
+//            //LEFT
+//            case 4 -> new Point(-steps, 0);
+//            default -> null;
+//        };
+//    }
 
     private int[][] cloneField(int[][] field) {
         int[][] result = new int[field.length][];
@@ -106,10 +139,10 @@ public class Field {
             current.set(actual);
             vector.set(SCAN_DIRECTIONS[i][0], SCAN_DIRECTIONS[i][1]);
             current.add(vector);
-            //TODO fix it
-            if (!current.equals(last) && isPointInBounds(current) && isPointFree(field, current)) {
-            } else {
-                return false;
+            if (!current.equals(last) && isPointInBounds(current)) {
+                if (!isPointFree(field, current)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -134,65 +167,8 @@ public class Field {
             for (int j = 0; j < cells[i].length; j++) {
                 System.out.print(cells[j][i] + "\t");
             }
-            System.out.println("");
+            System.out.println();
         }
         System.out.println("==============================");
-    }
-
-    private class Point {
-        public int x;
-        public int y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public Point(Point p) {
-            x = p.x;
-            y = p.y;
-        }
-
-        public Point() {
-            this(0, 0);
-        }
-
-        public void set(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public void set(Point point) {
-            x = point.x;
-            y = point.y;
-        }
-        public void add(Point point) {
-            x += point.x;
-            y += point.y;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            Point point = (Point) o;
-            return x == point.x &&
-                    y == point.y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-
-        @Override
-        public String toString() {
-            return "Point{" +
-                    "x=" + x +
-                    ", y=" + y +
-                    '}';
-        }
     }
 }
