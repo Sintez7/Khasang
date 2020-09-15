@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -28,9 +32,18 @@ public class Main {
 //        System.out.println(field.placeShip(1,8, new Ship(4, Ship.RIGHT)));
 //        field.printField();
 
-        TestServer1 s1 = new TestServer1();
-        s1.start();
-        TestServer2 s2 = new TestServer2(s1);
-        s2.start();
+//        TestServer1 s1 = new TestServer1();
+//        s1.start();
+//        TestServer2 s2 = new TestServer2(s1);
+//        s2.start();
+        try (ServerSocket server1 = new ServerSocket(2111)){
+            System.err.println("server started");
+            System.err.println("waiting for connection");
+            Socket client = server1.accept();
+            System.err.println("accepted");
+            System.err.println("connected address" + client.getInetAddress() + " port: " + client.getLocalPort());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

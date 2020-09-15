@@ -11,7 +11,7 @@ public class TestServer1StateMachine {
 
     private class State {
         protected State execute() {
-            System.out.println("default execute method, return null");
+            System.err.println("default execute method, return null");
             return null;
         }
     }
@@ -19,7 +19,7 @@ public class TestServer1StateMachine {
     private class FirstState extends State {
         @Override
         protected State execute() {
-            System.out.println("FirstState work");
+            System.err.println("FirstState work");
             return new SecondState();
         }
     }
@@ -27,7 +27,7 @@ public class TestServer1StateMachine {
     private class SecondState extends State {
         @Override
         protected State execute() {
-            System.out.println("SecondState work");
+            System.err.println("SecondState work");
             return new ThirdState();
         }
     }
@@ -35,7 +35,7 @@ public class TestServer1StateMachine {
     private class ThirdState extends State {
         @Override
         protected State execute() {
-            System.out.println("ThirdState work");
+            System.err.println("ThirdState work");
             return new FourthState();
         }
     }
@@ -43,7 +43,7 @@ public class TestServer1StateMachine {
     private class FourthState extends State {
         @Override
         protected State execute() {
-            System.out.println("FourthState work");
+            System.err.println("FourthState work");
             return new FirstState();
         }
     }
