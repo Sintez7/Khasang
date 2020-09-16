@@ -37,11 +37,14 @@ public class Main {
 //        TestServer2 s2 = new TestServer2(s1);
 //        s2.start();
         try (ServerSocket server1 = new ServerSocket(2111)){
-            System.err.println("server started");
-            System.err.println("waiting for connection");
-            Socket client = server1.accept();
-            System.err.println("accepted");
-            System.err.println("connected address" + client.getInetAddress() + " port: " + client.getLocalPort());
+            while (true) {
+                System.err.println("server started");
+                System.err.println("waiting for connection");
+                Socket client = server1.accept();
+                System.err.println("accepted");
+                System.err.println("connected address" + client.getInetAddress() + " port: " + client.getLocalPort());
+                new ClientHandler(client);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
