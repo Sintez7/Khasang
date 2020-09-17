@@ -36,6 +36,9 @@ public class Main {
 //        s1.start();
 //        TestServer2 s2 = new TestServer2(s1);
 //        s2.start();
+
+        LobbyServer lobbyServer = new LobbyServer();
+
         try (ServerSocket server1 = new ServerSocket(2111)){
             System.err.println("server started");
             while (true) {
@@ -43,7 +46,7 @@ public class Main {
                 Socket client = server1.accept();
                 System.err.println("accepted");
                 System.err.println("connected address" + client.getInetAddress() + " port: " + client.getLocalPort());
-                new ClientHandler(client).start();
+                new ClientHandler(client, lobbyServer).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

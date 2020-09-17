@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameServer {
 
     private Player player1;
@@ -5,6 +8,8 @@ public class GameServer {
 
     private Field player1Field;
     private Field player2Field;
+
+    private static final List<Player> spectators = new ArrayList<>();
 
     public GameServer() {
 

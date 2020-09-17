@@ -1,29 +1,39 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-public class ClientHandler extends Thread implements Player {
+public class ClientHandler extends Thread{
 
     // сокет как агрегат всех точек коннекта
     private final Socket client;
 
     // в этом потоке читаем ОТТУДА СЮДА (от клиента на сервер)
-    private DataInputStream in;
+    private ObjectInputStream in;
     // в этом потоке пишем ОТСЮДА ТУДА (от сервера на клиент)
-    private DataOutputStream out = null;
+    private ObjectOutputStream out = null;
 
-    public ClientHandler(Socket client) {
+    private List<String> lines = Collections.synchronizedList(new ArrayList<>());
+
+    public ClientHandler(Socket client, LobbyServer lobbyServer) {
         this.client = client;
 
         try {
             // инициализируем всё это непотребство
-            in = new DataInputStream(new BufferedInputStream(client.getInputStream()));
-            out = new DataOutputStream(new BufferedOutputStream(client.getOutputStream()));
+            out = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()));
+            out.flush();
+            in = new ObjectInputStream(new BufferedInputStream(client.getInputStream()));
         } catch (IOException e) { // TODO проверить на отвал клиента в рантайме, ибо хз, чекает ли эта хрень текущее состояние
             e.printStackTrace();
             try { // закрываем выходящий поток, зачем - а хер его знает...
                 // надо ли закрывать in?
                 if (out != null) {
                     out.close();
+                }
+                if (in != null) {
+                    in.close();
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -35,6 +45,8 @@ public class ClientHandler extends Thread implements Player {
                 e2.printStackTrace();
             }
         }
+
+        lobbyServer.addPlayer(new ActualPlayer(this));
     }
 
     // Здесь мы ПРИНИМАЕМ даные, если метод выкинул ошибку - клиент отвалился
@@ -43,6 +55,7 @@ public class ClientHandler extends Thread implements Player {
         try {
             while (true) { // TODO по хорошему, должен быть флаг
                 String line = in.readUTF();
+                lines.add(line);
                 // save line or continue work
             }
         } catch (IOException e) {
@@ -50,6 +63,24 @@ public class ClientHandler extends Thread implements Player {
 
         } finally {
             // вот тут описываются действия если клиент отвалился
+        }
+    }
+
+    public String getLine() {
+        String temp = "";
+        Iterator<String> it = lines.iterator();
+        if (it.hasNext()) {
+            temp = it.next();
+            it.remove();
+        }
+        return temp;
+    }
+
+    public void sendData(DataPackage dataPackage) {
+        try {
+            out.writeObject(dataPackage);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
