@@ -5,30 +5,50 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class ClientHandler extends Thread{
+public class ClientHandler extends Thread {
 
     // сокет как агрегат всех точек коннекта
     private final Socket client;
 
-    // в этом потоке читаем ОТТУДА СЮДА (от клиента на сервер)
-    private ObjectInputStream in;
     // в этом потоке пишем ОТСЮДА ТУДА (от сервера на клиент)
     private ObjectOutputStream out = null;
+    // в этом потоке читаем ОТТУДА СЮДА (от клиента на сервер)
+    private ObjectInputStream in;
 
     private List<String> lines = Collections.synchronizedList(new ArrayList<>());
 
     public ClientHandler(Socket client, LobbyServer lobbyServer) {
         this.client = client;
 
+
+
+        lobbyServer.addPlayer(new ActualPlayer(this));
+    }
+
+    // Здесь мы ПРИНИМАЕМ даные, если метод выкинул ошибку - клиент отвалился
+    @Override
+    public void run() {
         try {
             // инициализируем всё это непотребство
             out = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()));
             out.flush();
             in = new ObjectInputStream(new BufferedInputStream(client.getInputStream()));
-        } catch (IOException e) { // TODO проверить на отвал клиента в рантайме, ибо хз, чекает ли эта хрень текущее состояние
+            try {
+                while (true) { // TODO по хорошему, должен быть флаг
+                    String line = in.readUTF();
+                    lines.add(line);
+                    // save line or continue work
+                }
+            } catch (IOException e) {
+                // Клиент ОТВАЛИЛСЯ
+
+            } finally {
+                // вот тут описываются действия если клиент отвалился
+            }
+        } catch (IOException e) { // чекает в ран-тайме на коннект
             e.printStackTrace();
             try { // закрываем выходящий поток, зачем - а хер его знает...
-                // надо ли закрывать in?
+                // надо ли закрывать in? надо
                 if (out != null) {
                     out.close();
                 }
@@ -45,25 +65,6 @@ public class ClientHandler extends Thread{
                 e2.printStackTrace();
             }
         }
-
-        lobbyServer.addPlayer(new ActualPlayer(this));
-    }
-
-    // Здесь мы ПРИНИМАЕМ даные, если метод выкинул ошибку - клиент отвалился
-    @Override
-    public void run() {
-        try {
-            while (true) { // TODO по хорошему, должен быть флаг
-                String line = in.readUTF();
-                lines.add(line);
-                // save line or continue work
-            }
-        } catch (IOException e) {
-            // Клиент ОТВАЛИЛСЯ
-
-        } finally {
-            // вот тут описываются действия если клиент отвалился
-        }
     }
 
     public String getLine() {
@@ -79,6 +80,7 @@ public class ClientHandler extends Thread{
     public void sendData(DataPackage dataPackage) {
         try {
             out.writeObject(dataPackage);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

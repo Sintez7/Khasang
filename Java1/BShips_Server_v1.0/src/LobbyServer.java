@@ -11,19 +11,31 @@ public class LobbyServer extends Thread {
         players.add(client);
     }
 
+    public LobbyServer() {
+        lobbies.add(new Lobby("test1"));
+    }
+
     @Override
     public void run() {
         while (true) {
-            for (Player player : players) {
-                for (Lobby lobby : lobbies) {
-                    player.sendData(lobby.convertToDataPackage());
-                }
+            LobbiesDataPackage data = new LobbiesDataPackage();
+            for (Lobby lobby : lobbies) {
+                data.addLobbyData(lobby.convertToDataPackage());
             }
+
+            for (Player player : players) {
+                player.sendData(data);
+            }
+
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void newLobby(String name) {
+        lobbies.add(new Lobby(name));
     }
 }

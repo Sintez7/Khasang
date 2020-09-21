@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="server.src">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../BShips_Server_v1.0/src" />
+    </SOURCES>
+  </library>
+</component>

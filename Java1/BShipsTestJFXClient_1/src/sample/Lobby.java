@@ -1,3 +1,5 @@
+package sample;
+
 public class Lobby extends Thread {
 
     private boolean started = false;
