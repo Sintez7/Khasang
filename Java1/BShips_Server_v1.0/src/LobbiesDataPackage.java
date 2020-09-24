@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LobbiesDataPackage extends DataPackage{
+public class LobbiesDataPackage extends DataPackage implements Serializable, LobbiesPackage {
 
     private List<LobbyData> list = new ArrayList<>();
 

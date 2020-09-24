@@ -1,3 +1,5 @@
+package sample;
+
 import java.io.Serializable;
 
 public class LobbyData implements Serializable {
@@ -24,3 +26,4 @@ public class LobbyData implements Serializable {
         return id;
     }
 }
+
