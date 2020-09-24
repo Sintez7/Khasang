@@ -1,3 +1,5 @@
+package app;
+
 import java.util.Objects;
 
 public class Point {
@@ -50,7 +52,7 @@ public class Point {
 
     @Override
     public String toString() {
-        return "Point{" +
+        return "app.Point{" +
                 "x=" + x +
                 ", y=" + y +
                 '}';

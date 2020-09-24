@@ -1,3 +1,5 @@
+package app;
+
 public class TestServer1 extends Thread {
 
     TestServer1StateMachine sm = new TestServer1StateMachine();

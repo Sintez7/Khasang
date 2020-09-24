@@ -1,3 +1,5 @@
+package app;
+
 public class TestServer1StateMachine {
 
     private State currentState = new FirstState();

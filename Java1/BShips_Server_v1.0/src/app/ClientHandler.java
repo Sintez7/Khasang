@@ -1,3 +1,5 @@
+package app;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -80,6 +82,15 @@ public class ClientHandler extends Thread {
     public void sendData(DataPackage dataPackage) {
         try {
             out.writeObject(dataPackage);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendData(String s) {
+        try {
+            out.writeObject(s);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();

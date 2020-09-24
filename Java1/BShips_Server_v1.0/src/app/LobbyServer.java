@@ -1,3 +1,5 @@
+package app;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +25,11 @@ public class LobbyServer extends Thread {
                 data.addLobbyData(lobby.convertToDataPackage());
             }
 
+            System.err.println("sending lobbies data to " + players.size() + " players");
+
             for (Player player : players) {
-                player.sendData(data);
+//                player.sendData(data);
+                player.sendData("hello");
             }
 
             try {

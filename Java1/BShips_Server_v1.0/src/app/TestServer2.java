@@ -1,3 +1,5 @@
+package app;
+
 public class TestServer2 extends Thread {
 
     public TestServer2(TestServer1 s1) {

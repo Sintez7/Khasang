@@ -1,3 +1,5 @@
+package app;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -102,16 +104,16 @@ public class Field {
 //
 
 
-//    private Point getShipOffset(Ship ship, int steps) {
+//    private app.Point getShipOffset(app.Ship ship, int steps) {
 //        return switch (ship.getBias()) {
 //            //UP
-//            case 1 -> new Point(0, -steps);
+//            case 1 -> new app.Point(0, -steps);
 //            //RIGHT
-//            case 2 -> new Point(steps, 0);
+//            case 2 -> new app.Point(steps, 0);
 //            //DOWN
-//            case 3 -> new Point(0, steps);
+//            case 3 -> new app.Point(0, steps);
 //            //LEFT
-//            case 4 -> new Point(-steps, 0);
+//            case 4 -> new app.Point(-steps, 0);
 //            default -> null;
 //        };
 //    }

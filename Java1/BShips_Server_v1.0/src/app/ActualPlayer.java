@@ -1,3 +1,5 @@
+package app;
+
 public class ActualPlayer implements Player{
 
     private final ClientHandler client;
@@ -9,5 +11,10 @@ public class ActualPlayer implements Player{
     @Override
     public void sendData(DataPackage dataPackage) {
         client.sendData(dataPackage);
+    }
+
+    @Override
+    public void sendData(String s) {
+        client.sendData(s);
     }
 }

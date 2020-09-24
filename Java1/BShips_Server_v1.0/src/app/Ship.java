@@ -1,3 +1,5 @@
+package app;
+
 public class Ship {
 
     private final int size;

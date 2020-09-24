@@ -9,17 +9,22 @@ public class Lobby {
     private int id;
 
     public Lobby() {
-        this(null);
+        this("");
     }
 
     public Lobby(String name) {
         if (!name.equals("")) {
             this.name = name;
         } else {
-            this.name = "Unnamed Lobby";
+            this.name = "Unnamed app.Lobby";
         }
 
         id = idCounter++;
+    }
+
+    public Lobby(LobbyData data) {
+        this.name = data.lobbyName();
+        this.id = data.lobbyId();
     }
 
     public String getName() {

@@ -1,3 +1,5 @@
+package app;
+
 import java.io.Serializable;
 
 public abstract class DataPackage implements Serializable {
