@@ -2,6 +2,7 @@ package ex1;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server extends Thread {
 
@@ -11,7 +12,8 @@ public class Server extends Thread {
             ServerSocket sSocket = new ServerSocket(2222);
             while (true) {
                 System.err.println("new connection waiting");
-                new ClientHandler(sSocket.accept()).start();
+                Socket temp = sSocket.accept();
+                new ClientHandler(temp).start();
                 System.err.println("accepted");
             }
         } catch (IOException e) {

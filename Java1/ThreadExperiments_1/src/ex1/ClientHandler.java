@@ -48,6 +48,7 @@ public class ClientHandler extends Thread{
 
                 }
             }
+            list.clear();
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -91,7 +92,7 @@ public class ClientHandler extends Thread{
         private final Socket client;
 
         public OutConHandler(Socket client) {
-            this.setDaemon(true);
+//            this.setDaemon(true);
             this.client = client;
         }
 
@@ -100,6 +101,13 @@ public class ClientHandler extends Thread{
             try (ObjectOutputStream oOut = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()))){
                 oOut.flush();
                 System.err.println("OutHandler created and flushed");
+                while (true) {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -128,6 +136,11 @@ public class ClientHandler extends Thread{
                         System.err.println("inHandler: in read");
                         handler.addMessage(o);
                         System.err.println("inHandler: added message to list");
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }

@@ -135,8 +135,8 @@ public class Controller {
                     try {
 //                        LobbiesPackage lp = (LobbiesDataPackage) in.readObject();
 //                        controller.refreshLobbiesList(lp);
-                        String input = in.readUTF();
-                        System.err.println("echo: ");
+                        int input = in.read();
+                        System.err.println("echo: " + input);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

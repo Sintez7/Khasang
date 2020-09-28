@@ -42,7 +42,7 @@ public class Client extends Thread{
             System.err.println("Client: send");
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -50,7 +50,7 @@ public class Client extends Thread{
             System.err.println("Client: trying to send ObjMessage");
             out.writeObject(new ObjMessage(new CustomMessageObj()));
             out.flush();
-            System.err.println("Clent: send");
+            System.err.println("Client: send");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
