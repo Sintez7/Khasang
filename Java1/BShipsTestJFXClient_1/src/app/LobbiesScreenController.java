@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import app.shared.LobbyData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -47,13 +48,18 @@ public class LobbiesScreenController {
 //        list.getSelectionModel().selectFirst();
     }
 
+    @FXML
+    void selectLobby(ActionEvent event) {
+        main.selectLobby(selectedLobby);
+    }
+
     public void addLobbies(List<LobbyData> dPackage) {
         lobbiesList.clear();
-//        for (LobbyData lobbyData : dPackage) {
-//            lobbiesList.add(new Lobby(lobbyData.lobbyName()));
-//        }
-        lobbiesList.add(new Lobby());
-        System.err.println(lobbiesList);
+        for (LobbyData lobbyData : dPackage) {
+            lobbiesList.add(new Lobby(lobbyData.lobbyName()));
+        }
+//        lobbiesList.add(new Lobby());
+//        System.err.println(lobbiesList);
 //        lobbiesList.add(new Lobby());
 //        System.err.println(lobbiesList);
 //        lobbiesList.add(new Lobby());
@@ -61,13 +67,15 @@ public class LobbiesScreenController {
     }
 
     private class LobbyCell extends ListCell<Lobby> {
+//        private boolean inited = true;
         @Override
         synchronized protected void updateItem(Lobby lobby, boolean b) {
             super.updateItem(lobby, b);
-
             if (lobby != null) {
                 setText(lobby.getName());
-//                selectedLobby = lobby;
+                selectedLobby = lobby;
+            } else {
+                setText("");
             }
         }
     }

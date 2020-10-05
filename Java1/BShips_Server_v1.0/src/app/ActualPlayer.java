@@ -16,9 +16,4 @@ public class ActualPlayer implements Player{
     public void sendData(DataPackage dataPackage) throws SocketException {
         client.sendData(dataPackage);
     }
-
-    @Override
-    public void sendData(String s) {
-        client.sendData(s);
-    }
 }

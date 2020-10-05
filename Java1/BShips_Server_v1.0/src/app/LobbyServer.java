@@ -39,7 +39,6 @@ public class LobbyServer extends Thread {
                 } catch (SocketException e) {
                     disconnectedPlayers.add(player);
                 }
-//                player.sendData("hello");
             }
             checkList();
 

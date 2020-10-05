@@ -1,5 +1,6 @@
 package app;
 
+import app.shared.DataPackage;
 import app.shared.LobbiesDataPackage;
 import app.shared.LobbyData;
 import javafx.application.Platform;
@@ -47,6 +48,10 @@ public class ConnectionHandler {
         }
     }
 
+    public void sendData(DataPackage data) {
+        outHandler.send(data);
+    }
+
     private static class OutConnectHandler extends Thread {
         private Socket socket;
         private ObjectOutputStream out;
@@ -64,9 +69,18 @@ public class ConnectionHandler {
                 e.printStackTrace();
             }
         }
+
+        public void send(DataPackage data) {
+            try {
+                out.writeObject(data);
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    private static class InConnectionHandler extends Thread{
+    private static class InConnectionHandler extends Thread {
         private Socket socket;
 
         ObjectInputStream in;

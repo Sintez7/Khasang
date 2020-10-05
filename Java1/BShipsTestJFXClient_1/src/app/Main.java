@@ -1,5 +1,7 @@
 package app;
 
+import app.shared.DataPackage;
+import app.shared.Lobby;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +15,7 @@ public class Main extends Application {
     private AnchorPane anchor;
     Controller controller;
     LobbiesScreenController lsController;
+    ConnectionHandler handler;
 
     public static void main(String[] args) {
         launch(args);
@@ -43,7 +46,7 @@ public class Main extends Application {
         }
         screenLoader.setLocation(getClass().getResource("lobby.fxml"));
         lsController = new LobbiesScreenController(this);
-        ConnectionHandler handler = new ConnectionHandler(lsController);
+        handler = new ConnectionHandler(lsController);
         screenLoader.setController(lsController);
         anchor.getChildren().clear();
         try {
@@ -53,5 +56,9 @@ public class Main extends Application {
             System.err.println("tried to load: lobby.fxml");
         }
         System.err.println("loaded");
+    }
+
+    public void selectLobby(Lobby selectedLobby) {
+        handler.sendData
     }
 }
