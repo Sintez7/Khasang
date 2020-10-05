@@ -1,4 +1,4 @@
-package sample;
+package app.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,4 +23,3 @@ public class LobbiesDataPackage extends DataPackage implements Serializable, Lob
         return list;
     }
 }
-

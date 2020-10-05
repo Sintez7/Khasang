@@ -1,4 +1,4 @@
-package app;
+package app.shared;
 
 public class Lobby {
 
@@ -16,7 +16,7 @@ public class Lobby {
         if (!name.equals("")) {
             this.name = name;
         } else {
-            this.name = "Unnamed app.Lobby";
+            this.name = "Unnamed app.shared.Lobby";
         }
 
         id = idCounter++;

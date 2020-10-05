@@ -1,5 +1,9 @@
 package app;
 
+import app.shared.DataPackage;
+
+import java.net.SocketException;
+
 public class ActualPlayer implements Player{
 
     private final ClientHandler client;
@@ -9,7 +13,7 @@ public class ActualPlayer implements Player{
     }
 
     @Override
-    public void sendData(DataPackage dataPackage) {
+    public void sendData(DataPackage dataPackage) throws SocketException {
         client.sendData(dataPackage);
     }
 

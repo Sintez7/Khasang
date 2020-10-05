@@ -1,7 +1,10 @@
 package app;
 
+import app.shared.DataPackage;
+
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -79,10 +82,12 @@ public class ClientHandler extends Thread {
         return temp;
     }
 
-    public void sendData(DataPackage dataPackage) {
+    public void sendData(DataPackage dataPackage) throws SocketException {
         try {
             out.writeObject(dataPackage);
             out.flush();
+        } catch (SocketException e1) {
+            throw e1;
         } catch (IOException e) {
             e.printStackTrace();
         }

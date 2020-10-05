@@ -1,4 +1,4 @@
-package sample;
+package app.shared;
 
 public class Lobby {
 

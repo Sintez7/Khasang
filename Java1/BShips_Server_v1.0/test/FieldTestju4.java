@@ -1,3 +1,5 @@
+import app.Field;
+import app.Ship;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
