@@ -5,5 +5,6 @@ import app.shared.DataPackage;
 import java.net.SocketException;
 
 public interface Player {
+    int getId();
     void sendData(DataPackage dataPackage) throws SocketException;
 }

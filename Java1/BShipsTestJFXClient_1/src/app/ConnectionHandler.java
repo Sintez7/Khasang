@@ -55,6 +55,7 @@ public class ConnectionHandler {
     private static class OutConnectHandler extends Thread {
         private Socket socket;
         private ObjectOutputStream out;
+        public final Object OUT_MONITOR = new Object();
 
         public OutConnectHandler(Socket socket) {
             this.socket = socket;
@@ -65,6 +66,13 @@ public class ConnectionHandler {
             try {
                 out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
                 out.flush();
+                synchronized (OUT_MONITOR) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

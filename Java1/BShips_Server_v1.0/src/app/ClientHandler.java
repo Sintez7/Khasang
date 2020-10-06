@@ -1,6 +1,7 @@
 package app;
 
 import app.shared.DataPackage;
+import app.shared.LobbyChoice;
 
 import java.io.*;
 import java.net.Socket;
@@ -24,10 +25,15 @@ public class ClientHandler extends Thread {
 
     private final SynchronousQueue<DataPackage> inputQueue = new SynchronousQueue<>(true);
 
+    private final Player thisPlayer;
+    private final LobbyServer lobbyServer;
 
     public ClientHandler(Socket client, LobbyServer lobbyServer) {
         this.client = client;
-        lobbyServer.addPlayer(new ActualPlayer(this));
+        Player player = new ActualPlayer(this);
+        thisPlayer = player;
+        this.lobbyServer = lobbyServer;
+        lobbyServer.addPlayer(player);
     }
 
     // Здесь мы ПРИНИМАЕМ даные, если метод выкинул ошибку - клиент отвалился
@@ -71,8 +77,8 @@ public class ClientHandler extends Thread {
         }
     }
 
-    private void transferPlayerToLobby() {
-
+    private void transferPlayerToLobby(int lobbyId) {
+        lobbyServer.movePlayerToLobbyRoom(thisPlayer, lobbyId);
     }
 
     private class InExecutor extends Thread {
@@ -85,7 +91,7 @@ public class ClientHandler extends Thread {
                 e.printStackTrace();
             }
             switch (in.getId()) {
-                case 11 -> transferPlayerToLobby();
+                case 11 -> transferPlayerToLobby(((LobbyChoice)in).lobbyId);
             }
         }
     }

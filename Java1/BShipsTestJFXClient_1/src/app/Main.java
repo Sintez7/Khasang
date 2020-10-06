@@ -2,6 +2,7 @@ package app;
 
 import app.shared.DataPackage;
 import app.shared.Lobby;
+import app.shared.LobbyChoice;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -59,6 +60,6 @@ public class Main extends Application {
     }
 
     public void selectLobby(Lobby selectedLobby) {
-        handler.sendData
+        handler.sendData(new LobbyChoice(selectedLobby.getId()));
     }
 }

@@ -14,6 +14,7 @@ public class LobbyServer extends Thread {
     private static final List<Player> players = Collections.synchronizedList(new ArrayList<>());
     private static final List<Lobby> lobbies = Collections.synchronizedList(new ArrayList<>());
     private static final List<Player> disconnectedPlayers = Collections.synchronizedList(new ArrayList<>());
+    private static final LobbyRoomHandler roomHandler = new LobbyRoomHandler();
 
     public synchronized void addPlayer(Player client) {
         players.add(client);
@@ -62,5 +63,14 @@ public class LobbyServer extends Thread {
 
     public void newLobby(String name) {
         lobbies.add(new Lobby(name));
+    }
+
+    public void movePlayerToLobbyRoom(Player player, int lobbyId) {
+        roomHandler.acceptPlayer(player, lobbyId);
+        players.remove(player);
+    }
+
+    public void returnToLobbyServer(Player player) {
+        players.add(player);
     }
 }
