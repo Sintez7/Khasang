@@ -9,6 +9,7 @@ public class ActualPlayer implements Player{
     private static int id = 0;
     private final ClientHandler client;
     private int playerId;
+    private String name = "testName";
 
     public ActualPlayer(ClientHandler client) {
         this.client = client;
@@ -23,5 +24,10 @@ public class ActualPlayer implements Player{
     @Override
     public void sendData(DataPackage dataPackage) throws SocketException {
         client.sendData(dataPackage);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

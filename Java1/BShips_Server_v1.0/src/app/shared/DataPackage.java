@@ -9,6 +9,7 @@ public abstract class DataPackage implements Serializable {
     public static final int GAMESERVER_PACKAGE = 2;
     public static final int CHAT_MESSAGE_PACKAGE = 3;
     public static final int LOBBY_CHOICE = 11;
+    public static final int LOBBY_ROOM_PACKAGE = 12;
 
     private final int id;
 
