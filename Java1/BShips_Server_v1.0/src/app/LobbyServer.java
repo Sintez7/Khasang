@@ -9,6 +9,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+/*
+ * Класс занимается рассылкой информации о лобби всем подключенным клиентам
+ * Т.к. число как игроков, так и лобби постоянно будет меняться,
+ * LobbyServer в вечном цикле раздаёт всем клиентам информацию о текущих лобби
+ */
+
 public class LobbyServer extends Thread {
 
     private static final List<Player> players = Collections.synchronizedList(new ArrayList<>());
@@ -27,6 +33,7 @@ public class LobbyServer extends Thread {
     @Override
     public void run() {
         while (true) {
+            // Генерируем пакет о текущем состоянии
             LobbiesDataPackage data = new LobbiesDataPackage();
             for (Lobby lobby : lobbies) {
                 data.addLobbyData(lobby.convertToDataPackage());
@@ -34,13 +41,16 @@ public class LobbyServer extends Thread {
 
             System.err.println("sending lobbies data to " + players.size() + " players");
 
+            // Отправляем пакет всем игрокам
             for (Player player : players) {
                 try {
                     player.sendData(data);
                 } catch (SocketException e) {
+                    // если отправить не смог - считаем клиент отвалившимся
                     disconnectedPlayers.add(player);
                 }
             }
+            // Убираем отвалившиеся клиенты из списка активных
             checkList();
 
             try {

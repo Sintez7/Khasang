@@ -3,125 +3,105 @@ package app;
 import app.shared.DataPackage;
 import app.shared.LobbiesDataPackage;
 import app.shared.LobbyData;
+import app.shared.LobbyRoomData;
 import javafx.application.Platform;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.SynchronousQueue;
 
-public class ConnectionHandler {
+public class ConnectionHandler extends Thread {
 
+    private final SynchronousQueue<DataPackage> inQueue = new SynchronousQueue<>();
+    private final InExecutor inExecutor = new InExecutor(inQueue);
     private Socket socket;
 
-    private InConnectionHandler inHandler;
-    private OutConnectHandler outHandler;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
     private volatile LobbiesScreenController lsController;
 
-    public ConnectionHandler(LobbiesScreenController lsController) {
+    public static Main main;
+
+    public ConnectionHandler(LobbiesScreenController lsController, Main main) {
+        this.main = main;
+        inExecutor.setLsController(lsController);
+        inExecutor.start();
         if (lsController == null) {
             System.err.println("lsController null in ConnectionHandler");
         }
         this.lsController = lsController;
+    }
+
+    @Override
+    public void run() {
         try {
             socket = new Socket("localhost", 2111);
-            OutConnectHandler outCH = new OutConnectHandler(socket);
-            outCH.setDaemon(true);
-            outCH.start();
+            out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            out.flush();
+
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            InConnectionHandler inCH = new InConnectionHandler(socket, this.lsController);
-            inCH.setDaemon(true);
-            inCH.start();
+            in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             try {
-                Thread.sleep(100);
+                while (true) {
+                    Object input = in.readObject();
+                    System.err.println("echo: " + input);
+                    inQueue.offer((DataPackage)input);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("server otvalilsya");
+            }
+            try {
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.err.println("OutCH state: " + outCH.getState());
-            System.err.println("InCH state : " + inCH.getState());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void sendData(DataPackage data) {
-        outHandler.send(data);
-    }
-
-    private static class OutConnectHandler extends Thread {
-        private Socket socket;
-        private ObjectOutputStream out;
-        public final Object OUT_MONITOR = new Object();
-
-        public OutConnectHandler(Socket socket) {
-            this.socket = socket;
-        }
-
-        @Override
-        public void run() {
-            try {
-                out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-                out.flush();
-                synchronized (OUT_MONITOR) {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void send(DataPackage data) {
-            try {
-                out.writeObject(data);
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            out.writeObject(data);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private static class InConnectionHandler extends Thread {
-        private Socket socket;
+    private static class InExecutor extends Thread {
 
-        ObjectInputStream in;
-        private volatile LobbiesScreenController lsController;
+        private final SynchronousQueue<DataPackage> inQueue;
 
-        public InConnectionHandler(Socket socket, LobbiesScreenController lsController) {
-            this.socket = socket;
+        LobbiesScreenController lsController;
+
+        public InExecutor(SynchronousQueue<DataPackage> inQueue) {
+            this.inQueue = inQueue;
+        }
+
+        public void setLsController(LobbiesScreenController lsController) {
             this.lsController = lsController;
         }
 
         @Override
         public void run() {
-            try {
-                in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-                while(true) {
-                    try {
-//                        LobbiesPackage lp = (LobbiesDataPackage) in.readObject();
-//                        controller.refreshLobbiesList(lp);
-                        Object input = in.readObject();
-                        System.err.println("echo: " + input);
-//                        lsController.addLobbies(((LobbiesDataPackage)input).getList());
-                        List<LobbyData> dPackage = ((LobbiesDataPackage)input).getList();
-                        System.err.println(Thread.currentThread());
-                        Platform.runLater(() -> {
-                            System.err.println(Thread.currentThread());
-                            lsController.addLobbies(dPackage);
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            while (true) {
+                try {
+                    DataPackage temp = inQueue.take();
+                    switch (temp.getId()) {
+                        case 1 -> Platform.runLater(() -> main.handleLobbiesPackage((LobbiesDataPackage)temp));
+                        case 12 -> Platform.runLater(() -> main.handleRoomPackage((LobbyRoomData)temp));
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

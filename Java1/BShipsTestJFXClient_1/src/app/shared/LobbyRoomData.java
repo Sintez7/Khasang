@@ -40,11 +40,7 @@ public class LobbyRoomData extends DataPackage implements Serializable  {
     }
 
     public void setPlayer1Name(String player1Name) {
-        if (player1Name == null) {
-            this.player1Name = "anonymous player1";
-        } else {
-            this.player1Name = player1Name;
-        }
+        this.player1Name = player1Name;
     }
 
     public String getPlayer2Name() {
@@ -52,10 +48,6 @@ public class LobbyRoomData extends DataPackage implements Serializable  {
     }
 
     public void setPlayer2Name(String player2Name) {
-        if (player2Name == null) {
-            this.player2Name = "anonymous player2";
-        } else {
-            this.player2Name = player2Name;
-        }
+        this.player2Name = player2Name;
     }
 }

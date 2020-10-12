@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import app.shared.LobbyData;
+import app.shared.LobbyRoomData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import app.shared.Lobby;
 
-public class LobbiesScreenController {
+public class LobbiesScreenController implements Controllable {
 
     @FXML
     private ResourceBundle resources;
@@ -35,8 +36,6 @@ public class LobbiesScreenController {
 
     @FXML
     void initialize() {
-        assert list != null : "fx:id=\"list\" was not injected: check your FXML file 'lobby.fxml'.";
-
         list.setCellFactory(new Callback<ListView<Lobby>, ListCell<Lobby>>() {
             @Override
             public ListCell<Lobby> call(ListView<Lobby> lobbyListView) {
@@ -45,7 +44,6 @@ public class LobbiesScreenController {
         });
 
         list.setItems(lobbiesList);
-//        list.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -53,21 +51,20 @@ public class LobbiesScreenController {
         main.selectLobby(selectedLobby);
     }
 
+    @Override
     public void addLobbies(List<LobbyData> dPackage) {
         lobbiesList.clear();
         for (LobbyData lobbyData : dPackage) {
             lobbiesList.add(new Lobby(lobbyData.lobbyName()));
         }
-//        lobbiesList.add(new Lobby());
-//        System.err.println(lobbiesList);
-//        lobbiesList.add(new Lobby());
-//        System.err.println(lobbiesList);
-//        lobbiesList.add(new Lobby());
-//        System.err.println(lobbiesList);
+    }
+
+    @Override
+    public void receiveRoomInfo(LobbyRoomData data) {
+        System.err.println("receiveRoomData in LobbiesScreenController");
     }
 
     private class LobbyCell extends ListCell<Lobby> {
-//        private boolean inited = true;
         @Override
         synchronized protected void updateItem(Lobby lobby, boolean b) {
             super.updateItem(lobby, b);
