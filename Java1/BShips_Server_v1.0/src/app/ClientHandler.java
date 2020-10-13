@@ -54,11 +54,13 @@ public class ClientHandler extends Thread {
                     inputQueue.offer((DataPackage) input);
                 }
             } catch (ClassNotFoundException e) {
-                // Клиент ОТВАЛИЛСЯ
                 e.printStackTrace();
+            } catch (SocketException e1) {
+                // Клиент ОТВАЛИЛСЯ
+                System.err.println(client.toString() + " connection lost");
                 // Завершаем цикл чтения
 //                    break;
-            } finally {
+            }finally {
                 if (in != null) {
                     in.close();
                 }

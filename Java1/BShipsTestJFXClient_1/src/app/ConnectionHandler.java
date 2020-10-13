@@ -23,6 +23,7 @@ public class ConnectionHandler extends Thread {
     private volatile LobbiesScreenController lsController;
 
     public static Main main;
+    public static volatile boolean notClosed = true;
 
     public ConnectionHandler(LobbiesScreenController lsController, Main main) {
         this.main = main;
@@ -48,7 +49,7 @@ public class ConnectionHandler extends Thread {
             }
             in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             try {
-                while (true) {
+                while (notClosed) {
                     Object input = in.readObject();
                     System.err.println("echo: " + input);
                     inQueue.offer((DataPackage)input);
@@ -65,6 +66,7 @@ public class ConnectionHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public void sendData(DataPackage data) {
@@ -83,6 +85,7 @@ public class ConnectionHandler extends Thread {
         LobbiesScreenController lsController;
 
         public InExecutor(SynchronousQueue<DataPackage> inQueue) {
+            setName("InExecutor Thread");
             this.inQueue = inQueue;
         }
 
@@ -92,7 +95,7 @@ public class ConnectionHandler extends Thread {
 
         @Override
         public void run() {
-            while (true) {
+            while (notClosed) {
                 try {
                     DataPackage temp = inQueue.take();
                     switch (temp.getId()) {

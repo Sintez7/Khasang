@@ -40,7 +40,8 @@ public class RoomController {
     }
 
     public void receiveRoomInfo(LobbyRoomData data) {
-
+        player1Name.setText(data.getPlayer1Name());
+        player2Name.setText(data.getPlayer2Name());
     }
 
     @FXML

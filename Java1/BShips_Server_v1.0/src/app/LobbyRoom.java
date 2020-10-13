@@ -18,11 +18,11 @@ import java.util.List;
 public class LobbyRoom extends Thread {
 
     private static int id;
-    List<Player> players = Collections.synchronizedList(new ArrayList<>());
+    List<Player> spectators = Collections.synchronizedList(new ArrayList<>());
     private final int roomId;
 
-    private Player player1;
-    private Player player2;
+    private Player player1 = null;
+    private Player player2 = null;
 
     public LobbyRoom() {
         roomId = id++;
@@ -34,12 +34,12 @@ public class LobbyRoom extends Thread {
         } else if (player2 == null) {
             player2 = player;
         } else {
-            players.add(player);
+            spectators.add(player);
         }
     }
 
     public void removePlayerFromRoom(Player player) {
-        players.remove(player);
+        spectators.remove(player);
     }
 
     public int getRoomId() {
@@ -48,32 +48,34 @@ public class LobbyRoom extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (player1 != null || player2 != null || spectators.size() > 0) {
             System.err.println("sending Room data");
             DataPackage data = convertToDataPackage();
             if (player1 != null) {
                 try {
                     player1.sendData(data);
                 } catch (SocketException e) {
-                    e.printStackTrace();
+                    System.err.println("LobbyRoom.run.player1 SocketException");
+                    player1 = null;
                 }
             }
             if (player2 != null) {
                 try {
                     player2.sendData(data);
                 } catch (SocketException e) {
-                    e.printStackTrace();
+                    System.err.println("LobbyRoom.run.player2 SocketException");
+                    player2 = null;
                 }
             }
-            for (Player player : players) {
+            for (Player player : spectators) {
                 try {
                     player.sendData(data);
                 } catch (SocketException e) {
-                    e.printStackTrace();
+                    System.err.println("LobbyRoom.run.spectator SocketException");
                 }
             }
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -82,7 +84,7 @@ public class LobbyRoom extends Thread {
 
     private DataPackage convertToDataPackage() {
         LobbyRoomData result = new LobbyRoomData();
-        for (Player player : players) {
+        for (Player player : spectators) {
             result.addPlayerToList(player.getName());
         }
         result.setRoomId(roomId);

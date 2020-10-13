@@ -53,6 +53,7 @@ public class Main extends Application {
         screenLoader.setLocation(getClass().getResource("lobby.fxml"));
         lsController = new LobbiesScreenController(this);
         handler = new ConnectionHandler(lsController, this);
+        handler.setDaemon(true);
         handler.start();
         screenLoader.setController(lsController);
         anchor.getChildren().clear();
