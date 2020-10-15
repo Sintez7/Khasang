@@ -9,4 +9,5 @@ public interface Player {
     void sendData(DataPackage dataPackage) throws SocketException;
 
     String getName();
+    void setCurrentRoom(LobbyRoom currentRoom);
 }

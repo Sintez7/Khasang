@@ -3,7 +3,7 @@ package app;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameServer {
+public class GameServer extends Thread {
 
     private Player player1;
     private Player player2;
@@ -11,10 +11,12 @@ public class GameServer {
     private Field player1Field;
     private Field player2Field;
 
-    private static final List<Player> spectators = new ArrayList<>();
+    private final List<Player> spectators = new ArrayList<>();
 
-    public GameServer() {
-
+    public GameServer(Player player1, Player player2, List<Player> spectators) {
+        this.player1 = player1;
+        this.player2 = player2;
+        this.spectators.addAll(spectators);
     }
 
     public void setPlayer1(Player player) {
@@ -25,16 +27,26 @@ public class GameServer {
         player2 = player;
     }
 
-    private void startGame() {
-        init();
+    public GameServer startGame() {
         start();
+        return this;
     }
+
+    @Override
+    public void run() {
+
+    }
+
+//    private void startGame() {
+//        init();
+//        launchGame();
+//    }
 
     private void init() {
 
     }
 
-    private void start() {
+    private void launchGame() {
 
     }
 }

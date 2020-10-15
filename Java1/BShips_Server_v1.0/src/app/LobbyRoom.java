@@ -36,6 +36,7 @@ public class LobbyRoom extends Thread {
         } else {
             spectators.add(player);
         }
+        player.setCurrentRoom(this);
     }
 
     public void removePlayerFromRoom(Player player) {
@@ -100,5 +101,21 @@ public class LobbyRoom extends Thread {
             result.setPlayer2Name("empty slot");
         }
         return result;
+    }
+
+    public GameServer startGame() {
+        if (player1 != null && player2 != null) {
+            //TODO startGame
+            clearRoom();
+            return new GameServer(player1, player2, spectators).startGame();
+        } else {
+            return null;
+        }
+    }
+
+    private void clearRoom() {
+        player1 = null;
+        player2 = null;
+        spectators.clear();
     }
 }

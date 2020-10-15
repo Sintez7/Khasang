@@ -30,4 +30,9 @@ public class ActualPlayer implements Player{
     public String getName() {
         return name;
     }
+
+    @Override
+    public void setCurrentRoom(LobbyRoom currentRoom) {
+        client.setCurrentRoom(currentRoom);
+    }
 }

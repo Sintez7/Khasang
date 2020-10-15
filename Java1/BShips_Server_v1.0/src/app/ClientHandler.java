@@ -15,7 +15,6 @@ import java.util.concurrent.SynchronousQueue;
  */
 
 public class ClientHandler extends Thread {
-    // сокет как агрегат всех точек коннекта
     private final Socket client;
     private final SynchronousQueue<DataPackage> inputQueue = new SynchronousQueue<>(true);
     private final Player thisPlayer;
@@ -25,6 +24,9 @@ public class ClientHandler extends Thread {
     private ObjectOutputStream out = null;
     // в этом потоке читаем ОТТУДА СЮДА (от клиента на сервер)
     private ObjectInputStream in;
+
+    private LobbyRoom currentRoom;
+    private GameServer currentGameServer;
 
     public ClientHandler(Socket client, LobbyServer lobbyServer) {
         this.client = client;
@@ -102,8 +104,24 @@ public class ClientHandler extends Thread {
         }
     }
 
+    public LobbyRoom getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(LobbyRoom currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
     private void transferPlayerToLobby(int lobbyId) {
         lobbyServer.movePlayerToLobbyRoom(thisPlayer, lobbyId);
+    }
+
+    private void gameStart() {
+        currentGameServer = currentRoom.startGame();
+    }
+
+    private void playerMove() {
+//        currentGameServer.playerMove();
     }
 
     private class InExecutor extends Thread {
@@ -116,14 +134,18 @@ public class ClientHandler extends Thread {
 
         @Override
         public void run() {
-            DataPackage in = null;
-            try {
-                in = inputQueue.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            switch (in.getId()) {
-                case 11 -> transferPlayerToLobby(((LobbyChoice) in).lobbyId);
+            DataPackage in;
+            while (true) {
+                try {
+                    in = inputQueue.take();
+                    switch (in.getId()) {
+                        case DataPackage.LOBBY_CHOICE -> transferPlayerToLobby(((LobbyChoice) in).lobbyId);
+                        case DataPackage.GAME_START -> gameStart();
+                        case DataPackage.PLAYER_MOVE -> playerMove(); //TODO obrabotat' package
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
