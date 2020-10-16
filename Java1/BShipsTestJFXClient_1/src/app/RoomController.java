@@ -31,7 +31,7 @@ public class RoomController {
 
     @FXML
     void startGame(ActionEvent event) {
-
+        main.sendStartGame();
     }
 
     @FXML

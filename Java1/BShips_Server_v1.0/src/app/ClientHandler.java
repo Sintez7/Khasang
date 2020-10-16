@@ -1,7 +1,6 @@
 package app;
 
-import app.shared.DataPackage;
-import app.shared.LobbyChoice;
+import app.shared.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -62,7 +61,7 @@ public class ClientHandler extends Thread {
                 System.err.println(client.toString() + " connection lost");
                 // Завершаем цикл чтения
 //                    break;
-            }finally {
+            } finally {
                 if (in != null) {
                     in.close();
                 }
@@ -124,6 +123,18 @@ public class ClientHandler extends Thread {
 //        currentGameServer.playerMove();
     }
 
+    private void handlePlaceShip(PlaceShip ship) {
+        try {
+            sendData(new PlaceShipResponse(currentGameServer.handlePlaceShip(thisPlayer, ship)));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleHit(Hit in) {
+        currentGameServer.handleHit(thisPlayer, in.getX(), in.getY());
+    }
+
     private class InExecutor extends Thread {
 
         /*
@@ -141,7 +152,9 @@ public class ClientHandler extends Thread {
                     switch (in.getId()) {
                         case DataPackage.LOBBY_CHOICE -> transferPlayerToLobby(((LobbyChoice) in).lobbyId);
                         case DataPackage.GAME_START -> gameStart();
-                        case DataPackage.PLAYER_MOVE -> playerMove(); //TODO obrabotat' package
+                        case DataPackage.PLACE_SHIP -> handlePlaceShip((PlaceShip) in);
+                        case DataPackage.HIT -> handleHit((Hit)in); //TODO obrabotat' package
+
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

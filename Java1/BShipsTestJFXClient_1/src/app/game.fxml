@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.GameController">
+   <children>
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <GridPane hgap="30.0" vgap="30.0" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <AnchorPane>
+                     <children>
+                        <GridPane fx:id="playerGrid" style="-fx-grid-lines-visible: true;">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane GridPane.columnIndex="1">
+                     <children>
+                        <GridPane fx:id="opponentGrid" style="-fx-grid-lines-visible: true;">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </GridPane>
+         </center>
+         <right>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <center>
+                  <ScrollPane prefWidth="300.0" BorderPane.alignment="CENTER">
+                     <content>
+                        <TextArea fx:id="chatTextArea" editable="false" />
+                     </content>
+                  </ScrollPane>
+               </center>
+               <bottom>
+                  <TextField fx:id="chatInputTextField" BorderPane.alignment="CENTER" />
+               </bottom>
+            </BorderPane>
+         </right>
+      </BorderPane>
+   </children>
+</AnchorPane>

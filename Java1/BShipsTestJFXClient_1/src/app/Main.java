@@ -3,6 +3,7 @@ package app;
 import app.shared.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -22,6 +23,7 @@ public class Main extends Application {
     LobbiesScreenController lsController;
     ConnectionHandler handler;
     volatile RoomController roomController;
+    private Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -30,13 +32,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 //        Parent root = FXMLLoader.load(getClass().getResource("connectionScreen.fxml"));
+        this.primaryStage = primaryStage;
         FXMLLoader loader = new FXMLLoader();
         controller = new Controller(this);
         loader.setLocation(getClass().getResource("connectionScreen.fxml"));
         loader.setController(controller);
         loader.load();
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(loader.getRoot(), 800, 800));
+        primaryStage.setScene(new Scene(loader.getRoot(), 600, 600));
         primaryStage.show();
     }
 
@@ -102,5 +105,20 @@ public class Main extends Application {
         } else {
             System.err.println("roomController is null");
         }
+    }
+
+    public void sendStartGame() {
+        handler.sendData(new GameStart());
+    }
+
+    public void handleGameStart() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("game.fxml"));
+            Scene gameScene = new Scene(root, 800, 800);
+            primaryStage.setScene(gameScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -37,15 +37,17 @@ public class Field {
         }
     }
 
-    public void hit(int x, int y) {
+    public HitResult hit(int x, int y) {
         if (cells[x - 1][y - 1] != HIT) {
             if (hitPoint(x - 1, y - 1)) {
-                checkLose();
-//                server.hit();
+//                checkLose();
+                return  HitResult.HIT_SHIP;
             }
 //            server.miss();
+            return HitResult.MISS;
         } else {
 //            server.pointHit();
+            return HitResult.POINT_ALREADY_HIT;
         }
     }
 
@@ -76,14 +78,15 @@ public class Field {
         }
     }
 
-    public boolean placeShip(int x, int y, Ship ship) {
+    public boolean placeShip(int x, int y, int shipSize, int shipBias) {
+        Ship tempShip = new Ship(shipSize, shipBias);
         int[][] temp = cloneField(cells);
 
         Point offset = new Point();
         Point last = new Point(-1, -1);
 
-        for (int i = 0; i < ship.getSize(); i++) {
-            offset.set(ship.getVector().x * i, ship.getVector().y * i);
+        for (int i = 0; i < tempShip.getSize(); i++) {
+            offset.set(tempShip.getVector().x * i, tempShip.getVector().y * i);
             Point actual = new Point((x + offset.x) - 1, (y + offset.y) - 1);
 
             if (isValidPlacement(actual, last, temp)) {
@@ -93,7 +96,7 @@ public class Field {
             }
             last.set(actual);
         }
-        shipsInPlay.add(new ActualShip(x, y, ship));
+        shipsInPlay.add(new ActualShip(x, y, tempShip));
         cells = temp;
         return true;
     }
@@ -172,5 +175,11 @@ public class Field {
             System.out.println();
         }
         System.out.println("==============================");
+    }
+
+    enum HitResult {
+        HIT_SHIP,
+        MISS,
+        POINT_ALREADY_HIT
     }
 }

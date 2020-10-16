@@ -99,8 +99,9 @@ public class ConnectionHandler extends Thread {
                 try {
                     DataPackage temp = inQueue.take();
                     switch (temp.getId()) {
-                        case 1 -> Platform.runLater(() -> main.handleLobbiesPackage((LobbiesDataPackage)temp));
-                        case 12 -> Platform.runLater(() -> main.handleRoomPackage((LobbyRoomData)temp));
+                        case DataPackage.LOBBY_PACKAGE -> Platform.runLater(() -> main.handleLobbiesPackage((LobbiesDataPackage)temp));
+                        case DataPackage.ROOM -> Platform.runLater(() -> main.handleRoomPackage((LobbyRoomData)temp));
+                        case DataPackage.GAME_START -> Platform.runLater(() -> main.handleGameStart());
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
