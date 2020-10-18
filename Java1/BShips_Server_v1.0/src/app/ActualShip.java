@@ -9,11 +9,17 @@ public class ActualShip {
     public static final int DEAD = 0;
 
     private final Map<Point, Integer> occupiedPoints = new HashMap<>();
+    private int size;
+
+    private Point bias;
+    private boolean circled = false;
 
     public ActualShip(int x, int y, Ship ship) {
+        bias = ship.getVector();
+        size = ship.getSize();
         Point temp = new Point();
         for (int i = 0; i < ship.getSize(); i++) {
-            temp.set(x + (ship.getVector().x * i), y + (ship.getVector().y * i));
+            temp.set(x + (bias.x * i), y + (bias.y * i)); //TODO считается некорректно
             occupiedPoints.put(temp, ALIVE);
         }
     }
@@ -38,5 +44,27 @@ public class ActualShip {
             }
         }
         return false;
+    }
+
+    public Point[] getShipPoint() {
+        Point[] result = new Point[size];
+        int counter = 0;
+        for (Point point : occupiedPoints.keySet()) {
+            result[counter] = point;
+            counter++;
+        }
+        return result;
+    }
+
+    public Point getBias() {
+        return bias;
+    }
+
+    public void setCircled() {
+        circled = true;
+    }
+
+    public boolean isCircled() {
+        return circled;
     }
 }

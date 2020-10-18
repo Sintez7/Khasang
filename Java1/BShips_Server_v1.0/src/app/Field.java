@@ -6,9 +6,10 @@ import java.util.List;
 
 public class Field {
 
-    private static final int FREE = 0;
-    private static final int OCCUPIED = 1;
-    private static final int HIT = 2;
+    protected static final int FREE = 0;
+    protected static final int OCCUPIED = 1;
+    protected static final int HIT = 2;
+    protected static final int OCCUPIED_HIT = 3;
 
     private static final int SIZE = 10;
     private static final List<ActualShip> shipsInPlay = new ArrayList<>();
@@ -39,12 +40,13 @@ public class Field {
 
     public HitResult hit(int x, int y) {
         if (cells[x - 1][y - 1] != HIT) {
-            if (hitPoint(x - 1, y - 1)) {
+            if (hitPoint(x, y)) {
 //                checkLose();
                 return  HitResult.HIT_SHIP;
+            } else {
+//                server.miss();
+                return HitResult.MISS;
             }
-//            server.miss();
-            return HitResult.MISS;
         } else {
 //            server.pointHit();
             return HitResult.POINT_ALREADY_HIT;
@@ -52,8 +54,13 @@ public class Field {
     }
 
     private boolean hitPoint(int x, int y) {
-        cells[x][y] = HIT;
-        return hitShip(x, y);
+        if (hitShip(x, y)) {
+            cells[x - 1][y - 1] = OCCUPIED_HIT;
+            return true;
+        } else {
+            cells[x - 1][y - 1] = HIT;
+            return false;
+        }
     }
 
     private boolean hitShip(int x, int y) {
@@ -62,20 +69,17 @@ public class Field {
                 return true;
             }
         }
+        cells[x][y] = HIT;
         return false;
     }
 
-    private void checkLose() {
-        boolean defeated = true;
+    public boolean checkLose() {
         for (ActualShip actualShip : shipsInPlay) {
             if (actualShip.isAlive()) {
-                defeated = false;
-                break;
+                return false;
             }
         }
-        if (defeated) {
-//            server.callDefeated();
-        }
+        return true;
     }
 
     public boolean placeShip(int x, int y, int shipSize, int shipBias) {
@@ -97,7 +101,7 @@ public class Field {
             last.set(actual);
         }
         shipsInPlay.add(new ActualShip(x, y, tempShip));
-        cells = temp;
+        cells = cloneField(temp);
         return true;
     }
 
@@ -175,6 +179,40 @@ public class Field {
             System.out.println();
         }
         System.out.println("==============================");
+    }
+
+    public void checkSunkShips() {
+        for (ActualShip actualShip : shipsInPlay) {
+            if (!actualShip.isAlive() && !actualShip.isCircled()) {
+                circleSunkShip(actualShip);
+                actualShip.setCircled();
+            }
+        }
+    }
+
+    private void circleSunkShip(ActualShip ship) {
+        Point[] points = ship.getShipPoint();
+        Point vector = new Point();
+        Point current = new Point();
+        for (int i = 0; i < points.length; i++) {
+            for (int j = 0; j < 8; j++) {
+                current.set(points[i].x - 1, points[i].y - 1);
+                vector.set(SCAN_DIRECTIONS[j][0], SCAN_DIRECTIONS[j][1]);
+                current.add(vector);
+                if (isPointInBounds(current)) {
+                    setHit(current);
+                }
+            }
+
+        }
+    }
+
+    private void setHit(Point p) {
+        if (cells[p.x][p.y] == FREE) {
+            cells[p.x][p.y] = HIT;
+        } else if (cells[p.x][p.y] == OCCUPIED) {
+            cells[p.x][p.y] = OCCUPIED_HIT;
+        }
     }
 
     enum HitResult {

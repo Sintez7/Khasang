@@ -15,6 +15,7 @@ public abstract class DataPackage implements Serializable {
     public static final int PLAYER_MOVE = 15;
     public static final int PLACE_SHIP_RESPONSE = 16;
     public static final int HIT = 17;
+    public static final int HIT_RESPONSE = 18;
 
     private final int id;
 
