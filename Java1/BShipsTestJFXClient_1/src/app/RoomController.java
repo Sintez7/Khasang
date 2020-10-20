@@ -24,6 +24,9 @@ public class RoomController {
     @FXML
     private Label player2Name;
 
+    @FXML
+    private Label lobbyNameLabel;
+
     private Main main;
     public RoomController(Main main) {
         this.main = main;
@@ -42,6 +45,7 @@ public class RoomController {
     public void receiveRoomInfo(LobbyRoomData data) {
         player1Name.setText(data.getPlayer1Name());
         player2Name.setText(data.getPlayer2Name());
+        lobbyNameLabel.setText(data.getRoomName());
     }
 
     @FXML

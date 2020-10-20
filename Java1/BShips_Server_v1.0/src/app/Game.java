@@ -2,13 +2,16 @@ package app;
 
 import app.shared.HitResponse;
 import app.shared.PlaceShip;
+import app.shared.TurnUpdate;
 
 import java.net.SocketException;
 
-public class Game {
+public class Game implements Runnable {
+
+    private final Thread self;
 
     public final Object REMATCH_MONITOR = new Object();
-    public volatile boolean rematch;
+    public volatile boolean rematch = false;
 
     private Player player1;
     private Player player2;
@@ -18,9 +21,25 @@ public class Game {
     private Field player2Field = new Field();
     private FakeField player2OpponentField = new FakeField();
 
+    private final Object DEFEATED_MONITOR = new Object();
+    private boolean player1Defeated = false;
+    private boolean player2Defeated = false;
+
     public Game(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
+        self = new Thread(this);
+    }
+
+    public void start() {
+        self.start();
+    }
+
+    @Override
+    public void run() {
+        synchronized (REMATCH_MONITOR) {
+            REMATCH_MONITOR.notifyAll();
+        }
     }
 
     public void prepareRematch() {
@@ -75,9 +94,6 @@ public class Game {
                 player1OpponentField.setPoint(x, y, Field.HitResult.MISS);
                 player1.sendData(new HitResponse(HitResponse.MISS));
             }
-            case POINT_ALREADY_HIT -> {
-                player1.sendData(new HitResponse(HitResponse.ALREADY_HIT));
-            }
         }
 
         if (player2Field.checkLose()) {
@@ -93,7 +109,7 @@ public class Game {
         switch (player1Field.hit(x, y)) {
             case HIT_SHIP -> player2.sendData(new HitResponse(HitResponse.HIT));
             case MISS -> player2.sendData(new HitResponse(HitResponse.MISS));
-            case POINT_ALREADY_HIT -> player2.sendData(new HitResponse(HitResponse.ALREADY_HIT));
+//            case POINT_ALREADY_HIT -> player2.sendData(new HitResponse(HitResponse.ALREADY_HIT));
         }
 
         if (player1Field.checkLose()) {
@@ -102,10 +118,25 @@ public class Game {
     }
 
     private void setPlayer1Defeated() {
-
+        player1Defeated = true;
+        synchronized (DEFEATED_MONITOR) {
+            DEFEATED_MONITOR.notifyAll();
+        }
     }
 
     private void setPlayer2Defeated() {
+        player2Defeated = true;
+        synchronized (DEFEATED_MONITOR) {
+            DEFEATED_MONITOR.notifyAll();
+        }
+    }
 
+    public void updateClients() {
+        try {
+            player1.sendData(new TurnUpdate(player1Field.cells, player1OpponentField.cells, 0));
+            player2.sendData(new TurnUpdate(player2Field.cells, player2OpponentField.cells, 0));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 }

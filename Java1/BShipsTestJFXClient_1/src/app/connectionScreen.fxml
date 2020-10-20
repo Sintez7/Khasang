@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
@@ -9,6 +10,7 @@
       <AnchorPane fx:id="anchor" prefHeight="400.0" prefWidth="600.0">
          <children>
             <Button layoutX="191.0" layoutY="125.0" mnemonicParsing="false" onAction="#connect" prefHeight="151.0" prefWidth="218.0" text="Play" />
+            <TextField fx:id="nameTextField" layoutX="226.0" layoutY="69.0" />
          </children>
       </AnchorPane>
    </center>

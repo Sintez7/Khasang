@@ -17,9 +17,9 @@ public class ActualShip {
     public ActualShip(int x, int y, Ship ship) {
         bias = ship.getVector();
         size = ship.getSize();
-        Point temp = new Point();
         for (int i = 0; i < ship.getSize(); i++) {
-            temp.set(x + (bias.x * i), y + (bias.y * i)); //TODO считается некорректно
+            Point temp = new Point();
+            temp.set(x + (bias.x * i), y + (bias.y * i));
             occupiedPoints.put(temp, ALIVE);
         }
     }

@@ -8,6 +8,7 @@ public class LobbyRoomData extends DataPackage implements Serializable  {
 
     String player1Name;
     String player2Name;
+    String roomName;
     List<String> playersNames = new ArrayList<>();
     int roomId;
 
@@ -49,5 +50,13 @@ public class LobbyRoomData extends DataPackage implements Serializable  {
 
     public void setPlayer2Name(String player2Name) {
         this.player2Name = player2Name;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 }

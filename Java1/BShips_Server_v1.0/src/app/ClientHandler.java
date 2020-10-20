@@ -14,6 +14,8 @@ import java.util.concurrent.SynchronousQueue;
  */
 
 public class ClientHandler extends Thread {
+    private static int id = 0;
+
     private final Socket client;
     private final SynchronousQueue<DataPackage> inputQueue = new SynchronousQueue<>(true);
     private final Player thisPlayer;
@@ -26,14 +28,21 @@ public class ClientHandler extends Thread {
 
     private LobbyRoom currentRoom;
     private GameServer currentGameServer;
+    private boolean connectionAlive = false;
+    private InExecutor inExecutor;
 
     public ClientHandler(Socket client, LobbyServer lobbyServer) {
+        setName("ClientHandler " + id++);
         this.client = client;
         Player player = new ActualPlayer(this);
         thisPlayer = player;
         this.lobbyServer = lobbyServer;
         lobbyServer.addPlayer(player);
-        new InExecutor().start();
+        inExecutor = new InExecutor();
+        inExecutor.setDaemon(true);
+        inExecutor.setName("InExecutor " + id);
+        inExecutor.start();
+        connectionAlive = true;
     }
 
     // если метод выкинул ошибку - клиент отвалился
@@ -50,7 +59,7 @@ public class ClientHandler extends Thread {
              * делегируем обработку классу InExecutor через синхронизованную очередь
              */
             try {
-                while (true) {
+                while (connectionAlive) {
                     Object input = in.readObject();
                     inputQueue.offer((DataPackage) input);
                 }
@@ -61,6 +70,8 @@ public class ClientHandler extends Thread {
                 System.err.println(client.toString() + " connection lost");
                 // Завершаем цикл чтения
 //                    break;
+                connectionAlive = false;
+                inExecutor.interrupt();
             } finally {
                 if (in != null) {
                     in.close();
@@ -150,16 +161,22 @@ public class ClientHandler extends Thread {
                 try {
                     in = inputQueue.take();
                     switch (in.getId()) {
+                        case DataPackage.PLAYER_NAME -> setPlayerName(((PlayerName) in).getName());
                         case DataPackage.LOBBY_CHOICE -> transferPlayerToLobby(((LobbyChoice) in).lobbyId);
                         case DataPackage.GAME_START -> gameStart();
                         case DataPackage.PLACE_SHIP -> handlePlaceShip((PlaceShip) in);
-                        case DataPackage.HIT -> handleHit((Hit)in); //TODO obrabotat' package
+                        case DataPackage.HIT -> handleHit((Hit) in); //TODO obrabotat' package
 
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    break;
                 }
             }
         }
+    }
+
+    private void setPlayerName(String name) {
+        thisPlayer.setName(name);
     }
 }

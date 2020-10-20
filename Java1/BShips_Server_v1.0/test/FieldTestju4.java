@@ -15,7 +15,7 @@ public class FieldTestju4 {
         //acceptable numbers as bounds [1,1][10,10]
         //all that not in bounds must not be placed
         //placeShip test
-        assertTrue(field.placeShip(5,5 ,2, Ship.UP), "place ship 5.5 failed");
+        assertTrue(field.placeShip(5,5 ,4, Ship.UP), "place ship 5.5 failed");
         //top-left point, min bounds
         assertTrue(field.placeShip(1,1,1, Ship.UP), "min bounds check failed");
         //bottom-right point, max bounds
@@ -65,10 +65,12 @@ public class FieldTestju4 {
         field.printField();
         System.out.println("hit");
         field.hit(5, 5);
-//        field.hit(4, 5);
+        field.hit(5, 4);
+        field.hit(5, 3);
+        field.hit(5, 2);
         field.printField();
-//        System.out.println("check and circle");
-//        field.checkSunkShips();
-//        field.printField();
+        System.out.println("check and circle");
+        field.checkSunkShips();
+        field.printField();
     }
 }

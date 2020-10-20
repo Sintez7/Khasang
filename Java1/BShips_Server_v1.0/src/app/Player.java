@@ -10,4 +10,6 @@ public interface Player {
 
     String getName();
     void setCurrentRoom(LobbyRoom currentRoom);
+
+    void setName(String name);
 }

@@ -1,9 +1,6 @@
 package app;
 
-import app.shared.DataPackage;
-import app.shared.LobbiesDataPackage;
-import app.shared.LobbyData;
-import app.shared.LobbyRoomData;
+import app.shared.*;
 import javafx.application.Platform;
 
 import java.io.*;
@@ -41,14 +38,11 @@ public class ConnectionHandler extends Thread {
             socket = new Socket("localhost", 2111);
             out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             out.flush();
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             try {
+                synchronized (main.LOADED_MONITOR) {
+                    main.LOADED_MONITOR.notifyAll();
+                }
                 while (notClosed) {
                     Object input = in.readObject();
                     System.err.println("echo: " + input);
@@ -57,6 +51,8 @@ public class ConnectionHandler extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("server otvalilsya");
+                notClosed = false;
+                inExecutor.interrupt();
             }
             try {
                 Thread.sleep(500);
@@ -86,6 +82,7 @@ public class ConnectionHandler extends Thread {
 
         public InExecutor(SynchronousQueue<DataPackage> inQueue) {
             setName("InExecutor Thread");
+            setDaemon(true);
             this.inQueue = inQueue;
         }
 
@@ -102,6 +99,8 @@ public class ConnectionHandler extends Thread {
                         case DataPackage.LOBBY_PACKAGE -> Platform.runLater(() -> main.handleLobbiesPackage((LobbiesDataPackage)temp));
                         case DataPackage.ROOM -> Platform.runLater(() -> main.handleRoomPackage((LobbyRoomData)temp));
                         case DataPackage.GAME_START -> Platform.runLater(() -> main.handleGameStart());
+                        case DataPackage.HIT_RESPONSE -> Platform.runLater(() -> main.handleHitResponse((HitResponse)temp));
+                        case DataPackage.TURN_UPDATE -> Platform.runLater(() -> main.handleTurnUpdate((TurnUpdate)temp));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

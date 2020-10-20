@@ -69,7 +69,7 @@ public class Field {
                 return true;
             }
         }
-        cells[x][y] = HIT;
+        cells[x - 1][y - 1] = HIT;
         return false;
     }
 
@@ -183,7 +183,7 @@ public class Field {
 
     public void checkSunkShips() {
         for (ActualShip actualShip : shipsInPlay) {
-            if (!actualShip.isAlive() && !actualShip.isCircled()) {
+            if (!actualShip.isCircled() && !actualShip.isAlive()) {
                 circleSunkShip(actualShip);
                 actualShip.setCircled();
             }

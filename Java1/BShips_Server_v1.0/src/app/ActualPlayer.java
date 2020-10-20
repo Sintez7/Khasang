@@ -35,4 +35,9 @@ public class ActualPlayer implements Player{
     public void setCurrentRoom(LobbyRoom currentRoom) {
         client.setCurrentRoom(currentRoom);
     }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -3,7 +3,6 @@ package app;
 import app.shared.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -24,6 +23,9 @@ public class Main extends Application {
     ConnectionHandler handler;
     volatile RoomController roomController;
     private Stage primaryStage;
+    private GameController gameController;
+
+    public final Object LOADED_MONITOR = new Object();
 
     public static void main(String[] args) {
         launch(args);
@@ -38,7 +40,7 @@ public class Main extends Application {
         loader.setLocation(getClass().getResource("connectionScreen.fxml"));
         loader.setController(controller);
         loader.load();
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("JFX_SeaBattle_v0.1");
         primaryStage.setScene(new Scene(loader.getRoot(), 600, 600));
         primaryStage.show();
     }
@@ -58,6 +60,14 @@ public class Main extends Application {
         handler = new ConnectionHandler(lsController, this);
         handler.setDaemon(true);
         handler.start();
+        synchronized (LOADED_MONITOR) {
+            try {
+                LOADED_MONITOR.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        handler.sendData(new PlayerName(name));
         screenLoader.setController(lsController);
         anchor.getChildren().clear();
         try {
@@ -112,13 +122,29 @@ public class Main extends Application {
     }
 
     public void handleGameStart() {
+        System.err.println("screen loading");
+        FXMLLoader screenLoader = new FXMLLoader();
+        if (screenLoader.getRoot() != anchor) {
+            screenLoader.setRoot(anchor);
+        }
+        screenLoader.setLocation(getClass().getResource("game.fxml"));
+        gameController = new GameController(this);
+        screenLoader.setController(gameController);
+        anchor.getChildren().clear();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("game.fxml"));
-            Scene gameScene = new Scene(root, 800, 800);
-            primaryStage.setScene(gameScene);
+            screenLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("tried to load: lobby.fxml");
         }
+        System.err.println("loaded");
+    }
 
+    public void handleHitResponse(HitResponse temp) {
+        gameController.handleHitResponse(temp);
+    }
+
+    public void handleTurnUpdate(TurnUpdate temp) {
+        gameController.handleTurnUpdate(temp);
     }
 }

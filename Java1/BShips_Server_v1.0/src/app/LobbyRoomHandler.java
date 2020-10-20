@@ -8,10 +8,11 @@ public class LobbyRoomHandler {
 
     List<LobbyRoom> rooms = Collections.synchronizedList(new ArrayList<>());
 
-    public void createLobbyRoom() {
+    public LobbyRoom createLobbyRoom() {
         LobbyRoom temp = new LobbyRoom();
         rooms.add(temp);
         temp.start();
+        return temp;
     }
 
     public void acceptPlayer (Player player, int lobbyId) {

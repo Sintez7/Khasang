@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameServer extends Thread {
+    private static int id;
 
-    private Player player1;
-    private Player player2;
+    private volatile Player player1;
+    private volatile Player player2;
 
 //    private Field player1Field;
 //    private Field player2Field;
@@ -21,6 +22,7 @@ public class GameServer extends Thread {
     private final Game game;
 
     public GameServer(Player player1, Player player2, List<Player> spectators) {
+        setName("GameServer " + id++);
         this.player1 = player1;
         this.player2 = player2;
         this.spectators.addAll(spectators);
@@ -86,5 +88,6 @@ public class GameServer extends Thread {
 
     public void handleHit(Player player, int x, int y) {
         game.handleHit(player, x, y);
+        game.updateClients();
     }
 }

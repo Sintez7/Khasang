@@ -26,6 +26,7 @@ public class LobbyRoom extends Thread {
 
     public LobbyRoom() {
         roomId = id++;
+        setName("LobbyRoom " + roomId);
     }
 
     public void addPlayerToRoom(Player player) {
@@ -100,6 +101,8 @@ public class LobbyRoom extends Thread {
         } else {
             result.setPlayer2Name("empty slot");
         }
+
+        result.setRoomName("Room " + roomId);
         return result;
     }
 

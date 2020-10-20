@@ -9,6 +9,7 @@ import app.shared.LobbyData;
 import app.shared.LobbyRoomData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import app.shared.Lobby;
 
@@ -24,6 +25,9 @@ public class Controller {
 
     @FXML
     private AnchorPane anchor;
+
+    @FXML
+    private TextField nameTextField;
 
     public Controller() {
 //        System.err.println("controller default constructor");
@@ -42,6 +46,6 @@ public class Controller {
 
     @FXML
     void connect(ActionEvent event) {
-        main.loadLobby("sdasdas");
+        main.loadLobby(nameTextField.getText());
     }
 }
