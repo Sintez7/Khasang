@@ -3,12 +3,16 @@ package app.shared;
 import java.io.Serializable;
 
 public abstract class DataPackage implements Serializable {
-    private static final long serialVersionUID = 101005;
+    private static final long serialVersionUID = 101015;
 
     public static final int LOBBY_PACKAGE = 1;
     public static final int GAMESERVER_PACKAGE = 2;
     public static final int CHAT_MESSAGE_PACKAGE = 3;
     public static final int PLAYER_NAME = 4;
+    public static final int CREATE_LOBBY = 5;
+    public static final int RETURN_TO_LOBBY = 6;
+    public static final int LEAVE_ROOM = 7;
+    public static final int ENTER_ROOM = 8;
     public static final int LOBBY_CHOICE = 11;
     public static final int ROOM = 12;
     public static final int GAME_START = 13;

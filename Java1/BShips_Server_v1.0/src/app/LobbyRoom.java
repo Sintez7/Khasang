@@ -21,12 +21,15 @@ public class LobbyRoom extends Thread {
     List<Player> spectators = Collections.synchronizedList(new ArrayList<>());
     private final int roomId;
 
-    private Player player1 = null;
-    private Player player2 = null;
+    private volatile Player player1 = null;
+    private volatile Player player2 = null;
 
-    public LobbyRoom() {
+    private final LobbyServer lobbyServer;
+
+    public LobbyRoom(LobbyServer lobbyServer) {
         roomId = id++;
         setName("LobbyRoom " + roomId);
+        this.lobbyServer = lobbyServer;
     }
 
     public void addPlayerToRoom(Player player) {
@@ -82,6 +85,7 @@ public class LobbyRoom extends Thread {
                 e.printStackTrace();
             }
         }
+        lobbyServer.removeLobby(roomId);
     }
 
     private DataPackage convertToDataPackage() {
@@ -109,11 +113,23 @@ public class LobbyRoom extends Thread {
     public GameServer startGame() {
         if (player1 != null && player2 != null) {
             //TODO startGame
+            GameServer s = new GameServer(player1, player2, spectators).startGame();
             clearRoom();
-            return new GameServer(player1, player2, spectators).startGame();
+            return s.startGame();
         } else {
             return null;
         }
+    }
+
+    public void returnPlayerToLobbyServer(Player player) {
+        if (player.equals(player1)) {
+            player1 = null;
+        } else if (player.equals(player2)) {
+            player2 = null;
+        } else {
+            spectators.remove(player);
+        }
+        player.setCurrentRoom(null);
     }
 
     private void clearRoom() {

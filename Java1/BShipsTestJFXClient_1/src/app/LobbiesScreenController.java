@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import app.shared.Lobby;
 import app.shared.LobbyData;
 import app.shared.LobbyRoomData;
 import javafx.collections.FXCollections;
@@ -13,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
-import app.shared.Lobby;
 
 public class LobbiesScreenController implements Controllable {
 
@@ -51,11 +51,16 @@ public class LobbiesScreenController implements Controllable {
         main.selectLobby(selectedLobby);
     }
 
+    @FXML
+    void createLobby(ActionEvent event) {
+        main.createLobby();
+    }
+
     @Override
     public void addLobbies(List<LobbyData> dPackage) {
         lobbiesList.clear();
         for (LobbyData lobbyData : dPackage) {
-            lobbiesList.add(new Lobby(lobbyData.lobbyName()));
+            lobbiesList.add(new Lobby(lobbyData));
         }
     }
 
@@ -69,7 +74,7 @@ public class LobbiesScreenController implements Controllable {
         synchronized protected void updateItem(Lobby lobby, boolean b) {
             super.updateItem(lobby, b);
             if (lobby != null) {
-                setText(lobby.getName());
+                setText(lobby.getName() + " " + lobby.getId());
                 selectedLobby = lobby;
             } else {
                 setText("");

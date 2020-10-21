@@ -39,7 +39,7 @@ public class RoomController {
 
     @FXML
     void leaveRoom(ActionEvent event) {
-
+        main.leaveRoom();
     }
 
     public void receiveRoomInfo(LobbyRoomData data) {

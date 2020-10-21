@@ -8,5 +8,6 @@
    <children>
       <ListView fx:id="list" layoutX="15.0" layoutY="14.0" prefHeight="370.0" prefWidth="356.0" />
       <Button layoutX="408.0" layoutY="38.0" mnemonicParsing="false" onAction="#selectLobby" text="Select Lobby" />
+      <Button layoutX="407.0" layoutY="84.0" mnemonicParsing="false" onAction="#createLobby" text="Create Lobby" />
    </children>
 </fx:root>

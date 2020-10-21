@@ -49,6 +49,24 @@ public class Main extends Application {
         anchor = pane;
     }
 
+    public void loadLobby() {
+        System.err.println("screen loading");
+        FXMLLoader screenLoader = new FXMLLoader();
+        if (screenLoader.getRoot() != anchor) {
+            screenLoader.setRoot(anchor);
+        }
+        screenLoader.setLocation(getClass().getResource("lobby.fxml"));
+        screenLoader.setController(lsController);
+        anchor.getChildren().clear();
+        try {
+            screenLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("tried to load: lobby.fxml");
+        }
+        System.err.println("loaded");
+    }
+
     public void loadLobby(String name) {
         System.err.println("screen loading");
         FXMLLoader screenLoader = new FXMLLoader();
@@ -103,6 +121,10 @@ public class Main extends Application {
         loadRoom();
     }
 
+    public void createLobby() {
+        handler.sendData(new CreateLobby());
+    }
+
     public void handleLobbiesPackage (LobbiesDataPackage data) {
         System.err.println("received LobbiesDataPackage");
         lsController.addLobbies(data.getList());
@@ -146,5 +168,9 @@ public class Main extends Application {
 
     public void handleTurnUpdate(TurnUpdate temp) {
         gameController.handleTurnUpdate(temp);
+    }
+
+    public void leaveRoom() {
+        handler.sendData(new LeaveRoom());
     }
 }

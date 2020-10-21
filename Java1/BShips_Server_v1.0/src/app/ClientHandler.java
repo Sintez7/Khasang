@@ -72,10 +72,6 @@ public class ClientHandler extends Thread {
 //                    break;
                 connectionAlive = false;
                 inExecutor.interrupt();
-            } finally {
-                if (in != null) {
-                    in.close();
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -122,7 +118,7 @@ public class ClientHandler extends Thread {
         this.currentRoom = currentRoom;
     }
 
-    private void transferPlayerToLobby(int lobbyId) {
+    private void transferPlayerToRoom(int lobbyId) {
         lobbyServer.movePlayerToLobbyRoom(thisPlayer, lobbyId);
     }
 
@@ -162,7 +158,9 @@ public class ClientHandler extends Thread {
                     in = inputQueue.take();
                     switch (in.getId()) {
                         case DataPackage.PLAYER_NAME -> setPlayerName(((PlayerName) in).getName());
-                        case DataPackage.LOBBY_CHOICE -> transferPlayerToLobby(((LobbyChoice) in).lobbyId);
+                        case DataPackage.LOBBY_CHOICE -> transferPlayerToRoom(((LobbyChoice) in).lobbyId);
+                        case DataPackage.CREATE_LOBBY -> createLobby();
+                        case DataPackage.LEAVE_ROOM -> returnPlayerToLobbyServer();
                         case DataPackage.GAME_START -> gameStart();
                         case DataPackage.PLACE_SHIP -> handlePlaceShip((PlaceShip) in);
                         case DataPackage.HIT -> handleHit((Hit) in); //TODO obrabotat' package
@@ -173,6 +171,26 @@ public class ClientHandler extends Thread {
                     break;
                 }
             }
+        }
+    }
+
+    private void returnPlayerToLobbyServer() {
+        currentRoom.returnPlayerToLobbyServer(thisPlayer);
+        lobbyServer.addPlayer(thisPlayer);
+        try {
+            sendData(new ReturnToLobby());
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createLobby() {
+        Lobby temp = lobbyServer.newLobby("");
+        transferPlayerToRoom(temp.getId());
+        try {
+            sendData(new EnterRoom());
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,17 +1,12 @@
 package app;
 
-import java.net.Socket;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-import app.shared.LobbyData;
-import app.shared.LobbyRoomData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import app.shared.Lobby;
 
 public class Controller {
 

@@ -3,12 +3,13 @@ package app;
 import app.shared.DataPackage;
 
 import java.net.SocketException;
+import java.util.Objects;
 
 public class ActualPlayer implements Player{
 
     private static int id = 0;
     private final ClientHandler client;
-    private int playerId;
+    private final int playerId;
     private String name = "testName";
 
     public ActualPlayer(ClientHandler client) {
@@ -39,5 +40,21 @@ public class ActualPlayer implements Player{
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        ActualPlayer that = (ActualPlayer) o;
+        return playerId == that.playerId &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerId, name);
     }
 }

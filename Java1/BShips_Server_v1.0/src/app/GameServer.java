@@ -38,7 +38,7 @@ public class GameServer extends Thread {
     }
 
     public GameServer startGame() {
-        start();
+        this.start();
         return this;
     }
 

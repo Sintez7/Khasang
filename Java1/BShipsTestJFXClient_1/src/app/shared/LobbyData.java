@@ -26,4 +26,3 @@ public class LobbyData implements Serializable {
         return id;
     }
 }
-
