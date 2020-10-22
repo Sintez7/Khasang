@@ -15,7 +15,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
-public class LobbiesScreenController implements Controllable {
+public class LobbiesScreenController {
 
     @FXML
     private ResourceBundle resources;
@@ -56,7 +56,6 @@ public class LobbiesScreenController implements Controllable {
         main.createLobby();
     }
 
-    @Override
     public void addLobbies(List<LobbyData> dPackage) {
         lobbiesList.clear();
         for (LobbyData lobbyData : dPackage) {
@@ -64,7 +63,6 @@ public class LobbiesScreenController implements Controllable {
         }
     }
 
-    @Override
     public void receiveRoomInfo(LobbyRoomData data) {
         System.err.println("receiveRoomData in LobbiesScreenController");
     }

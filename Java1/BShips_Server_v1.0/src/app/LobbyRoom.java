@@ -113,7 +113,7 @@ public class LobbyRoom extends Thread {
     public GameServer startGame() {
         if (player1 != null && player2 != null) {
             //TODO startGame
-            GameServer s = new GameServer(player1, player2, spectators).startGame();
+            GameServer s = new GameServer(player1, player2, spectators);
             clearRoom();
             return s.startGame();
         } else {

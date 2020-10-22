@@ -1,0 +1,40 @@
+.freeCell{
+    -fx-background-color: transparent;
+}
+
+.freeCell: hover{
+    -fx-background-color: yellow;
+}
+
+.oneDeckShip{
+    -fx-background-image: url("../images/1deckShip.png");
+}
+
+#oneDeckShipImage{
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/1deckShip.png");
+    -fx-background-position: left;
+    -fx-background-repeat: no-repeat;
+}
+
+#twoDeckShipImage{
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/2deckShip.png");
+    -fx-background-position: left;
+    -fx-background-repeat: no-repeat;
+}
+
+#threeDeckShipImage{
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/3deckShip.png");
+    -fx-background-position: left;
+    -fx-background-repeat: no-repeat;
+}
+
+#fourDeckShipImage{
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/4deckShip.png");
+    -fx-background-position: left;
+    -fx-background-repeat: no-repeat;
+}
+

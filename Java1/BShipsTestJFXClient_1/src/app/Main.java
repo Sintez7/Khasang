@@ -41,7 +41,9 @@ public class Main extends Application {
         loader.setController(controller);
         loader.load();
         primaryStage.setTitle("JFX_SeaBattle_v0.1");
-        primaryStage.setScene(new Scene(loader.getRoot(), 600, 600));
+        Scene scene = new Scene(loader.getRoot(), 600, 600);
+        scene.getStylesheets().add(0, "app/styles/style.css");
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
