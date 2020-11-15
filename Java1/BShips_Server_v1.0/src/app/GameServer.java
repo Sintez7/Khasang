@@ -7,12 +7,16 @@ import app.shared.PlaceShip;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 
 public class GameServer extends Thread {
     private static int id;
 
     private volatile Player player1;
     private volatile Player player2;
+
+    private volatile boolean player1Ready = false;
+    private volatile boolean player2Ready = false;
 
 //    private Field player1Field;
 //    private Field player2Field;
@@ -89,5 +93,21 @@ public class GameServer extends Thread {
     public void handleHit(Player player, int x, int y) {
         game.handleHit(player, x, y);
         game.updateClients();
+    }
+
+    public void playerReady(Player thisPlayer) {
+        if (player1.equals(thisPlayer)) {
+            player1Ready = true;
+        } else {
+            if (player2.equals(thisPlayer)) {
+                player2Ready = true;
+            }
+        }
+
+        if (player1Ready && player2Ready) {
+            synchronized (game.PLAYERS_READY) {
+                game.PLAYERS_READY.notifyAll();
+            }
+        }
     }
 }

@@ -7,34 +7,54 @@
 }
 
 .oneDeckShip{
-    -fx-background-image: url("../images/1deckShip.png");
+    -fx-background-image: url("../images/shipPart.png");
+}
+
+.ship {
+    -fx-background-image: url("../images/shipPart.png");
+}
+
+.hitShip {
+    -fx-background-image: url("../images/hitShip.png");
+}
+
+.hitMiss {
+    -fx-background-image: url("../images/hitMiss.png");
+}
+
+.freeOpponentCell {
+    -fx-background-color: transparent;
+}
+
+.freeOpponentCell: hover {
+    -fx-background-color: crimson;
 }
 
 #oneDeckShipImage{
     -fx-background-color: transparent;
-    -fx-background-image: url("../images/1deckShip.png");
+    -fx-background-image: url("../images/shipPart.png");
     -fx-background-position: left;
     -fx-background-repeat: no-repeat;
 }
 
 #twoDeckShipImage{
     -fx-background-color: transparent;
-    -fx-background-image: url("../images/2deckShip.png");
+    -fx-background-image: url("../images/shipPart.png");
     -fx-background-position: left;
-    -fx-background-repeat: no-repeat;
+    -fx-background-repeat: repeat;
 }
 
 #threeDeckShipImage{
     -fx-background-color: transparent;
-    -fx-background-image: url("../images/3deckShip.png");
+    -fx-background-image: url("../images/shipPart.png");
     -fx-background-position: left;
-    -fx-background-repeat: no-repeat;
+    -fx-background-repeat: repeat;
 }
 
 #fourDeckShipImage{
     -fx-background-color: transparent;
-    -fx-background-image: url("../images/4deckShip.png");
+    -fx-background-image: url("../images/shipPart.png");
     -fx-background-position: left;
-    -fx-background-repeat: no-repeat;
+    -fx-background-repeat: repeat;
 }
 

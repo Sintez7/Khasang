@@ -2,8 +2,11 @@ package app;
 
 import app.shared.*;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -24,6 +27,7 @@ public class Main extends Application {
     volatile RoomController roomController;
     private Stage primaryStage;
     private GameController gameController;
+//    private RightClickHandler rcHandler;
 
     public final Object LOADED_MONITOR = new Object();
 
@@ -151,6 +155,15 @@ public class Main extends Application {
         if (screenLoader.getRoot() != anchor) {
             screenLoader.setRoot(anchor);
         }
+        anchor.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                System.err.println("Main handle right click event");
+                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                    gameController.handleRightClick();
+                }
+            }
+        });
         screenLoader.setLocation(getClass().getResource("game.fxml"));
         gameController = new GameController(this);
         screenLoader.setController(gameController);
@@ -174,5 +187,17 @@ public class Main extends Application {
 
     public void leaveRoom() {
         handler.sendData(new LeaveRoom());
+    }
+
+    public void handlePlaceShip(int x, int y, int shipSize, int shipBias) {
+        handler.sendData(new PlaceShip(x, y, shipSize, shipBias));
+    }
+
+    public void handlePlaceShipResponse(PlaceShipResponse response) {
+        gameController.handlePlaceShipResponse(response.getResponse());
+    }
+
+    public void handleShoot(int x, int y) {
+        handler.sendData(new Hit(x, y));
     }
 }

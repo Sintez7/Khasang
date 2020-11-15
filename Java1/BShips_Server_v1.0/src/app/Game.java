@@ -11,6 +11,7 @@ public class Game implements Runnable {
     private final Thread self;
 
     public final Object REMATCH_MONITOR = new Object();
+    public final Object PLAYERS_READY = new Object();
     public volatile boolean rematch = false;
 
     private Player player1;
@@ -40,6 +41,16 @@ public class Game implements Runnable {
         synchronized (REMATCH_MONITOR) {
             REMATCH_MONITOR.notifyAll();
         }
+
+        synchronized (PLAYERS_READY) {
+            try {
+                PLAYERS_READY.wait();
+            } catch (InterruptedException e) {
+                System.err.println("PLAYERS_READY interrupted");
+            }
+        }
+
+        beginShootingPhase();
     }
 
     public void prepareRematch() {
@@ -138,5 +149,12 @@ public class Game implements Runnable {
         } catch (SocketException e) {
             e.printStackTrace();
         }
+    }
+
+    private enum GameState {
+        CREATED,
+        SHIP_PLACEMENT_PHASE,
+        BATTLE_PHASE,
+        REMATCH_DECISION
     }
 }

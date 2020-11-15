@@ -163,8 +163,8 @@ public class ClientHandler extends Thread {
                         case DataPackage.LEAVE_ROOM -> returnPlayerToLobbyServer();
                         case DataPackage.GAME_START -> gameStart();
                         case DataPackage.PLACE_SHIP -> handlePlaceShip((PlaceShip) in);
+                        case DataPackage.READY_TO_GAME_START -> handleReady();
                         case DataPackage.HIT -> handleHit((Hit) in); //TODO obrabotat' package
-
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -172,6 +172,10 @@ public class ClientHandler extends Thread {
                 }
             }
         }
+    }
+
+    private void handleReady() {
+        currentGameServer.playerReady(thisPlayer);
     }
 
     private void returnPlayerToLobbyServer() {

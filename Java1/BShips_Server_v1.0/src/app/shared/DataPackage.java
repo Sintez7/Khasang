@@ -22,6 +22,7 @@ public abstract class DataPackage implements Serializable {
     public static final int HIT = 17;
     public static final int HIT_RESPONSE = 18;
     public static final int TURN_UPDATE = 19;
+    public static final int READY_TO_GAME_START = 20;
 
     private final int id;
 
