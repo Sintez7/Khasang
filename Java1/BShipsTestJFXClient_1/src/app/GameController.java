@@ -14,6 +14,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
@@ -38,6 +39,9 @@ public class GameController {
 
     @FXML
     private URL location;
+
+    @FXML
+    private AnchorPane rootPane;
 
     @FXML
     private GridPane playerGrid;
@@ -70,6 +74,9 @@ public class GameController {
     private boolean playerTurn = false;
 
     private String tempText = "asddsaasddsasddsaasddsa";
+    private Label l = new Label();
+    private double curMX;
+    private double curMY;
 
     public GameController(Main main) {
         this.main = main;
@@ -80,6 +87,21 @@ public class GameController {
         initPlayerGrid();
         initOpponentGrid();
         initShipSelection();
+        rootPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                curMX = mouseEvent.getSceneX();
+                curMY = mouseEvent.getSceneY();
+                updateLabel();
+            }
+        });
+
+        l.setText("curMX: " + curMX + " curMY: " + curMY);
+        flowPane.getChildren().add(l);
+    }
+
+    private void updateLabel() {
+        l.setText("curMX: " + curMX + " curMY: " + curMY);
     }
 
     private void initPlayerGrid() {
