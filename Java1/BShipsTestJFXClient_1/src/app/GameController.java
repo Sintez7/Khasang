@@ -6,11 +6,14 @@ import java.util.ResourceBundle;
 import app.shared.HitResponse;
 import app.shared.TurnUpdate;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
@@ -60,11 +63,13 @@ public class GameController {
     private Cell[][] opponentField = new Cell[SIZE][SIZE];
     private boolean holdingShip = false;
     private int shipSize = 0;
-    private int shipBias = 0;
+    private Integer shipBias = 0;
 
     private ShipEntity shipToPlace = null;
 
     private boolean playerTurn = false;
+
+    private String tempText = "asddsaasddsasddsaasddsa";
 
     public GameController(Main main) {
         this.main = main;
@@ -159,6 +164,8 @@ public class GameController {
                             holdingShip = true;
                             shipSize = 2;
                             shipBias = RIGHT;
+//                            temp.snapPositionX(main.curMouseX);
+//                            temp.snapPositionY(main.curMouseY);
                         }
                         System.err.println("clicked on 2 deck ship");
                         System.err.println("holdingShip is " + holdingShip);
@@ -174,6 +181,7 @@ public class GameController {
                             holdingShip = true;
                             shipSize = 3;
                             shipBias = RIGHT;
+                            ShipPicture s = new ShipPicture(); // TODO: пока не работает
                         }
                         System.err.println("clicked on 3 deck ship");
                         System.err.println("holdingShip is " + holdingShip);
@@ -401,6 +409,14 @@ public class GameController {
             this.y = y;
             size = shipSize;
             bias = shipBias;
+        }
+    }
+
+    private static class ShipPicture extends Label {
+
+
+        public ShipPicture() {
+
         }
     }
 }
