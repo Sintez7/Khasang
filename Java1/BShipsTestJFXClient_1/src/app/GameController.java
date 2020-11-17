@@ -1,22 +1,21 @@
 package app;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import app.shared.HitResponse;
 import app.shared.TurnUpdate;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class GameController {
 
@@ -42,6 +41,15 @@ public class GameController {
 
     @FXML
     private AnchorPane rootPane;
+
+    @FXML
+    private AnchorPane aPane;
+
+    @FXML
+    private Pane pane;
+
+    @FXML
+    private StackPane sPane;
 
     @FXML
     private GridPane playerGrid;
@@ -75,6 +83,9 @@ public class GameController {
 
     private String tempText = "asddsaasddsasddsaasddsa";
     private Label l = new Label();
+    private ShipPicture heldShip = null;
+    //    private ShipButton heldS = null;
+    private Point2D stPoint;
     private double curMX;
     private double curMY;
 
@@ -87,14 +98,22 @@ public class GameController {
         initPlayerGrid();
         initOpponentGrid();
         initShipSelection();
-        rootPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                curMX = mouseEvent.getSceneX();
-                curMY = mouseEvent.getSceneY();
-                updateLabel();
-            }
-        });
+//        aPane.setOnMouseMoved(mouseEvent -> {
+//            curMX = mouseEvent.getSceneX();
+//            curMY = mouseEvent.getSceneY();
+//            updateLabel();
+////                heldShip.updatePos(heldShip.getLayoutX() - mouseEvent.getSceneX(),
+////                                   heldShip.getLayoutY() - mouseEvent.getSceneY());
+//
+//        });
+//        pane.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                curMX = mouseEvent.getSceneX();
+//                curMY = mouseEvent.getSceneY();
+//                updateLabel();
+//            }
+//        });
 
         l.setText("curMX: " + curMX + " curMY: " + curMY);
         flowPane.getChildren().add(l);
@@ -102,6 +121,10 @@ public class GameController {
 
     private void updateLabel() {
         l.setText("curMX: " + curMX + " curMY: " + curMY);
+        if (heldShip != null) {
+            heldShip.setTranslateX(curMX - stPoint.getX());
+            heldShip.setTranslateY(curMY - stPoint.getY());
+        }
     }
 
     private void initPlayerGrid() {
@@ -167,6 +190,8 @@ public class GameController {
                     temp.setOnMouseClicked((mouseEvent) -> {
                         if (holdingShip) {
                             holdingShip = false;
+                            aPane.getChildren().clear();
+                            heldShip = null;
                         } else {
                             holdingShip = true;
                             shipSize = 1;
@@ -182,6 +207,8 @@ public class GameController {
                     temp.setOnMouseClicked((mouseEvent) -> {
                         if (holdingShip) {
                             holdingShip = false;
+                            aPane.getChildren().clear();
+                            heldShip = null;
                         } else {
                             holdingShip = true;
                             shipSize = 2;
@@ -199,11 +226,13 @@ public class GameController {
                     temp.setOnMouseClicked((mouseEvent) -> {
                         if (holdingShip) {
                             holdingShip = false;
+                            aPane.getChildren().clear();
+                            heldShip = null;
                         } else {
                             holdingShip = true;
                             shipSize = 3;
                             shipBias = RIGHT;
-                            ShipPicture s = new ShipPicture(); // TODO: пока не работает
+//                            ShipPicture s = new ShipPicture(); // TODO: пока не работает
                         }
                         System.err.println("clicked on 3 deck ship");
                         System.err.println("holdingShip is " + holdingShip);
@@ -215,10 +244,15 @@ public class GameController {
                     temp.setOnMouseClicked((mouseEvent) -> {
                         if (holdingShip) {
                             holdingShip = false;
+                            aPane.getChildren().clear();
+                            heldShip = null;
                         } else {
                             holdingShip = true;
                             shipSize = 4;
                             shipBias = RIGHT;
+                            heldShip = new ShipPicture(4);
+                            stPoint = new Point2D(curMX, curMY);
+                            aPane.getChildren().add(heldShip);
                         }
                         System.err.println("clicked on 4 deck ship");
                         System.err.println("holdingShip is " + holdingShip);
@@ -305,25 +339,25 @@ public class GameController {
         switch (shipSize) {
             case 1 -> {
                 if (oneDeckShipsPlaced + 1 > ONE_DECK_SHIPS_MAX) {
-                    System.err.println("limit for one deck ships is 4");
+                    System.err.println("limit for one deck ships is " + ONE_DECK_SHIPS_MAX);
                     return;
                 }
             }
             case 2 -> {
                 if (twoDeckShipsPlaced + 1 > TWO_DECK_SHIPS_MAX) {
-                    System.err.println("limit for two deck ships is 3");
+                    System.err.println("limit for two deck ships is " + TWO_DECK_SHIPS_MAX);
                     return;
                 }
             }
             case 3 -> {
                 if (threeDeckShipsPlaced + 1 > THREE_DECK_SHIPS_MAX) {
-                    System.err.println("limit for three deck ships is 2");
+                    System.err.println("limit for three deck ships is " + THREE_DECK_SHIPS_MAX);
                     return;
                 }
             }
             case 4 -> {
                 if (fourDeckShipsPlaced + 1 > FOUR_DECK_SHIPS_MAX) {
-                    System.err.println("limit for four deck ships is 1");
+                    System.err.println("limit for four deck ships is " + FOUR_DECK_SHIPS_MAX);
                     return;
                 }
             }
@@ -336,6 +370,8 @@ public class GameController {
         }
 //        shipToPlace = new ShipEntity(x, y, shipSize, shipBias);
         handlePlaceShipResponse(true);
+        aPane.getChildren().clear();
+        heldShip = null;
     }
 
     public void handlePlaceShipResponse(boolean accepted) {
@@ -354,9 +390,13 @@ public class GameController {
                         case LEFT -> xOffset = -1;
                     }
                     for (int i = 0; i < shipToPlace.size; i++) {
-                        playerField[shipToPlace.x + (i * xOffset)]
-                                   [shipToPlace.y + (i * yOffset)]
-                                   .getStyleClass().add("ship");
+                        try {
+                            playerField[shipToPlace.x + (i * xOffset)]
+                                    [shipToPlace.y + (i * yOffset)]
+                                    .getStyleClass().add("ship");
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            System.err.println("out of area");
+                        }
                     }
                 }
                 switch (shipSize) {
@@ -436,8 +476,24 @@ public class GameController {
 
     private static class ShipPicture extends Label {
 
+        public ShipPicture(int size) {
+            switch (size) {
+                case 1 -> setPrefSize(20, 20);
+                case 2 -> setPrefSize(40, 20);
+                case 3 -> setPrefSize(60, 20);
+                case 4 -> setPrefSize(80, 20);
+            }
 
-        public ShipPicture() {
+            getStyleClass().clear();
+            getStyleClass().add("fDeckShipImage");
+        }
+
+        public void setInitPos(Point2D initPos) {
+
+        }
+
+        public void updatePos(double x, double y) {
+//            setTranslateX();
 
         }
     }
