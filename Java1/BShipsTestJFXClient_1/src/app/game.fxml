@@ -19,10 +19,10 @@
 
 <fx:root fx:id="rootPane" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <StackPane fx:id="sPane" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="aPane" disable="true" />
-            <BorderPane translateZ="2.0">
+            <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" />
+            <BorderPane fx:id="bPane">
                <center>
                   <BorderPane BorderPane.alignment="CENTER">
                      <center>
@@ -163,7 +163,7 @@
                   </BorderPane>
                </right>
             </BorderPane>
-            <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" />
+            <AnchorPane fx:id="aPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mouseTransparent="true" />
          </children>
       </StackPane>
    </children>

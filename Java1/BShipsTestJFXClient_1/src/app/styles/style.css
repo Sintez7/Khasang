@@ -58,6 +58,13 @@
     -fx-background-repeat: repeat;
 }
 
+.aDeckShipImage{
+    -fx-background-color: transparent;
+    -fx-background-image: url("../images/hitShip.png");
+    -fx-background-position: left;
+    -fx-background-repeat: no-repeat;
+}
+
 .fDeckShipImage{
     -fx-background-color: transparent;
     -fx-background-image: url("../images/shipPart.png");
