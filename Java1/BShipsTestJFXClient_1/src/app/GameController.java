@@ -5,14 +5,12 @@ import app.shared.TurnUpdate;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
 import java.net.URL;
@@ -133,8 +131,7 @@ public class GameController {
         if (heldShip != null) {
 //            heldShip.setTranslateX(curMX - stPoint.getX());
 //            heldShip.setTranslateY(curMY - stPoint.getY());
-            heldShip.setLayoutX(curMX);
-            heldShip.setLayoutY(curMY);
+            heldShip.updatePosition(curMX, curMY);
         }
     }
 
@@ -283,8 +280,7 @@ public class GameController {
                                 shipBias = RIGHT;
                                 heldShip = new ShipPicture(4);
                                 stPoint = new Point2D(curMX, curMY);
-                                heldShip.setLayoutX(curMX);
-                                heldShip.setLayoutY(curMY);
+                                heldShip.updatePosition(curMX, curMY);
                                 aPane.getChildren().add(heldShip);
                             }
                         }
@@ -484,34 +480,23 @@ public class GameController {
         }
     }
 
-    private static class ShipPicture extends Rectangle {
+    private static class ShipPicture extends Label {
 
-        static final Point3D PIVOT_UP = new Point3D(0, 10, 0);
-        static final Point3D PIVOT_RIGHT = new Point3D(0, 10, 0);
-        static final Point3D PIVOT_DOWN = new Point3D(0, 10, 0);
-        static final Point3D PIVOT_LEFT = new Point3D(0, 10, 0);
+        static final Point2D PIVOT_UP = new Point2D(0, 10);
+        static final Point2D PIVOT_RIGHT = new Point2D(0, 10);
+        static final Point2D PIVOT_DOWN = new Point2D(0, 10);
+        static final Point2D PIVOT_LEFT = new Point2D(0, 10);
+
+        private Bias bias;
 
         public ShipPicture(int size) {
             switch (size) {
-                case 1 -> {
-                    setWidth(20);
-                    setHeight(20);
-                }
-                case 2 -> {
-                    setWidth(40);
-                    setHeight(20);
-                }
-                case 3 -> {
-                    setWidth(60);
-                    setHeight(20);
-                }
-                case 4 -> {
-                    setWidth(80);
-                    setHeight(20);
-                }
+                case 1 -> setPrefSize(20, 20);
+                case 2 -> setPrefSize(40, 20);
+                case 3 -> setPrefSize(60, 20);
+                case 4 -> setPrefSize(80, 20);
             }
-//            setFill(Color.BLUEVIOLET);
-            applyCss();
+//            applyCss();
             getStyleClass().clear();
             getStyleClass().add("fDeckShipImage");
 //            getStyleClass().add("aDeckShipImage");
@@ -519,36 +504,105 @@ public class GameController {
         }
 
         public void updateRotation(int shipBias) {
-            Point3D pivot = null;
+            Point2D pivot = null;
             double angle = 0.0;
             switch (shipBias) {
+//                case 1 -> {
+//                    angle = 270.0;
+//                    pivot = PIVOT_UP;
+//                }
+//                case 2 -> {
+//                    angle = 0.0;
+//                    pivot = PIVOT_RIGHT;
+//                }
+//                case 3 -> {
+//                    angle = 90.0;
+//                    pivot = PIVOT_DOWN;
+//                }
+//                case 4 -> {
+//                    angle = 180.0;
+//                    pivot = PIVOT_LEFT;
+//                }
                 case 1 -> {
                     angle = 270.0;
-                    pivot = PIVOT_UP;
+                    bias = Bias.UP;
                 }
                 case 2 -> {
                     angle = 0.0;
-                    pivot = PIVOT_RIGHT;
+                    bias = Bias.RIGHT;
                 }
                 case 3 -> {
                     angle = 90.0;
-                    pivot = PIVOT_DOWN;
+                    bias = Bias.DOWN;
                 }
                 case 4 -> {
                     angle = 180.0;
-                    pivot = PIVOT_LEFT;
+                    bias = Bias.LEFT;
                 }
                 default -> System.err.println("unsupported bias");
             }
-
             getTransforms().clear();
-            Rotate r = new Rotate(angle, pivot.getX(), pivot.getY(), pivot.getZ());
+            Rotate r = new Rotate(angle, 0, 0);
 //            Rotate r = new Rotate(angle, 0, 0, 0);
             r.axisProperty().setValue(Rotate.Z_AXIS);
             System.err.println("pivotXProperty: " + r.getPivotX());
             System.err.println("pivotYProperty: " + r.getPivotY());
-            System.err.println("pivotZProperty: " + r.getPivotZ());
             getTransforms().addAll(r);
+        }
+
+        public void updatePosition(double curMX, double curMY) {
+            setLayoutX(curMX + bias.getXOffset());
+            setLayoutY(curMY + bias.getYOffset());
+        }
+
+        private enum Bias {
+            UP {
+                @Override
+                double getXOffset() {
+                    return -10;
+                }
+
+                @Override
+                double getYOffset() {
+                    return 10;
+                }
+            },
+            RIGHT {
+                @Override
+                double getXOffset() {
+                    return -10;
+                }
+
+                @Override
+                double getYOffset() {
+                    return -10;
+                }
+            },
+            DOWN {
+                @Override
+                double getXOffset() {
+                    return 10;
+                }
+
+                @Override
+                double getYOffset() {
+                    return -10;
+                }
+            },
+            LEFT {
+                @Override
+                double getXOffset() {
+                    return 10;
+                }
+
+                @Override
+                double getYOffset() {
+                    return 10;
+                }
+            };
+
+            abstract double getXOffset();
+            abstract double getYOffset();
         }
     }
 }
