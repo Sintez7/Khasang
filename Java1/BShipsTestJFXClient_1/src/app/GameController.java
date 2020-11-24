@@ -3,13 +3,16 @@ package app;
 import app.shared.HitResponse;
 import app.shared.TurnUpdate;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.transform.Rotate;
 
@@ -100,19 +103,35 @@ public class GameController {
         initPlayerGrid();
         initOpponentGrid();
         initShipSelection();
+        Label dl = new Label();
+        flowPane.getChildren().add(dl);
         sPane.setOnMouseMoved(mouseEvent -> {
+            System.err.println("sPane eventHandler triggered");
             curMX = mouseEvent.getSceneX();
             curMY = mouseEvent.getSceneY();
             updateLabel();
+//            dl.setText(mouseEvent.toString());
+            System.err.println("sPane eventHandler");
+            System.err.println(mouseEvent.toString());
 //            Event.fireEvent(bPane, mouseEvent);
 //                heldShip.updatePos(heldShip.getLayoutX() - mouseEvent.getSceneX(),
 //                                   heldShip.getLayoutY() - mouseEvent.getSceneY());
 
         });
-//        sPane.addEventFilter(MouseEvent.ANY, mouseEvent -> {
-////            System.err.println("mouse event filter triggered on sPane");
-//
-//        });
+        sPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                    System.err.println("sPane OnMouseClicked triggered");
+                    handleRightClick();
+                }
+            }
+        });
+        sPane.addEventFilter(MouseEvent.ANY, mouseEvent -> {
+//            System.err.println("mouse event filter triggered on sPane");
+            System.err.println("sPane eventFilter");
+            System.err.println(mouseEvent.toString());
+        });
 //        pane.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {
 //            @Override
 //            public void handle(MouseEvent mouseEvent) {
@@ -121,6 +140,14 @@ public class GameController {
 //                updateLabel();
 //            }
 //        });
+
+        aPane.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                System.err.println("aPane eventFilter triggered");
+                System.err.println(mouseEvent.toString());
+            }
+        });
 
         l.setText("curMX: " + curMX + " curMY: " + curMY);
         flowPane.getChildren().add(l);
@@ -482,12 +509,9 @@ public class GameController {
 
     private static class ShipPicture extends Label {
 
-        static final Point2D PIVOT_UP = new Point2D(0, 10);
-        static final Point2D PIVOT_RIGHT = new Point2D(0, 10);
-        static final Point2D PIVOT_DOWN = new Point2D(0, 10);
-        static final Point2D PIVOT_LEFT = new Point2D(0, 10);
-
         private Bias bias;
+        double lastMX;
+        double lastMY;
 
         public ShipPicture(int size) {
             switch (size) {
@@ -496,7 +520,6 @@ public class GameController {
                 case 3 -> setPrefSize(60, 20);
                 case 4 -> setPrefSize(80, 20);
             }
-//            applyCss();
             getStyleClass().clear();
             getStyleClass().add("fDeckShipImage");
 //            getStyleClass().add("aDeckShipImage");
@@ -504,25 +527,8 @@ public class GameController {
         }
 
         public void updateRotation(int shipBias) {
-            Point2D pivot = null;
             double angle = 0.0;
             switch (shipBias) {
-//                case 1 -> {
-//                    angle = 270.0;
-//                    pivot = PIVOT_UP;
-//                }
-//                case 2 -> {
-//                    angle = 0.0;
-//                    pivot = PIVOT_RIGHT;
-//                }
-//                case 3 -> {
-//                    angle = 90.0;
-//                    pivot = PIVOT_DOWN;
-//                }
-//                case 4 -> {
-//                    angle = 180.0;
-//                    pivot = PIVOT_LEFT;
-//                }
                 case 1 -> {
                     angle = 270.0;
                     bias = Bias.UP;
@@ -543,14 +549,14 @@ public class GameController {
             }
             getTransforms().clear();
             Rotate r = new Rotate(angle, 0, 0);
-//            Rotate r = new Rotate(angle, 0, 0, 0);
             r.axisProperty().setValue(Rotate.Z_AXIS);
-            System.err.println("pivotXProperty: " + r.getPivotX());
-            System.err.println("pivotYProperty: " + r.getPivotY());
             getTransforms().addAll(r);
+            updatePosition(lastMX, lastMY);
         }
 
         public void updatePosition(double curMX, double curMY) {
+            lastMX = curMX;
+            lastMY = curMY;
             setLayoutX(curMX + bias.getXOffset());
             setLayoutY(curMY + bias.getYOffset());
         }

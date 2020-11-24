@@ -155,15 +155,15 @@ public class Main extends Application {
         if (screenLoader.getRoot() != anchor) {
             screenLoader.setRoot(anchor);
         }
-        anchor.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.err.println("Main handle right click event");
-                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    gameController.handleRightClick();
-                }
-            }
-        });
+//        anchor.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                System.err.println("Main handle right click event");
+//                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+//                    gameController.handleRightClick();
+//                }
+//            }
+//        });
         screenLoader.setLocation(getClass().getResource("game.fxml"));
         gameController = new GameController(this);
         screenLoader.setController(gameController);
