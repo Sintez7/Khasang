@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -105,19 +104,19 @@ public class GameController {
         initShipSelection();
         Label dl = new Label();
         flowPane.getChildren().add(dl);
-        sPane.setOnMouseMoved(mouseEvent -> {
-            System.err.println("sPane eventHandler triggered");
-            curMX = mouseEvent.getSceneX();
-            curMY = mouseEvent.getSceneY();
-            updateLabel();
-//            dl.setText(mouseEvent.toString());
-            System.err.println("sPane eventHandler");
-            System.err.println(mouseEvent.toString());
-//            Event.fireEvent(bPane, mouseEvent);
-//                heldShip.updatePos(heldShip.getLayoutX() - mouseEvent.getSceneX(),
-//                                   heldShip.getLayoutY() - mouseEvent.getSceneY());
-
-        });
+//        sPane.setOnMouseMoved(mouseEvent -> {
+//            System.err.println("sPane eventHandler triggered");
+//            curMX = mouseEvent.getSceneX();
+//            curMY = mouseEvent.getSceneY();
+//            updateLabel();
+////            dl.setText(mouseEvent.toString());
+//            System.err.println("sPane eventHandler");
+//            System.err.println(mouseEvent.toString());
+////            Event.fireEvent(bPane, mouseEvent);
+////                heldShip.updatePos(heldShip.getLayoutX() - mouseEvent.getSceneX(),
+////                                   heldShip.getLayoutY() - mouseEvent.getSceneY());
+//
+//        });
         sPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -127,11 +126,11 @@ public class GameController {
                 }
             }
         });
-        sPane.addEventFilter(MouseEvent.ANY, mouseEvent -> {
-//            System.err.println("mouse event filter triggered on sPane");
-            System.err.println("sPane eventFilter");
-            System.err.println(mouseEvent.toString());
-        });
+//        sPane.addEventFilter(MouseEvent.ANY, mouseEvent -> {
+////            System.err.println("mouse event filter triggered on sPane");
+//            System.err.println("sPane eventFilter");
+//            System.err.println(mouseEvent.toString());
+//        });
 //        pane.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {
 //            @Override
 //            public void handle(MouseEvent mouseEvent) {
@@ -141,16 +140,36 @@ public class GameController {
 //            }
 //        });
 
-        aPane.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+//        aPane.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                System.err.println("aPane eventFilter triggered");
+//                System.err.println(mouseEvent.toString());
+//            }
+//        });
+
+//        rootPane.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                updateCursorPos(mouseEvent);
+//            }
+//        });
+
+        rootPane.addEventFilter(MouseEvent.ANY, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                System.err.println("aPane eventFilter triggered");
-                System.err.println(mouseEvent.toString());
+                updateCursorPos(mouseEvent);
             }
         });
 
         l.setText("curMX: " + curMX + " curMY: " + curMY);
         flowPane.getChildren().add(l);
+    }
+
+    private void updateCursorPos(MouseEvent mouseEvent) {
+        curMX = mouseEvent.getSceneX();
+        curMY = mouseEvent.getSceneY();
+        updateLabel();
     }
 
     private void updateLabel() {
@@ -184,6 +203,12 @@ public class GameController {
                         }
                     }
                 });
+//                cell.setOnMouseMoved(new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent mouseEvent) {
+//                        updateCursorPos(mouseEvent);
+//                    }
+//                });
                 playerField[j][i] = cell;
                 playerGrid.add(playerField[j][i], j, i);
             }
@@ -205,6 +230,12 @@ public class GameController {
                     System.err.println("opponent cell clicked: x " + ((Cell) event.getSource()).x + " y: " + ((Cell) event.getSource()).y);
                     handleShoot(((Cell) event.getSource()).x, ((Cell) event.getSource()).y);
                 });
+//                cell.setOnMouseMoved(new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent mouseEvent) {
+//                        updateCursorPos(mouseEvent);
+//                    }
+//                });
                 opponentField[j][i] = cell;
                 opponentGrid.add(opponentField[j][i], j, i);
             }
@@ -316,6 +347,12 @@ public class GameController {
                     });
                 }
             }
+//            temp.setOnMouseMoved(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent mouseEvent) {
+//                    updateCursorPos(mouseEvent);
+//                }
+//            });
             flowPane.getChildren().add(temp);
         }
     }
