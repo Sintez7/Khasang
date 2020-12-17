@@ -43,6 +43,11 @@ public class ActualPlayer implements Player{
     }
 
     @Override
+    public void setCurrentGameServer(GameServer gameServer) {
+        client.setCurrentGameServer(gameServer);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

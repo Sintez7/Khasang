@@ -155,15 +155,6 @@ public class Main extends Application {
         if (screenLoader.getRoot() != anchor) {
             screenLoader.setRoot(anchor);
         }
-//        anchor.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                System.err.println("Main handle right click event");
-//                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-//                    gameController.handleRightClick();
-//                }
-//            }
-//        });
         screenLoader.setLocation(getClass().getResource("game.fxml"));
         gameController = new GameController(this);
         screenLoader.setController(gameController);
@@ -194,10 +185,15 @@ public class Main extends Application {
     }
 
     public void handlePlaceShipResponse(PlaceShipResponse response) {
+        System.err.println("handlePlaceShipResponse in Main invoked");
         gameController.handlePlaceShipResponse(response.getResponse());
     }
 
     public void handleShoot(int x, int y) {
         handler.sendData(new Hit(x, y));
+    }
+
+    public void sendReady() {
+        handler.sendData(new ReadyToStart());
     }
 }

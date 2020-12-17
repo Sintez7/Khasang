@@ -101,6 +101,8 @@ public class ConnectionHandler extends Thread {
                         case DataPackage.RETURN_TO_LOBBY -> Platform.runLater(() -> main.loadLobby());
                         case DataPackage.ENTER_ROOM -> Platform.runLater(() -> main.loadRoom());
                         case DataPackage.GAME_START -> Platform.runLater(() -> main.handleGameStart());
+                        case DataPackage.PLACE_SHIP_RESPONSE -> Platform.runLater(() ->
+                                main.handlePlaceShipResponse((PlaceShipResponse) temp));
                         case DataPackage.HIT_RESPONSE -> Platform.runLater(() -> main.handleHitResponse((HitResponse)temp));
                         case DataPackage.TURN_UPDATE -> Platform.runLater(() -> main.handleTurnUpdate((TurnUpdate)temp));
                     }

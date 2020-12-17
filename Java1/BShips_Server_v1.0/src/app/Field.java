@@ -83,6 +83,7 @@ public class Field {
     }
 
     public boolean placeShip(int x, int y, int shipSize, int shipBias) {
+        System.err.println("placeShip in Field invoked");
         Ship tempShip = new Ship(shipSize, shipBias);
         int[][] temp = cloneField(cells);
 
@@ -96,6 +97,7 @@ public class Field {
             if (isValidPlacement(actual, last, temp)) {
                 temp[actual.x][actual.y] = OCCUPIED;
             } else {
+                System.err.println("placement not valid");
                 return false;
             }
             last.set(actual);
@@ -137,9 +139,11 @@ public class Field {
 
     private boolean isValidPlacement(Point actual, Point last, int[][] field) {
         if (!isPointInBounds(actual)) {
+            System.err.println("point not in bounds");
             return false;
         }
         if (!isPointFree(field, actual)) {
+            System.err.println("point not free");
             return false;
         }
         Point vector = new Point();
@@ -150,6 +154,7 @@ public class Field {
             current.add(vector);
             if (!current.equals(last) && isPointInBounds(current)) {
                 if (!isPointFree(field, current)) {
+                    System.err.println("ship collision detected");
                     return false;
                 }
             }

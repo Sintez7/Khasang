@@ -12,4 +12,6 @@ public interface Player {
     void setCurrentRoom(LobbyRoom currentRoom);
 
     void setName(String name);
+
+    void setCurrentGameServer(GameServer gameServer);
 }

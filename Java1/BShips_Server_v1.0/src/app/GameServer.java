@@ -18,6 +18,11 @@ public class GameServer extends Thread {
     private volatile boolean player1Ready = false;
     private volatile boolean player2Ready = false;
 
+    private volatile boolean player1Rematch = false;
+    private volatile boolean player1RematchVoted = false;
+    private volatile boolean player2Rematch = false;
+    private volatile boolean player2RematchVoted = false;
+
 //    private Field player1Field;
 //    private Field player2Field;
 
@@ -31,6 +36,7 @@ public class GameServer extends Thread {
         this.player2 = player2;
         this.spectators.addAll(spectators);
         game = new Game(player1, player2);
+        game.start();
     }
 
     public void setPlayer1(Player player) {
@@ -51,6 +57,8 @@ public class GameServer extends Thread {
         boolean playable = true;
         // Оповещаем всех о том что игра началась
         DataPackage startPackage = new GameStart();
+        player1.setCurrentGameServer(this);
+        player2.setCurrentGameServer(this);
         try {
             player1.sendData(startPackage);
             player2.sendData(startPackage);
@@ -87,6 +95,7 @@ public class GameServer extends Thread {
     }
 
     public boolean handlePlaceShip(Player player, PlaceShip ship) {
+        System.err.println("handlePlaceShip ing GameServer invoked");
         return game.handlePlaceShip(player, ship);
     }
 
@@ -95,11 +104,11 @@ public class GameServer extends Thread {
         game.updateClients();
     }
 
-    public void playerReady(Player thisPlayer) {
-        if (player1.equals(thisPlayer)) {
+    public void playerReady(Player player) {
+        if (player1.equals(player)) {
             player1Ready = true;
         } else {
-            if (player2.equals(thisPlayer)) {
+            if (player2.equals(player)) {
                 player2Ready = true;
             }
         }
@@ -107,6 +116,25 @@ public class GameServer extends Thread {
         if (player1Ready && player2Ready) {
             synchronized (game.PLAYERS_READY) {
                 game.PLAYERS_READY.notifyAll();
+            }
+        }
+    }
+
+    public void handleRematchDecision(Player player) {
+        if (player1.equals(player)) {
+            player1Rematch = true;
+            player1RematchVoted = true;
+        } else {
+            if (player2.equals(player)) {
+                player2Rematch = true;
+                player2RematchVoted = true;
+            }
+        }
+
+        if (player1RematchVoted && player2RematchVoted) {
+            game.rematch = player1Rematch & player2Rematch;
+            synchronized (game.REMATCH_DECISION_MONITOR) {
+                game.REMATCH_DECISION_MONITOR.notifyAll();
             }
         }
     }

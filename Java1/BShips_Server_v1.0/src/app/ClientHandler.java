@@ -20,6 +20,7 @@ public class ClientHandler extends Thread {
     private final SynchronousQueue<DataPackage> inputQueue = new SynchronousQueue<>(true);
     private final Player thisPlayer;
     private final LobbyServer lobbyServer;
+    private final InExecutor inExecutor;
 
     // в этом потоке пишем ОТСЮДА ТУДА (от сервера на клиент)
     private ObjectOutputStream out = null;
@@ -29,7 +30,6 @@ public class ClientHandler extends Thread {
     private LobbyRoom currentRoom;
     private GameServer currentGameServer;
     private boolean connectionAlive = false;
-    private InExecutor inExecutor;
 
     public ClientHandler(Socket client, LobbyServer lobbyServer) {
         setName("ClientHandler " + id++);
@@ -78,7 +78,7 @@ public class ClientHandler extends Thread {
             try { // закрываем выходящий поток
                 if (out != null) {
                     out.close();
-                }
+                } // закрываем входящий поток
                 if (in != null) {
                     in.close();
                 }
@@ -124,6 +124,7 @@ public class ClientHandler extends Thread {
 
     private void gameStart() {
         currentGameServer = currentRoom.startGame();
+        System.err.println(currentGameServer);
     }
 
     private void playerMove() {
@@ -131,6 +132,7 @@ public class ClientHandler extends Thread {
     }
 
     private void handlePlaceShip(PlaceShip ship) {
+        System.err.println(currentGameServer + " player " + thisPlayer);
         try {
             sendData(new PlaceShipResponse(currentGameServer.handlePlaceShip(thisPlayer, ship)));
         } catch (SocketException e) {
@@ -140,6 +142,10 @@ public class ClientHandler extends Thread {
 
     private void handleHit(Hit in) {
         currentGameServer.handleHit(thisPlayer, in.getX(), in.getY());
+    }
+
+    public void setCurrentGameServer(GameServer gameServer) {
+        currentGameServer = gameServer;
     }
 
     private class InExecutor extends Thread {
@@ -165,6 +171,7 @@ public class ClientHandler extends Thread {
                         case DataPackage.PLACE_SHIP -> handlePlaceShip((PlaceShip) in);
                         case DataPackage.READY_TO_GAME_START -> handleReady();
                         case DataPackage.HIT -> handleHit((Hit) in); //TODO obrabotat' package
+                        case DataPackage.REMATCH_DECISION -> handleRematchDecision();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -172,6 +179,10 @@ public class ClientHandler extends Thread {
                 }
             }
         }
+    }
+
+    private void handleRematchDecision() {
+        currentGameServer.handleRematchDecision(thisPlayer);
     }
 
     private void handleReady() {
