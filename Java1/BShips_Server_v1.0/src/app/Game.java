@@ -57,6 +57,7 @@ public class Game implements Runnable {
 
             state = GameState.BATTLE_PHASE;
             System.err.println("Game switched to BATTLE_PHASE state");
+            updateClients();
 
             synchronized (DEFEATED_MONITOR) {
                 try {
@@ -101,6 +102,7 @@ public class Game implements Runnable {
 
     public boolean handlePlaceShip(Player player, PlaceShip ship) {
         System.err.println("handlePlaceShip in Game invoked");
+        System.err.println("placeShip: " + ship.toString());
         if (player.equals(player1)) {
             return tryPlaceShipForPlayer1(ship);
         } else {

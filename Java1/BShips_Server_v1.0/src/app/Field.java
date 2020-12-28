@@ -84,6 +84,7 @@ public class Field {
 
     public boolean placeShip(int x, int y, int shipSize, int shipBias) {
         System.err.println("placeShip in Field invoked");
+        System.err.println("ship x: " + x + ", ship y: " + y + ", shipSize: " + shipSize + ", shipBias: " + shipBias);
         Ship tempShip = new Ship(shipSize, shipBias);
         int[][] temp = cloneField(cells);
 
@@ -92,7 +93,7 @@ public class Field {
 
         for (int i = 0; i < tempShip.getSize(); i++) {
             offset.set(tempShip.getVector().x * i, tempShip.getVector().y * i);
-            Point actual = new Point((x + offset.x) - 1, (y + offset.y) - 1);
+            Point actual = new Point((x + offset.x), (y + offset.y));
 
             if (isValidPlacement(actual, last, temp)) {
                 temp[actual.x][actual.y] = OCCUPIED;
@@ -105,36 +106,6 @@ public class Field {
         shipsInPlay.add(new ActualShip(x, y, tempShip));
         cells = cloneField(temp);
         return true;
-    }
-
-    //
-//            System.out.println("Offsets: x: " + offset.x + " y: " + offset.y);
-//            System.out.println("targeted cell index x: " + actual.x + " y: " + actual.y);
-//
-
-
-//    private app.Point getShipOffset(app.Ship ship, int steps) {
-//        return switch (ship.getBias()) {
-//            //UP
-//            case 1 -> new app.Point(0, -steps);
-//            //RIGHT
-//            case 2 -> new app.Point(steps, 0);
-//            //DOWN
-//            case 3 -> new app.Point(0, steps);
-//            //LEFT
-//            case 4 -> new app.Point(-steps, 0);
-//            default -> null;
-//        };
-//    }
-
-    private int[][] cloneField(int[][] field) {
-        int[][] result = new int[field.length][];
-
-        for (int i = 0; i < field.length; i++) {
-            result[i] = Arrays.copyOf(field[i], field[i].length);
-        }
-
-        return result;
     }
 
     private boolean isValidPlacement(Point actual, Point last, int[][] field) {
@@ -174,6 +145,16 @@ public class Field {
 
     private boolean isPointFree (int[][] field, Point p) {
         return field[p.x][p.y] == FREE;
+    }
+
+    private int[][] cloneField(int[][] field) {
+        int[][] result = new int[field.length][];
+
+        for (int i = 0; i < field.length; i++) {
+            result[i] = Arrays.copyOf(field[i], field[i].length);
+        }
+
+        return result;
     }
 
     public void printField() {

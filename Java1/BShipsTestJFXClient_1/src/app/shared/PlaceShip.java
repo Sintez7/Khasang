@@ -29,4 +29,14 @@ public class PlaceShip extends DataPackage {
     public int getBias() {
         return bias;
     }
+
+    @Override
+    public String toString() {
+        return "PlaceShip{" +
+                "x=" + x +
+                ", y=" + y +
+                ", size=" + size +
+                ", bias=" + bias +
+                '}';
+    }
 }

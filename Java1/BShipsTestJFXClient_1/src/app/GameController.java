@@ -378,7 +378,7 @@ public class GameController {
     private void placeShip(int x, int y, int shipSize, int shipBias) {
         if (shipToPlace == null) {
             shipToPlace = new ShipEntity(x, y, shipSize, shipBias);
-            main.handlePlaceShip(x - 1, y - 1, shipSize, shipBias); //TODO: proverit' koordinati
+            main.handlePlaceShip(x, y, shipSize, shipBias); //TODO: proverit' koordinati
         } else {
             System.err.println("waiting for ship placement response");
         }

@@ -41,6 +41,22 @@ public class LobbyRoom extends Thread {
             spectators.add(player);
         }
         player.setCurrentRoom(this);
+
+        if (player1 != null) {
+            try {
+                player1.sendData(convertToDataPackage());
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (player2 != null) {
+            try {
+                player2.sendData(convertToDataPackage());
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void removePlayerFromRoom(Player player) {
