@@ -2,7 +2,6 @@ import app.Field;
 import app.Ship;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -70,7 +69,7 @@ public class FieldTestju4 {
         field.hit(5, 2);
         field.printField();
         System.out.println("check and circle");
-        field.checkSunkShips();
+//        field.checkSunkShips(player1OpponentField);
         field.printField();
     }
 }

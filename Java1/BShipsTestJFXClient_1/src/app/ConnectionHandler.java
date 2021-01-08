@@ -105,6 +105,7 @@ public class ConnectionHandler extends Thread {
                                 main.handlePlaceShipResponse((PlaceShipResponse) temp));
                         case DataPackage.HIT_RESPONSE -> Platform.runLater(() -> main.handleHitResponse((HitResponse)temp));
                         case DataPackage.TURN_UPDATE -> Platform.runLater(() -> main.handleTurnUpdate((TurnUpdate)temp));
+                        case DataPackage.PLAYER_INFO -> Platform.runLater(() -> main.handlePlayerInfo((PlayerInfo) temp));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

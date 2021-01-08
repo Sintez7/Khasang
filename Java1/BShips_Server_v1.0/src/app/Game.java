@@ -2,6 +2,7 @@ package app;
 
 import app.shared.HitResponse;
 import app.shared.PlaceShip;
+import app.shared.PlayerInfo;
 import app.shared.TurnUpdate;
 
 import java.net.SocketException;
@@ -16,17 +17,22 @@ public class Game implements Runnable {
     public volatile boolean rematch = false;
     private volatile GameState state;
 
+    private static final int PLAYER_1 = 1;
+    private static final int PLAYER_2 = 2;
+
     private Player player1;
     private Player player2;
 
-    private Field player1Field = new Field();
-    private FakeField player1OpponentField = new FakeField();
-    private Field player2Field = new Field();
-    private FakeField player2OpponentField = new FakeField();
+    private volatile Field player1Field = new Field();
+    private volatile FakeField player1OpponentField = new FakeField();
+    private volatile Field player2Field = new Field();
+    private volatile FakeField player2OpponentField = new FakeField();
 
     private final Object DEFEATED_MONITOR = new Object();
     private boolean player1Defeated = false;
     private boolean player2Defeated = false;
+
+    private boolean player1Turn = true;
 
     public Game(Player player1, Player player2) {
         this.player1 = player1;
@@ -55,9 +61,9 @@ public class Game implements Runnable {
                 }
             }
 
+            prepareToBattle();
             state = GameState.BATTLE_PHASE;
             System.err.println("Game switched to BATTLE_PHASE state");
-            updateClients();
 
             synchronized (DEFEATED_MONITOR) {
                 try {
@@ -67,7 +73,7 @@ public class Game implements Runnable {
                 }
             }
 
-            state = GameState.REMATCH_DECISION;
+            state = GameState.REMATCH_DECISION; //TODO: сделать возможность переигровки
             System.err.println("Game switched to REMATCH_DECISION state");
 
             synchronized (REMATCH_DECISION_MONITOR) {
@@ -90,6 +96,30 @@ public class Game implements Runnable {
         }
     }
 
+    private void prepareToBattle() {
+        System.err.println("PREPARE TO BATTLE STAGE ============================");
+        System.err.println("player1 field");
+        player1Field.printField();
+        System.err.println("player1 opponent field");
+        player1OpponentField.printField();
+        System.err.println("player 2 field");
+        player2Field.printField();
+        System.err.println("player2 opponent field");
+        player2OpponentField.printField();
+        sendPlayerInfo();
+        updateClients();
+        System.err.println("END OF PREPARING BATTLE ===========================");
+    }
+
+    private void sendPlayerInfo() {
+        try {
+            player1.sendData(new PlayerInfo(PLAYER_1, player1.getName(), player2.getName()));
+            player2.sendData(new PlayerInfo(PLAYER_2, player2.getName(), player1.getName()));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void prepareRematch() {
         player1Field = new Field();
         player1OpponentField = new FakeField();
@@ -100,7 +130,7 @@ public class Game implements Runnable {
         updateClients();
     }
 
-    public boolean handlePlaceShip(Player player, PlaceShip ship) {
+    public synchronized boolean handlePlaceShip(Player player, PlaceShip ship) {
         System.err.println("handlePlaceShip in Game invoked");
         System.err.println("placeShip: " + ship.toString());
         if (player.equals(player1)) {
@@ -136,11 +166,21 @@ public class Game implements Runnable {
         }
     }
 
-    public void handleHit(Player player, int x, int y) {
+    public synchronized void handleHit(Player player, int x, int y) {
+//        System.err.println("player1 field before hit");
+//        player1Field.printField();
+//        System.err.println("player1 opponent field before hit");
+//        player1OpponentField.printField();
+//        System.err.println("player 2 field before hit");
+//        player2Field.printField();
+//        System.err.println("player2 opponent field before hit");
+//        player2OpponentField.printField();
         if (state == GameState.BATTLE_PHASE) {
             if (player.equals(player1)) {
                 try {
+                    System.err.println("========== handling player1 hit ===================");
                     handlePlayer1Hit(x, y);
+                    System.err.println("========== player 1 hit handled ===================");
                 } catch (SocketException e) {
                     System.err.println("handlePlayer1Hit exception");
                 }
@@ -148,48 +188,79 @@ public class Game implements Runnable {
 
             if (player.equals(player2)) {
                 try {
+                    System.err.println("========== handling player2 hit ===================");
                     handlePlayer2Hit(x, y);
+                    System.err.println("========== player 2 hit handled ===================");
                 } catch (SocketException e) {
                     System.err.println("handlePlayer2Hit exception");
                 }
             }
         }
+
+//        System.err.println("player1 field after hit");
+//        player1Field.printField();
+//        System.err.println("player1 opponent field after hit");
+//        player1OpponentField.printField();
+//        System.err.println("player 2 field after hit");
+//        player2Field.printField();
+//        System.err.println("player2 opponent field after hit");
+//        player2OpponentField.printField();
+
+        player1Turn = !player1Turn;
     }
 
     private void handlePlayer1Hit(int x, int y) throws SocketException {
         switch (player2Field.hit(x, y)) {
             case HIT_SHIP -> {
                 player1OpponentField.setPoint(x, y, Field.HitResult.HIT_SHIP);
-                player1.sendData(new HitResponse(HitResponse.HIT_SHIP));
+                player1.sendData(new HitResponse(HitResponse.HIT));
+                player1Turn = !player1Turn;
             }
             case MISS -> {
                 player1OpponentField.setPoint(x, y, Field.HitResult.MISS);
                 player1.sendData(new HitResponse(HitResponse.MISS));
             }
+            case POINT_ALREADY_HIT -> {
+                player1.sendData(new HitResponse(HitResponse.ALREADY_HIT));
+                player1Turn = !player1Turn;
+            }
         }
 
         if (player2Field.checkLose()) {
+            System.err.println("registered defeat of player2");
             setPlayer2Defeated();
         }
 
-        player2Field.checkSunkShips();
-//        updatePlayers();
-//        updateSpectators();
+        player2Field.checkSunkShips(player1OpponentField);
     }
 
     private void handlePlayer2Hit(int x, int y) throws SocketException {
         switch (player1Field.hit(x, y)) {
-            case HIT_SHIP -> player2.sendData(new HitResponse(HitResponse.HIT));
-            case MISS -> player2.sendData(new HitResponse(HitResponse.MISS));
-//            case POINT_ALREADY_HIT -> player2.sendData(new HitResponse(HitResponse.ALREADY_HIT));
+            case HIT_SHIP -> {
+                player2OpponentField.setPoint(x, y, Field.HitResult.HIT_SHIP);
+                player2.sendData(new HitResponse(HitResponse.HIT));
+                player1Turn = !player1Turn;
+            }
+            case MISS -> {
+                player2OpponentField.setPoint(x, y, Field.HitResult.MISS);
+                player2.sendData(new HitResponse(HitResponse.MISS));
+            }
+            case POINT_ALREADY_HIT -> {
+                player2.sendData(new HitResponse(HitResponse.ALREADY_HIT));
+                player1Turn = !player1Turn;
+            }
         }
 
         if (player1Field.checkLose()) {
+            System.err.println("registered defeat of player1");
             setPlayer1Defeated();
         }
+
+        player1Field.checkSunkShips(player2OpponentField);
     }
 
     private void setPlayer1Defeated() {
+        System.err.println("Player1 Defeated");
         player1Defeated = true;
         synchronized (DEFEATED_MONITOR) {
             DEFEATED_MONITOR.notifyAll();
@@ -197,19 +268,34 @@ public class Game implements Runnable {
     }
 
     private void setPlayer2Defeated() {
+        System.err.println("Player2 Defeated");
         player2Defeated = true;
         synchronized (DEFEATED_MONITOR) {
             DEFEATED_MONITOR.notifyAll();
         }
     }
 
-    public void updateClients() {
+    public synchronized void updateClients() {
+
+        System.err.println("TurnUpdate sending: \n");
+        System.err.println("player1 field");
+        player1Field.printField();
+        System.err.println("player1 opponent field");
+        player1OpponentField.printField();
+        System.err.println("player 2 field");
+        player2Field.printField();
+        System.err.println("player2 opponent field");
+        player2OpponentField.printField();
         try {
-            player1.sendData(new TurnUpdate(player1Field.cells, player1OpponentField.cells, 0));
-            player2.sendData(new TurnUpdate(player2Field.cells, player2OpponentField.cells, 0));
+            player1.sendData(new TurnUpdate(player1Field.cells, player1OpponentField.cells, getPlayerTurn()));
+            player2.sendData(new TurnUpdate(player2Field.cells, player2OpponentField.cells, getPlayerTurn()));
         } catch (SocketException e) {
             e.printStackTrace();
         }
+    }
+
+    private int getPlayerTurn() {
+        return player1Turn ? 1 : 2;
     }
 
     private enum GameState {

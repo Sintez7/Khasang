@@ -23,9 +23,6 @@ public class GameServer extends Thread {
     private volatile boolean player2Rematch = false;
     private volatile boolean player2RematchVoted = false;
 
-//    private Field player1Field;
-//    private Field player2Field;
-
     private final List<Player> spectators = new ArrayList<>();
 
     private final Game game;

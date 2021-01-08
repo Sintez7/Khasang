@@ -12,7 +12,6 @@ public class Field {
     protected static final int OCCUPIED_HIT = 3;
 
     private static final int SIZE = 10;
-    private static final List<ActualShip> shipsInPlay = new ArrayList<>();
 
     private static final int[][] SCAN_DIRECTIONS =
             {{0, -1},
@@ -24,6 +23,7 @@ public class Field {
                     {-1, 0},
                     {-1, -1}};
 
+    private final List<ActualShip> shipsInPlay = new ArrayList<>();
     int[][] cells = new int[SIZE][SIZE];
 
     public Field() {
@@ -39,26 +39,32 @@ public class Field {
     }
 
     public HitResult hit(int x, int y) {
-        if (cells[x - 1][y - 1] != HIT) {
+        System.err.println("hit in Field invoked");
+        System.err.println("current Thread: " + Thread.currentThread());
+        System.err.println("hit point x" + x + " y" + y);
+        if (cells[x][y] != HIT) {
             if (hitPoint(x, y)) {
 //                checkLose();
+                System.err.println("result HIT_SHIP");
                 return  HitResult.HIT_SHIP;
             } else {
 //                server.miss();
+                System.err.println("result MISS");
                 return HitResult.MISS;
             }
         } else {
 //            server.pointHit();
+            System.err.println("result ALREADY_HIT");
             return HitResult.POINT_ALREADY_HIT;
         }
     }
 
     private boolean hitPoint(int x, int y) {
         if (hitShip(x, y)) {
-            cells[x - 1][y - 1] = OCCUPIED_HIT;
+            cells[x][y] = OCCUPIED_HIT;
             return true;
         } else {
-            cells[x - 1][y - 1] = HIT;
+            cells[x][y] = HIT;
             return false;
         }
     }
@@ -69,12 +75,13 @@ public class Field {
                 return true;
             }
         }
-        cells[x - 1][y - 1] = HIT;
+        cells[x][y] = HIT;
         return false;
     }
 
     public boolean checkLose() {
         for (ActualShip actualShip : shipsInPlay) {
+            System.err.println(actualShip.toString());
             if (actualShip.isAlive()) {
                 return false;
             }
@@ -160,45 +167,50 @@ public class Field {
     public void printField() {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                System.out.print(cells[j][i] + "\t");
+                System.err.print(cells[j][i] + "\t");
             }
-            System.out.println();
+            System.err.println();
         }
-        System.out.println("==============================");
+        System.err.println("==============================");
     }
 
-    public void checkSunkShips() {
+    public void checkSunkShips(FakeField player1OpponentField) {
         for (ActualShip actualShip : shipsInPlay) {
             if (!actualShip.isCircled() && !actualShip.isAlive()) {
-                circleSunkShip(actualShip);
+                circleSunkShip(actualShip, player1OpponentField);
                 actualShip.setCircled();
             }
         }
     }
 
-    private void circleSunkShip(ActualShip ship) {
+    private void circleSunkShip(ActualShip ship, FakeField player1OpponentField) {
         Point[] points = ship.getShipPoint();
         Point vector = new Point();
         Point current = new Point();
         for (int i = 0; i < points.length; i++) {
             for (int j = 0; j < 8; j++) {
-                current.set(points[i].x - 1, points[i].y - 1);
+                current.set(points[i].x, points[i].y);
                 vector.set(SCAN_DIRECTIONS[j][0], SCAN_DIRECTIONS[j][1]);
                 current.add(vector);
                 if (isPointInBounds(current)) {
-                    setHit(current);
+                    int temp = setHit(current);
+                    player1OpponentField.setPoint(current.x, current.y, temp);
                 }
             }
 
         }
     }
 
-    private void setHit(Point p) {
+    private int setHit(Point p) {
         if (cells[p.x][p.y] == FREE) {
             cells[p.x][p.y] = HIT;
         } else if (cells[p.x][p.y] == OCCUPIED) {
             cells[p.x][p.y] = OCCUPIED_HIT;
+            return OCCUPIED_HIT;
+        } else if (cells[p.x][p.y] == OCCUPIED_HIT) {
+            return OCCUPIED_HIT;
         }
+        return HIT;
     }
 
     enum HitResult {

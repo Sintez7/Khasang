@@ -39,7 +39,7 @@ public class LobbyServer extends Thread {
                 data.addLobbyData(lobby.convertToDataPackage());
             }
 
-            System.err.println("sending lobbies data to " + players.size() + " players");
+//            System.err.println("sending lobbies data to " + players.size() + " players");
 
             // Отправляем пакет всем игрокам
             for (Player player : players) {

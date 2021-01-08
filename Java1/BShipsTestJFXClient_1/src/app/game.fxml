@@ -100,11 +100,17 @@
                                  <center>
                                     <Label text="Player Field" BorderPane.alignment="CENTER" />
                                  </center>
+                                 <bottom>
+                                    <Label fx:id="playerNameLabel" text="Label" BorderPane.alignment="CENTER" />
+                                 </bottom>
                               </BorderPane>
                               <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                                  <center>
                                     <Label text="Opponent Field" BorderPane.alignment="CENTER" />
                                  </center>
+                                 <bottom>
+                                    <Label fx:id="opponentNameLabel" text="Label" BorderPane.alignment="CENTER" />
+                                 </bottom>
                               </BorderPane>
                            </children>
                         </GridPane>

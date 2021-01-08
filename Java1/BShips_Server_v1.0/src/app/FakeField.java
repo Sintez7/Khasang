@@ -23,4 +23,8 @@ public class FakeField extends Field {
             case MISS -> cells[x][y] = HIT;
         }
     }
+
+    public void setPoint(int x, int y, int state) {
+        cells[x][y] = state;
+    }
 }

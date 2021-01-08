@@ -1,6 +1,7 @@
 package app;
 
 import app.shared.HitResponse;
+import app.shared.PlayerInfo;
 import app.shared.TurnUpdate;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -70,13 +71,19 @@ public class GameController {
     @FXML
     private TextField chatInputTextField;
 
+    @FXML
+    private Label playerNameLabel;
+
+    @FXML
+    private Label opponentNameLabel;
+
     private int oneDeckShipsPlaced = 0;
     private int twoDeckShipsPlaced = 0;
     private int threeDeckShipsPlaced = 0;
     private int fourDeckShipsPlaced = 0;
 
-    private Cell[][] playerField = new Cell[SIZE][SIZE];
-    private Cell[][] opponentField = new Cell[SIZE][SIZE];
+    private volatile Cell[][] playerField = new Cell[SIZE][SIZE];
+    private volatile Cell[][] opponentField = new Cell[SIZE][SIZE];
     private boolean holdingShip = false;
     private int shipSize = 0;
     private Integer shipBias = 0;
@@ -91,6 +98,8 @@ public class GameController {
     private Point2D stPoint;
     private double curMX;
     private double curMY;
+
+    private int thisPlayerNumber = -1;
 
     public GameController(Main main) {
         this.main = main;
@@ -119,6 +128,7 @@ public class GameController {
 
         l.setText("curMX: " + curMX + " curMY: " + curMY);
         flowPane.getChildren().add(l);
+        chatTextArea.appendText("Ship placement phase started!\n");
     }
 
     private void updateCursorPos(MouseEvent mouseEvent) {
@@ -323,11 +333,14 @@ public class GameController {
         }
     }
 
-    public void handleHitResponse(HitResponse temp) {
-
+    public synchronized void handleHitResponse(HitResponse temp) {
+        chatTextArea.appendText("player " + thisPlayerNumber + " hit response " + temp.getResponseType() + "\n");
     }
 
     private void handleShoot(int x, int y) {
+        System.err.println("handleShoot invoked");
+        System.err.println("playerTurn: " + playerTurn);
+        System.err.println("hit x: " + x + " y: " + y);
         if (playerTurn) {
             main.handleShoot(x, y);
         } else {
@@ -336,20 +349,69 @@ public class GameController {
     }
 
     public void handleTurnUpdate(TurnUpdate temp) {
+//        showField(temp);
         updatePlayerGrid(temp.getPlayerField());
-//        updateOpponentGrid(temp.getOpponentField());
-//        setTurn = temp.getPlayerTurn();
+        updateOpponentGrid(temp.getOpponentField());
+        setTurn(temp.getPlayerTurn());
+        chatTextArea.appendText("current player turn: " + temp.getPlayerTurn() + "\n");
+    }
+
+    private void showField(TurnUpdate temp) {
+        System.err.println("field on new turn");
+        System.err.println("current player field");
+        for (int i = 0; i < temp.getPlayerField().length; i++) {
+            for (int j = 0; j < temp.getPlayerField()[i].length; j++) {
+                System.err.print(temp.getPlayerField()[j][i] + "\t");
+            }
+            System.err.println();
+        }
+        System.err.println("==============================");
+
+        System.err.println("current opponent field");
+        for (int i = 0; i < temp.getOpponentField().length; i++) {
+            for (int j = 0; j < temp.getOpponentField()[i].length; j++) {
+                System.err.print(temp.getOpponentField()[j][i] + "\t");
+            }
+            System.err.println();
+        }
+        System.err.println("==============================");
+    }
+
+    private void setTurn(int playerTurn) {
+        System.err.println("setTurn invoked");
+        System.err.println("thisPlayerNumber: " + whosTurnName());
+        System.err.println("gotted playerTurn: " + playerTurn);
+        System.err.println("playerTurn before: " + this.playerTurn);
+        this.playerTurn = thisPlayerNumber == playerTurn;
+        System.err.println("playerTurn after: " + this.playerTurn);
+    }
+
+    private String whosTurnName() {
+        if (thisPlayerNumber == 1) {
+            return playerNameLabel.getText();
+        } else if (thisPlayerNumber == 2) {
+            return opponentNameLabel.getText();
+        }
+        return "";
     }
 
     private void updatePlayerGrid(int[][] playerField) {
         for (int i = 0; i < playerField.length; i++) {
             for (int j = 0; j < playerField.length; j++) {
-                updatePlayerCell(this.playerField[j][i], playerField[j][i]);
+                updateCell(this.playerField[j][i], playerField[j][i]);
             }
         }
     }
 
-    private void updatePlayerCell(Cell cell, int status) {
+    private void updateOpponentGrid(int[][] opponentField) {
+        for (int i = 0; i < opponentField.length; i++) {
+            for (int j = 0; j < opponentField.length; j++) {
+                updateCell(this.opponentField[j][i], opponentField[j][i]);
+            }
+        }
+    }
+
+    private void updateCell(Cell cell, int status) {
         if (cell.status != status) {
             cell.status = status;
             switch (status) {
@@ -372,7 +434,7 @@ public class GameController {
             }
         }
 
-        playerTurn = !playerTurn;
+//        playerTurn = !playerTurn;
     }
 
     private void placeShip(int x, int y, int shipSize, int shipBias) {
@@ -432,6 +494,15 @@ public class GameController {
 
     public void startGame() {
 
+    }
+
+    public void handlePlayerInfo(PlayerInfo playerInfo) {
+        System.err.println("gotted player info: " + playerInfo);
+        thisPlayerNumber = playerInfo.getPlayerInfo();
+        System.err.println("thisPlayerNumber now is: " + thisPlayerNumber);
+        playerNameLabel.setText(playerInfo.getPlayerName());
+        opponentNameLabel.setText(playerInfo.getOpponentName());
+        chatTextArea.appendText("Battle Started!\n");
     }
 
     public static class Cell extends Button {

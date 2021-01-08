@@ -8,8 +8,21 @@ public class TurnUpdate extends DataPackage {
 
     public TurnUpdate(int[][] playerField, int[][] opponentField, int playerTurn) {
         super(DataPackage.TURN_UPDATE);
-        this.playerField = playerField;
-        this.opponentField = opponentField;
+
+        this.playerField = new int[playerField.length][playerField.length];
+        for (int i = 0; i < this.playerField.length; i++) {
+            for (int j = 0; j < 10; j++) {
+                this.playerField[j][i] = playerField[j][i];
+            }
+        }
+
+        this.opponentField = new int[playerField.length][playerField.length];
+        for (int i = 0; i < this.opponentField.length; i++) {
+            for (int j = 0; j < 10; j++) {
+                this.opponentField[j][i] = opponentField[j][i];
+            }
+        }
+
         this.playerTurn = playerTurn;
     }
 

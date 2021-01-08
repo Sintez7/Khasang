@@ -14,7 +14,12 @@ public class ActualShip {
     private Point bias;
     private boolean circled = false;
 
+    private int initX;
+    private int initY;
+
     public ActualShip(int x, int y, Ship ship) {
+        initX = x;
+        initY = y;
         bias = ship.getVector();
         size = ship.getSize();
         for (int i = 0; i < ship.getSize(); i++) {
@@ -66,5 +71,10 @@ public class ActualShip {
 
     public boolean isCircled() {
         return circled;
+    }
+
+    @Override
+    public String toString() {
+        return "ActualShip, size " + size + ", x " + initX + ", y " + initY + ", alive? " + isAlive();
     }
 }

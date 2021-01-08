@@ -3,7 +3,7 @@ package app.shared;
 import java.io.Serializable;
 
 public abstract class DataPackage implements Serializable {
-    private static final long serialVersionUID = 101015;
+//    private static final long serialVersionUID = 101015;
 
     public static final int LOBBY_PACKAGE = 1;
     public static final int GAMESERVER_PACKAGE = 2;
@@ -24,6 +24,7 @@ public abstract class DataPackage implements Serializable {
     public static final int TURN_UPDATE = 19;
     public static final int READY_TO_GAME_START = 20;
     public static final int REMATCH_DECISION = 21;
+    public static final int PLAYER_INFO = 22;
 
     private final int id;
 

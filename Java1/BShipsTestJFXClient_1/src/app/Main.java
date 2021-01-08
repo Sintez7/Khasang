@@ -45,7 +45,7 @@ public class Main extends Application {
         loader.setController(controller);
         loader.load();
         primaryStage.setTitle("JFX_SeaBattle_v0.1");
-        Scene scene = new Scene(loader.getRoot(), 600, 600);
+        Scene scene = new Scene(loader.getRoot(), 800, 800);
         scene.getStylesheets().add(0, "app/styles/style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -173,6 +173,24 @@ public class Main extends Application {
     }
 
     public void handleTurnUpdate(TurnUpdate temp) {
+        System.err.println("field on new turn");
+        System.err.println("current player field");
+        for (int i = 0; i < temp.getPlayerField().length; i++) {
+            for (int j = 0; j < temp.getPlayerField()[i].length; j++) {
+                System.err.print(temp.getPlayerField()[j][i] + "\t");
+            }
+            System.err.println();
+        }
+        System.err.println("==============================");
+
+        System.err.println("current opponent field");
+        for (int i = 0; i < temp.getOpponentField().length; i++) {
+            for (int j = 0; j < temp.getOpponentField()[i].length; j++) {
+                System.err.print(temp.getOpponentField()[j][i] + "\t");
+            }
+            System.err.println();
+        }
+        System.err.println("==============================");
         gameController.handleTurnUpdate(temp);
     }
 
@@ -195,5 +213,9 @@ public class Main extends Application {
 
     public void sendReady() {
         handler.sendData(new ReadyToStart());
+    }
+
+    public void handlePlayerInfo(PlayerInfo temp) {
+        gameController.handlePlayerInfo(temp);
     }
 }
