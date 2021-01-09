@@ -106,6 +106,10 @@ public class ConnectionHandler extends Thread {
                         case DataPackage.HIT_RESPONSE -> Platform.runLater(() -> main.handleHitResponse((HitResponse)temp));
                         case DataPackage.TURN_UPDATE -> Platform.runLater(() -> main.handleTurnUpdate((TurnUpdate)temp));
                         case DataPackage.PLAYER_INFO -> Platform.runLater(() -> main.handlePlayerInfo((PlayerInfo) temp));
+                        case DataPackage.PLAYER_WON -> Platform.runLater(() -> main.handlePlayerWon((PlayerWon) temp));
+                        case DataPackage.REMATCH_OFFER -> Platform.runLater(() -> main.handleRematchOffer());
+                        case DataPackage.REMATCH_SIGNAL -> Platform.runLater(() -> main.handleRematch());
+                        case DataPackage.BATTLE_START -> Platform.runLater(() -> main.handleBattleStart());
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

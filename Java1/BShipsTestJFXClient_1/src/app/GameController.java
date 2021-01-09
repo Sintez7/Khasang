@@ -2,6 +2,7 @@ package app;
 
 import app.shared.HitResponse;
 import app.shared.PlayerInfo;
+import app.shared.PlayerWon;
 import app.shared.TurnUpdate;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -66,6 +67,18 @@ public class GameController {
     private FlowPane flowPane;
 
     @FXML
+    private Button readyBtn;
+
+    @FXML
+    private Label rematchLabel;
+
+    @FXML
+    private Button rematchYesBtn;
+
+    @FXML
+    private Button rematchNoBtn;
+
+    @FXML
     private TextArea chatTextArea;
 
     @FXML
@@ -77,10 +90,15 @@ public class GameController {
     @FXML
     private Label opponentNameLabel;
 
+    @FXML
+    private Label availableShipsLabel;
+
     private int oneDeckShipsPlaced = 0;
     private int twoDeckShipsPlaced = 0;
     private int threeDeckShipsPlaced = 0;
     private int fourDeckShipsPlaced = 0;
+
+    private boolean gameEnded = false;
 
     private volatile Cell[][] playerField = new Cell[SIZE][SIZE];
     private volatile Cell[][] opponentField = new Cell[SIZE][SIZE];
@@ -91,6 +109,7 @@ public class GameController {
     private ShipEntity shipToPlace = null;
 
     private boolean playerTurn = false;
+    private volatile boolean battlePhase = false;
 
     private String tempText = "asddsaasddsasddsaasddsa";
     private Label l = new Label();
@@ -128,6 +147,13 @@ public class GameController {
 
         l.setText("curMX: " + curMX + " curMY: " + curMY);
         flowPane.getChildren().add(l);
+
+        readyBtn.setVisible(true);
+        availableShipsLabel.setVisible(true);
+        rematchLabel.setVisible(false);
+        rematchYesBtn.setVisible(false);
+        rematchNoBtn.setVisible(false);
+
         chatTextArea.appendText("Ship placement phase started!\n");
     }
 
@@ -305,7 +331,10 @@ public class GameController {
     @FXML
     void sendReady(ActionEvent event) {
         if (checkReadiness()) {
+            chatTextArea.appendText("Waiting for opponent...\n");
             main.sendReady();
+        } else {
+            chatTextArea.appendText("You are not ready! Check your ships.\n");
         }
     }
 
@@ -338,13 +367,14 @@ public class GameController {
     }
 
     private void handleShoot(int x, int y) {
-        System.err.println("handleShoot invoked");
-        System.err.println("playerTurn: " + playerTurn);
-        System.err.println("hit x: " + x + " y: " + y);
-        if (playerTurn) {
-            main.handleShoot(x, y);
+        if (battlePhase){
+            if (playerTurn) {
+                main.handleShoot(x, y);
+            } else {
+                System.err.println("not your turn");
+            }
         } else {
-            System.err.println("not your turn");
+            System.err.println("not in battlePhase");
         }
     }
 
@@ -353,7 +383,9 @@ public class GameController {
         updatePlayerGrid(temp.getPlayerField());
         updateOpponentGrid(temp.getOpponentField());
         setTurn(temp.getPlayerTurn());
-        chatTextArea.appendText("current player turn: " + temp.getPlayerTurn() + "\n");
+        if (!gameEnded) {
+            chatTextArea.appendText("current player turn: " + whosTurnName() + "\n");
+        }
     }
 
     private void showField(TurnUpdate temp) {
@@ -378,12 +410,7 @@ public class GameController {
     }
 
     private void setTurn(int playerTurn) {
-        System.err.println("setTurn invoked");
-        System.err.println("thisPlayerNumber: " + whosTurnName());
-        System.err.println("gotted playerTurn: " + playerTurn);
-        System.err.println("playerTurn before: " + this.playerTurn);
         this.playerTurn = thisPlayerNumber == playerTurn;
-        System.err.println("playerTurn after: " + this.playerTurn);
     }
 
     private String whosTurnName() {
@@ -433,14 +460,12 @@ public class GameController {
                 }
             }
         }
-
-//        playerTurn = !playerTurn;
     }
 
     private void placeShip(int x, int y, int shipSize, int shipBias) {
         if (shipToPlace == null) {
             shipToPlace = new ShipEntity(x, y, shipSize, shipBias);
-            main.handlePlaceShip(x, y, shipSize, shipBias); //TODO: proverit' koordinati
+            main.handlePlaceShip(x, y, shipSize, shipBias);
         } else {
             System.err.println("waiting for ship placement response");
         }
@@ -497,12 +522,88 @@ public class GameController {
     }
 
     public void handlePlayerInfo(PlayerInfo playerInfo) {
-        System.err.println("gotted player info: " + playerInfo);
         thisPlayerNumber = playerInfo.getPlayerInfo();
-        System.err.println("thisPlayerNumber now is: " + thisPlayerNumber);
         playerNameLabel.setText(playerInfo.getPlayerName());
         opponentNameLabel.setText(playerInfo.getOpponentName());
-        chatTextArea.appendText("Battle Started!\n");
+    }
+
+    private void hideShipSelection() {
+        flowPane.setVisible(false);
+    }
+
+    public void handlePlayerWon(PlayerWon temp) {
+        chatTextArea.appendText("Player " + temp.getPlayerWon() + " won!\n");
+        gameEnded = true;
+        battlePhase = false;
+    }
+
+    public void handleRematchOffer() {
+        changeToRematchDecision();
+    }
+
+    private void changeToRematchDecision() {
+        readyBtn.setVisible(false);
+        availableShipsLabel.setVisible(false);
+        rematchLabel.setVisible(true);
+        rematchYesBtn.setVisible(true);
+        rematchNoBtn.setVisible(true);
+    }
+
+    @FXML
+    void rematchYes(ActionEvent event) {
+        main.sendRematch(true);
+        chatTextArea.appendText("You voted yes for rematch, waiting for your opponent decision...\n");
+    }
+
+    @FXML
+    void rematchNo(ActionEvent event) {
+        main.sendRematch(false);
+        chatTextArea.appendText("You voted no for rematch\n");
+        chatTextArea.appendText("Returning to Lobby\n");
+        main.loadLobby();
+    }
+
+    public synchronized void handleRematch() {
+        clearFields();
+        showShipSelection();
+        hideRematchElements();
+        gameEnded = false;
+        chatTextArea.appendText("Rematch accepted\n");
+        chatTextArea.appendText("Ship placement phase started!\n");
+    }
+
+    private void hideRematchElements() {
+        readyBtn.setVisible(true);
+        availableShipsLabel.setVisible(true);
+        rematchLabel.setVisible(false);
+        rematchYesBtn.setVisible(false);
+        rematchNoBtn.setVisible(false);
+    }
+
+    private void showShipSelection() {
+        flowPane.setVisible(true);
+    }
+
+    private void clearFields() {
+        for (int i = 0; i < playerField.length; i++) {
+            for (int j = 0; j < playerField.length; j++) {
+                playerField[j][i].getStyleClass().clear();
+                playerField[j][i].getStyleClass().add("freeCell"); //freeOpponentCell
+                opponentField[j][i].getStyleClass().clear();
+                opponentField[j][i].getStyleClass().add("freeOpponentCell");
+            }
+        }
+
+        oneDeckShipsPlaced = 0;
+        twoDeckShipsPlaced = 0;
+        threeDeckShipsPlaced = 0;
+        fourDeckShipsPlaced = 0;
+    }
+
+    public void handleBattleStart() {
+        hideShipSelection();
+        battlePhase = true;
+        chatTextArea.appendText("Battle Started!\n");//TODO: допилить старт и отображение смены режима
     }
 
     public static class Cell extends Button {

@@ -26,7 +26,7 @@
                <center>
                   <BorderPane BorderPane.alignment="CENTER">
                      <center>
-                        <GridPane hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="30.0">
+                        <GridPane alignment="CENTER" hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="30.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" />
                             <ColumnConstraints hgrow="SOMETIMES" />
@@ -38,7 +38,7 @@
                            <children>
                               <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1">
                                  <children>
-                                    <GridPane fx:id="playerGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-grid-lines-visible: true;">
+                                    <GridPane fx:id="playerGrid" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-grid-lines-visible: true;">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
@@ -68,7 +68,7 @@
                               </AnchorPane>
                               <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
-                                    <GridPane fx:id="opponentGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-grid-lines-visible: true;">
+                                    <GridPane fx:id="opponentGrid" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-grid-lines-visible: true;">
                                        <columnConstraints>
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
@@ -118,10 +118,25 @@
                      <bottom>
                         <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <top>
-                              <Label text="Available Ships" BorderPane.alignment="CENTER" />
+                              <Label fx:id="availableShipsLabel" text="Available Ships" BorderPane.alignment="CENTER" />
                            </top>
                            <bottom>
-                              <Button mnemonicParsing="false" onAction="#sendReady" text="Ready!" BorderPane.alignment="CENTER" />
+                              <BorderPane BorderPane.alignment="CENTER">
+                                 <top>
+                                    <Button fx:id="readyBtn" mnemonicParsing="false" onAction="#sendReady" text="Ready!" BorderPane.alignment="CENTER" />
+                                 </top>
+                                 <center>
+                                    <Label fx:id="rematchLabel" text="Rematch?" BorderPane.alignment="CENTER" />
+                                 </center>
+                                 <bottom>
+                                    <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="20.0" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="rematchYesBtn" mnemonicParsing="false" onAction="#rematchYes" prefWidth="50.0" text="Yes" />
+                                          <Button fx:id="rematchNoBtn" mnemonicParsing="false" onAction="#rematchNo" prefWidth="50.0" text="No" />
+                                       </children>
+                                    </FlowPane>
+                                 </bottom>
+                              </BorderPane>
                            </bottom>
                            <center>
                               <FlowPane fx:id="flowPane" hgap="30.0" prefHeight="200.0" prefWidth="200.0">

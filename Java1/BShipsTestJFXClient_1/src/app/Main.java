@@ -173,24 +173,24 @@ public class Main extends Application {
     }
 
     public void handleTurnUpdate(TurnUpdate temp) {
-        System.err.println("field on new turn");
-        System.err.println("current player field");
-        for (int i = 0; i < temp.getPlayerField().length; i++) {
-            for (int j = 0; j < temp.getPlayerField()[i].length; j++) {
-                System.err.print(temp.getPlayerField()[j][i] + "\t");
-            }
-            System.err.println();
-        }
-        System.err.println("==============================");
-
-        System.err.println("current opponent field");
-        for (int i = 0; i < temp.getOpponentField().length; i++) {
-            for (int j = 0; j < temp.getOpponentField()[i].length; j++) {
-                System.err.print(temp.getOpponentField()[j][i] + "\t");
-            }
-            System.err.println();
-        }
-        System.err.println("==============================");
+//        System.err.println("field on new turn");
+//        System.err.println("current player field");
+//        for (int i = 0; i < temp.getPlayerField().length; i++) {
+//            for (int j = 0; j < temp.getPlayerField()[i].length; j++) {
+//                System.err.print(temp.getPlayerField()[j][i] + "\t");
+//            }
+//            System.err.println();
+//        }
+//        System.err.println("==============================");
+//
+//        System.err.println("current opponent field");
+//        for (int i = 0; i < temp.getOpponentField().length; i++) {
+//            for (int j = 0; j < temp.getOpponentField()[i].length; j++) {
+//                System.err.print(temp.getOpponentField()[j][i] + "\t");
+//            }
+//            System.err.println();
+//        }
+//        System.err.println("==============================");
         gameController.handleTurnUpdate(temp);
     }
 
@@ -217,5 +217,25 @@ public class Main extends Application {
 
     public void handlePlayerInfo(PlayerInfo temp) {
         gameController.handlePlayerInfo(temp);
+    }
+
+    public void handlePlayerWon(PlayerWon temp) {
+        gameController.handlePlayerWon(temp);
+    }
+
+    public void handleRematchOffer() {
+        gameController.handleRematchOffer();
+    }
+
+    public void sendRematch(boolean decision) {
+        handler.sendData(new RematchDecision(decision));
+    }
+
+    public void handleRematch() {
+        gameController.handleRematch();
+    }
+
+    public void handleBattleStart() {
+        gameController.handleBattleStart();
     }
 }
