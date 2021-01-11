@@ -111,6 +111,12 @@ public class Game implements Runnable {
         player2Field.printField();
         System.err.println("player2 opponent field");
         player2OpponentField.printField();
+        try {
+            player1.sendData(new BattleStart());
+            player2.sendData(new BattleStart());
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         updateClients();
         System.err.println("END OF PREPARING BATTLE ===========================");
     }

@@ -603,7 +603,7 @@ public class GameController {
     public void handleBattleStart() {
         hideShipSelection();
         battlePhase = true;
-        chatTextArea.appendText("Battle Started!\n");//TODO: допилить старт и отображение смены режима
+        chatTextArea.appendText("Battle Started!\n");
     }
 
     public static class Cell extends Button {

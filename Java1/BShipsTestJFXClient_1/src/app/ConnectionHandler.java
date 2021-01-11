@@ -6,11 +6,14 @@ import javafx.application.Platform;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 public class ConnectionHandler extends Thread {
 
-    private final SynchronousQueue<DataPackage> inQueue = new SynchronousQueue<>();
+//    private final SynchronousQueue<DataPackage> inQueue = new SynchronousQueue<>();
+    private final BlockingQueue<DataPackage> inQueue = new LinkedBlockingQueue<DataPackage>();
     private final InExecutor inExecutor = new InExecutor(inQueue);
     private Socket socket;
 
@@ -76,11 +79,11 @@ public class ConnectionHandler extends Thread {
 
     private static class InExecutor extends Thread {
 
-        private final SynchronousQueue<DataPackage> inQueue;
+        private final BlockingQueue<DataPackage> inQueue;
 
         LobbiesScreenController lsController;
 
-        public InExecutor(SynchronousQueue<DataPackage> inQueue) {
+        public InExecutor(BlockingQueue<DataPackage> inQueue) {
             setName("InExecutor Thread");
             setDaemon(true);
             this.inQueue = inQueue;
