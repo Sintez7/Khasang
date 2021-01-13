@@ -81,7 +81,7 @@ public class Game implements Runnable {
                 e.printStackTrace();
             }
 
-            state = GameState.REMATCH_DECISION; //TODO: сделать возможность переигровки
+            state = GameState.REMATCH_DECISION;
             System.err.println("Game switched to REMATCH_DECISION state");
 
             synchronized (REMATCH_DECISION_MONITOR) {
@@ -312,6 +312,14 @@ public class Game implements Runnable {
 
     private int getPlayerTurn() {
         return player1Turn ? 1 : 2;
+    }
+
+    public void setPositiveRematch() {
+        rematch = true;
+    }
+
+    public void setNegativeRematch() {
+        rematch = false;
     }
 
     private enum GameState {

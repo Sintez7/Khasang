@@ -8,7 +8,8 @@ import app.shared.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /*
  * ClientHandler предназначен для обработки входящего подключения как клиента
@@ -20,7 +21,7 @@ public class ClientHandler extends Thread {
     private static int id = 0;
 
     private final Socket client;
-    private final SynchronousQueue<DataPackage> inputQueue = new SynchronousQueue<>(true);
+    private final BlockingQueue<DataPackage> inputQueue = new LinkedBlockingQueue<>();
     private final Player thisPlayer;
     private final LobbyServer lobbyServer;
     private final InExecutor inExecutor;
@@ -59,12 +60,12 @@ public class ClientHandler extends Thread {
             /*
              * Обработка входящего пакета может быть довольно долгой.
              * Чтобы принимать пакеты от клиента как можно чаще,
-             * делегируем обработку классу InExecutor через синхронизованную очередь
+             * делегируем обработку классу InExecutor через очередь
              */
             try {
                 while (connectionAlive) {
                     Object input = in.readObject();
-                    inputQueue.offer((DataPackage) input);
+                    inputQueue.add((DataPackage) input);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -72,7 +73,6 @@ public class ClientHandler extends Thread {
                 // Клиент ОТВАЛИЛСЯ
                 System.err.println(client.toString() + " connection lost");
                 // Завершаем цикл чтения
-//                    break;
                 connectionAlive = false;
                 inExecutor.interrupt();
             }
@@ -130,10 +130,6 @@ public class ClientHandler extends Thread {
         System.err.println(currentGameServer);
     }
 
-    private void playerMove() {
-//        currentGameServer.playerMove();
-    }
-
     private void handlePlaceShip(PlaceShip ship) {
         System.err.println(currentGameServer + " player " + thisPlayer);
         try {
@@ -173,8 +169,8 @@ public class ClientHandler extends Thread {
                         case DataPackage.GAME_START -> gameStart();
                         case DataPackage.PLACE_SHIP -> handlePlaceShip((PlaceShip) in);
                         case DataPackage.READY_TO_GAME_START -> handleReady();
-                        case DataPackage.HIT -> handleHit((Hit) in); //TODO obrabotat' package
-                        case DataPackage.REMATCH_DECISION -> handleRematchDecision();
+                        case DataPackage.HIT -> handleHit((Hit) in);
+                        case DataPackage.REMATCH_DECISION -> handleRematchDecision((RematchDecision) in);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -184,8 +180,8 @@ public class ClientHandler extends Thread {
         }
     }
 
-    private void handleRematchDecision() {
-        currentGameServer.handleRematchDecision(thisPlayer);
+    private void handleRematchDecision(RematchDecision dec) {
+        currentGameServer.handleRematchDecision(thisPlayer, dec);
     }
 
     private void handleReady() {

@@ -6,6 +6,7 @@ package app;
 import app.shared.DataPackage;
 import app.shared.GameStart;
 import app.shared.PlaceShip;
+import app.shared.RematchDecision;
 
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ public class GameServer extends Thread {
         this.player2 = player2;
         this.spectators.addAll(spectators);
         game = new Game(player1, player2);
-        game.start();
     }
 
     public void setPlayer1(Player player) {
@@ -73,6 +73,8 @@ public class GameServer extends Thread {
                 e.printStackTrace();
             }
         }
+        // запускаем саму игру
+        game.start();
 
         // Пока сервер игры используется - он должен работать
         // Если игроки отказались от рематча - он должен быть закрыт и уничтожен
@@ -82,9 +84,19 @@ public class GameServer extends Thread {
                     // Ждём пока не будет принято решение о рематче
                     game.REMATCH_MONITOR.wait();
                     // после нотификации, у нас гарантированно будет решение о рематче
+                    // если положительно - подготовить рематч,
+                    // сбросить переменные готовности и голосования о рематче
                     if (game.rematch) {
                         game.prepareRematch();
+                        player1Ready = false;
+                        player2Ready = false;
+                        player1Rematch = false;
+                        player1RematchVoted = false;
+                        player2Rematch = false;
+                        player2RematchVoted = false;
                     } else {
+                        // в ином случае - игра считается завершённой, а потому нужды в сервере более нет,
+                        // и его работа прекращается
                         playable = false;
                     }
                 } catch (InterruptedException e) {
@@ -120,21 +132,29 @@ public class GameServer extends Thread {
         }
     }
 
-    public void handleRematchDecision(Player player) {
+    public void handleRematchDecision(Player player, RematchDecision dec) {
         if (player1.equals(player)) {
-            player1Rematch = true;
+            player1Rematch = dec.getDecision();
             player1RematchVoted = true;
         } else {
             if (player2.equals(player)) {
-                player2Rematch = true;
+                player2Rematch = dec.getDecision();
                 player2RematchVoted = true;
             }
         }
 
         if (player1RematchVoted && player2RematchVoted) {
-            game.rematch = player1Rematch & player2Rematch;
-            synchronized (game.REMATCH_DECISION_MONITOR) {
+            if (player1Rematch && player2Rematch) {
+                game.rematch = player1Rematch & player2Rematch;
+                synchronized (game.REMATCH_DECISION_MONITOR) {
+                    game.setPositiveRematch();
+                    game.REMATCH_DECISION_MONITOR.notifyAll();
+                }
+            } else {
+                // один из игроков отказался от рематча
+                game.setNegativeRematch();
                 game.REMATCH_DECISION_MONITOR.notifyAll();
+                //TODO: оповестить клиенты о отмене рематча
             }
         }
     }
