@@ -131,7 +131,6 @@ public class LobbyRoom extends Thread {
 
     public GameServer startGame() {
         if (player1 != null && player2 != null) {
-            //TODO startGame
             GameServer s = new GameServer(player1, player2, spectators);
             clearRoom();
             return s.startGame();
@@ -155,5 +154,15 @@ public class LobbyRoom extends Thread {
         player1 = null;
         player2 = null;
         spectators.clear();
+    }
+
+    public void handlePvA() {
+        if (player1 == null) {
+            player1 = new BotPlayer();
+        }
+
+        if (player2 == null) {
+            player2 = new BotPlayer();
+        }
     }
 }

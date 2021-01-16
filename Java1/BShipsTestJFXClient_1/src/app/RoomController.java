@@ -11,6 +11,7 @@ import app.shared.LobbyData;
 import app.shared.LobbyRoomData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 public class RoomController {
@@ -30,6 +31,10 @@ public class RoomController {
     @FXML
     private Label lobbyNameLabel;
 
+    @FXML
+    private Button vsAIbtn;
+
+
     private Main main;
     public RoomController(Main main) {
         this.main = main;
@@ -43,6 +48,11 @@ public class RoomController {
     @FXML
     void leaveRoom(ActionEvent event) {
         main.leaveRoom();
+    }
+
+    @FXML
+    void playAgainstAI(ActionEvent event) {
+        main.playAgainstAI();
     }
 
     public void receiveRoomInfo(LobbyRoomData data) {

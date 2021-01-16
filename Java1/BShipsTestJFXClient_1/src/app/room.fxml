@@ -9,7 +9,8 @@
       <Label fx:id="player1Name" layoutX="33.0" layoutY="89.0" text="PLAYER1NAME" />
       <Label fx:id="player2Name" layoutX="178.0" layoutY="89.0" text="PLAYER2NAME" />
       <Button layoutX="114.0" layoutY="188.0" mnemonicParsing="false" onAction="#startGame" text="Start Game" />
-      <Button layoutX="114.0" layoutY="233.0" mnemonicParsing="false" onAction="#leaveRoom" text="Leave Room" />
+      <Button layoutX="112.0" layoutY="317.0" mnemonicParsing="false" onAction="#leaveRoom" text="Leave Room" />
       <Label fx:id="lobbyNameLabel" layoutX="127.0" layoutY="36.0" text="LOBBYNAME" />
+      <Button fx:id="vsAIbtn" layoutX="132.0" layoutY="233.0" mnemonicParsing="false" onAction="#playAgainstAI" text="vs AI" />
    </children>
 </fx:root>

@@ -73,6 +73,9 @@ public class Main extends Application {
             e.printStackTrace();
             System.err.println("tried to load: lobby.fxml");
         }
+        if (lsController != null) {
+            lsController.clearList();
+        }
         System.err.println("loaded");
     }
 
@@ -240,5 +243,17 @@ public class Main extends Application {
 
     public void handleBattleStart() {
         gameController.handleBattleStart();
+    }
+
+    public void sendChatMessage(String text) {
+        handler.sendData(new ChatMessage("", text));
+    }
+
+    public void handleChatMessage(ChatMessage temp) {
+        gameController.handleChatMessage(temp);
+    }
+
+    public void playAgainstAI() {
+        handler.sendData(new PlayAgainstAI());
     }
 }

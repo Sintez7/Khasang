@@ -211,6 +211,7 @@ public class Game implements Runnable {
         }
 
         player1Turn = !player1Turn;
+        System.err.println("player1Turn: " + player1Turn + ", method getPlayerTurn: " + getPlayerTurn());
     }
 
     private void handlePlayer1Hit(int x, int y) throws SocketException {

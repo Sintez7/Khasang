@@ -3,10 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
-import app.shared.DataPackage;
-import app.shared.GameStart;
-import app.shared.PlaceShip;
-import app.shared.RematchDecision;
+import app.shared.*;
 
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -153,9 +150,26 @@ public class GameServer extends Thread {
             } else {
                 // один из игроков отказался от рематча
                 game.setNegativeRematch();
-                game.REMATCH_DECISION_MONITOR.notifyAll();
-                //TODO: оповестить клиенты о отмене рематча
+                synchronized (game.REMATCH_DECISION_MONITOR) {
+                    game.REMATCH_DECISION_MONITOR.notifyAll();
+                }
+                try {
+                    player1.sendData(new RematchDenied());
+                    player2.sendData(new RematchDenied());
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
             }
+        }
+    }
+
+    public void handleChatMessage(Player thisPlayer, ChatMessage in) {
+        System.err.println("handling chatMessage");
+        try {
+            player1.sendData(new ChatMessage(thisPlayer.getName(), in.getMessage()));
+            player2.sendData(new ChatMessage(thisPlayer.getName(), in.getMessage()));
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
     }
 }

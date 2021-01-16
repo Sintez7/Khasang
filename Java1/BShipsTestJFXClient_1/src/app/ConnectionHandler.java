@@ -104,7 +104,7 @@ public class ConnectionHandler extends Thread {
                     switch (temp.getId()) {
                         case DataPackage.LOBBY_PACKAGE -> Platform.runLater(() -> main.handleLobbiesPackage((LobbiesDataPackage)temp));
                         case DataPackage.ROOM -> Platform.runLater(() -> main.handleRoomPackage((LobbyRoomData)temp));
-                        case DataPackage.RETURN_TO_LOBBY -> Platform.runLater(() -> main.loadLobby());
+                        case DataPackage.RETURN_TO_LOBBY, DataPackage.REMATCH_DENIED -> Platform.runLater(() -> main.loadLobby());
                         case DataPackage.ENTER_ROOM -> Platform.runLater(() -> main.loadRoom());
                         case DataPackage.GAME_START -> Platform.runLater(() -> main.handleGameStart());
                         case DataPackage.PLACE_SHIP_RESPONSE -> Platform.runLater(() ->
@@ -116,6 +116,7 @@ public class ConnectionHandler extends Thread {
                         case DataPackage.REMATCH_OFFER -> Platform.runLater(() -> main.handleRematchOffer());
                         case DataPackage.REMATCH_SIGNAL -> Platform.runLater(() -> main.handleRematch());
                         case DataPackage.BATTLE_START -> Platform.runLater(() -> main.handleBattleStart());
+                        case DataPackage.CHAT_MESSAGE_PACKAGE -> Platform.runLater(() -> main.handleChatMessage((ChatMessage) temp));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

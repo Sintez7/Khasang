@@ -70,6 +70,10 @@ public class LobbiesScreenController {
         System.err.println("receiveRoomData in LobbiesScreenController");
     }
 
+    public void clearList() {
+        lobbiesList.clear();
+    }
+
     private class LobbyCell extends ListCell<Lobby> {
         @Override
         synchronized protected void updateItem(Lobby lobby, boolean b) {

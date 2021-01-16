@@ -29,6 +29,8 @@ public abstract class DataPackage implements Serializable {
     public static final int PLAYER_WON = 24;
     public static final int REMATCH_SIGNAL = 25;
     public static final int BATTLE_START = 26;
+    public static final int REMATCH_DENIED = 27;
+    public static final int PLAY_VS_AI = 28;
 
     private final int id;
 

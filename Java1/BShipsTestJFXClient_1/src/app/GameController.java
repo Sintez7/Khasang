@@ -3,10 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
-import app.shared.HitResponse;
-import app.shared.PlayerInfo;
-import app.shared.PlayerWon;
-import app.shared.TurnUpdate;
+import app.shared.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -132,6 +131,7 @@ public class GameController {
         initPlayerGrid();
         initOpponentGrid();
         initShipSelection();
+        prepareChatWindow();
         Label dl = new Label();
         flowPane.getChildren().add(dl);
         sPane.setOnMouseClicked(mouseEvent -> {
@@ -157,7 +157,44 @@ public class GameController {
         rematchYesBtn.setVisible(false);
         rematchNoBtn.setVisible(false);
 
-        chatTextArea.appendText("Ship placement phase started!\n");
+        applyToChat("Ship placement phase started!");
+    }
+
+    private void prepareChatWindow() {
+        rootPane.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    sendChatMessage(chatInputTextField.getText());
+                    chatInputTextField.setText("");
+                }
+            }
+        });
+    }
+
+    private void sendChatMessage(String text) {
+        main.sendChatMessage(text);
+    }
+
+    @FXML
+    void sendMessage(ActionEvent event) {
+        sendChatMessage(chatInputTextField.getText());
+        chatInputTextField.setText("");
+    }
+
+    // Все сообщения не являющиеся сообщениями игроков должны быть
+    // помечены как сообщения системы
+    private void applyToChat(String text) {
+        appendToChat("SYSTEM", text);
+    }
+
+    //Это конечный метод для добавления в чат текста
+    private void appendToChat(String name, String text) {
+        chatTextArea.appendText(name + ": " + text + "\n");
+    }
+
+    public void handleChatMessage(ChatMessage message) {
+        appendToChat(message.getName(), message.getMessage());
     }
 
     private void updateCursorPos(MouseEvent mouseEvent) {
@@ -334,10 +371,10 @@ public class GameController {
     @FXML
     void sendReady(ActionEvent event) {
         if (checkReadiness()) {
-            chatTextArea.appendText("Waiting for opponent...\n");
+            applyToChat("Waiting for opponent...");
             main.sendReady();
         } else {
-            chatTextArea.appendText("You are not ready! Check your ships.\n");
+            applyToChat("You are not ready! Check your ships.");
         }
     }
 
@@ -346,11 +383,6 @@ public class GameController {
                 twoDeckShipsPlaced == TWO_DECK_SHIPS_MAX &
                 threeDeckShipsPlaced == THREE_DECK_SHIPS_MAX &
                 fourDeckShipsPlaced == FOUR_DECK_SHIPS_MAX;
-    }
-
-    @FXML
-    void sendMessage(ActionEvent event) {
-
     }
 
     public void handleRightClick() {
@@ -366,7 +398,7 @@ public class GameController {
     }
 
     public synchronized void handleHitResponse(HitResponse temp) {
-        chatTextArea.appendText("player " + thisPlayerNumber + " hit response " + temp.getResponseType() + "\n");
+        applyToChat("player " + thisPlayerNumber + " hit response " + temp.getResponseType());
     }
 
     private void handleShoot(int x, int y) {
@@ -387,7 +419,8 @@ public class GameController {
         updateOpponentGrid(temp.getOpponentField());
         setTurn(temp.getPlayerTurn());
         if (!gameEnded) {
-            chatTextArea.appendText("current player turn: " + whosTurnName() + "\n");
+            System.err.println("temp.getPlayerTurn()" + temp.getPlayerTurn());
+            applyToChat("current player turn: " + whosTurnName());
         }
     }
 
@@ -535,7 +568,7 @@ public class GameController {
     }
 
     public void handlePlayerWon(PlayerWon temp) {
-        chatTextArea.appendText("Player " + temp.getPlayerWon() + " won!\n");
+        applyToChat("Player " + temp.getPlayerWon() + " won!");
         gameEnded = true;
         battlePhase = false;
     }
@@ -555,14 +588,12 @@ public class GameController {
     @FXML
     void rematchYes(ActionEvent event) {
         main.sendRematch(true);
-        chatTextArea.appendText("You voted yes for rematch, waiting for your opponent decision...\n");
+        applyToChat("You voted yes for rematch, waiting for your opponent decision...");
     }
 
     @FXML
     void rematchNo(ActionEvent event) {
         main.sendRematch(false);
-        chatTextArea.appendText("You voted no for rematch\n");
-        chatTextArea.appendText("Returning to Lobby\n");
         main.loadLobby();
     }
 
@@ -571,8 +602,8 @@ public class GameController {
         showShipSelection();
         hideRematchElements();
         gameEnded = false;
-        chatTextArea.appendText("Rematch accepted\n");
-        chatTextArea.appendText("Ship placement phase started!\n");
+        applyToChat("Rematch accepted");
+        applyToChat("Ship placement phase started!");
     }
 
     private void hideRematchElements() {
@@ -606,10 +637,11 @@ public class GameController {
     public void handleBattleStart() {
         hideShipSelection();
         battlePhase = true;
-        chatTextArea.appendText("Battle Started!\n");
+        applyToChat("Battle Started!");
     }
 
     public static class Cell extends Button {
+        // Вспомогательный класс для упрощения управления сеткой с кораблями
 
         protected static final int FREE = 0;
         protected static final int OCCUPIED = 1;
@@ -643,6 +675,7 @@ public class GameController {
     }
 
     private static class ShipButton extends Button {
+        // Описание кнопок чтобы "взять" корабль
 
         private int size;
 
@@ -656,6 +689,7 @@ public class GameController {
     }
 
     private static class ShipEntity {
+        // Описание характеристик
         int x;
         int y;
         int size;
@@ -670,6 +704,11 @@ public class GameController {
     }
 
     private static class ShipPicture extends Label {
+
+        /*
+         * Этот класс описывает изображение "корабаля" выбранного игроком
+         * который перемещается за курсором
+         */
 
         private Bias bias;
         double lastMX;
@@ -723,6 +762,10 @@ public class GameController {
             setLayoutY(curMY + bias.getYOffset());
         }
 
+        /* Перечисление смещения относительно текущего направления отображения корабля
+         * Был выбран этот вариант, так как изменение точки вращения у Rotation не давало
+         * корректного результата
+         */
         private enum Bias {
             UP {
                 @Override

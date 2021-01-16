@@ -171,6 +171,8 @@ public class ClientHandler extends Thread {
                         case DataPackage.READY_TO_GAME_START -> handleReady();
                         case DataPackage.HIT -> handleHit((Hit) in);
                         case DataPackage.REMATCH_DECISION -> handleRematchDecision((RematchDecision) in);
+                        case DataPackage.CHAT_MESSAGE_PACKAGE -> handleChatMessage((ChatMessage) in);
+                        case DataPackage.PLAY_VS_AI -> handlePvA();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -178,6 +180,16 @@ public class ClientHandler extends Thread {
                 }
             }
         }
+    }
+
+    private void handlePvA() {
+        currentRoom.handlePvA();
+    }
+
+    private void handleChatMessage(ChatMessage in) {
+        System.err.println("chat message accepted");
+        System.err.println("name: " + in.getName() + " , message: " + in.getMessage());
+        currentGameServer.handleChatMessage(thisPlayer, in);
     }
 
     private void handleRematchDecision(RematchDecision dec) {
