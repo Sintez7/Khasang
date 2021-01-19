@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
+import app.botPlayer.BotPlayer;
 import app.shared.DataPackage;
 import app.shared.LobbyRoomData;
 
