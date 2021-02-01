@@ -28,6 +28,7 @@ public class Field {
 
     private final List<ActualShip> shipsInPlay = new ArrayList<>();
     int[][] cells = new int[SIZE][SIZE];
+    private boolean sunk = false;
 
     public Field() {
         initField();
@@ -45,11 +46,17 @@ public class Field {
         System.err.println("hit in Field invoked");
         System.err.println("current Thread: " + Thread.currentThread());
         System.err.println("hit point x" + x + " y" + y);
+        sunk = false;
         if (cells[x][y] != HIT) {
             if (hitPoint(x, y)) {
 //                checkLose();
-                System.err.println("result HIT_SHIP");
-                return  HitResult.HIT_SHIP;
+                if (sunk) {
+                    System.err.println("result SUNK_SHIP");
+                    return HitResult.SUNK_SHIP;
+                } else {
+                    System.err.println("result HIT_SHIP");
+                    return  HitResult.HIT_SHIP;
+                }
             } else {
 //                server.miss();
                 System.err.println("result MISS");
@@ -182,6 +189,7 @@ public class Field {
             if (!actualShip.isCircled() && !actualShip.isAlive()) {
                 circleSunkShip(actualShip, player1OpponentField);
                 actualShip.setCircled();
+                sunk = true;
             }
         }
     }
@@ -219,6 +227,7 @@ public class Field {
     enum HitResult {
         HIT_SHIP,
         MISS,
-        POINT_ALREADY_HIT
+        POINT_ALREADY_HIT,
+        SUNK_SHIP
     }
 }

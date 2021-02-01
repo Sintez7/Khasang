@@ -229,6 +229,11 @@ public class Game implements Runnable {
                 player1.sendData(new HitResponse(HitResponse.ALREADY_HIT));
                 player1Turn = !player1Turn;
             }
+            case SUNK_SHIP -> {
+                player1OpponentField.setPoint(x, y, Field.HitResult.HIT_SHIP);
+                player1.sendData(new HitResponse(HitResponse.SUNK_SHIP));
+                player1Turn = !player1Turn;
+            }
         }
 
         if (player2Field.checkLose()) {
@@ -252,6 +257,11 @@ public class Game implements Runnable {
             }
             case POINT_ALREADY_HIT -> {
                 player2.sendData(new HitResponse(HitResponse.ALREADY_HIT));
+                player1Turn = !player1Turn;
+            }
+            case SUNK_SHIP -> {
+                player2OpponentField.setPoint(x, y, Field.HitResult.HIT_SHIP);
+                player2.sendData(new HitResponse(HitResponse.SUNK_SHIP));
                 player1Turn = !player1Turn;
             }
         }

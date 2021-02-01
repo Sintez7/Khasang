@@ -37,6 +37,10 @@ public class Point {
         y += point.y;
     }
 
+    public Point plus(Point p) {
+        return new Point (x + p.x, y + p.y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
