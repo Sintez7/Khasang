@@ -28,12 +28,17 @@ public class BotPlayer implements Player, Runnable{
     private int thisBotPlayerNumber = -1;
 
     public BotPlayer() {
-
+        self.start();
     }
 
     @Override
     public void run() {
         System.err.println("BotPlayer method run() started");
+//        try {
+//            Thread.sleep(4000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         while(alive) {
             System.err.println("BotPlayer new cycle iteration");
             try {
@@ -46,6 +51,8 @@ public class BotPlayer implements Player, Runnable{
                     case DataPackage.BATTLE_START -> handleBattleStart();
                     case DataPackage.HIT_RESPONSE -> handleHitResponse((HitResponse) in);
                     case DataPackage.TURN_UPDATE -> handleTurnUpdate((TurnUpdate) in);
+                    case DataPackage.REMATCH_OFFER -> handleRematchOffer();
+                    default -> System.err.println("Unknown package: " + in.toString());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -54,12 +61,17 @@ public class BotPlayer implements Player, Runnable{
     }
 
     private void handlePlayerInfo(PlayerInfo in) {
-        System.err.println("bPlayeerInfo");
+        System.err.println("bPlayerInfo");
         thisBotPlayerNumber = in.getPlayerInfo();
         System.err.println("thisBotPlayerNumber: " + thisBotPlayerNumber);
     }
 
     private void handleGameStart() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.err.println("bp GameStartPackage");
         state = State.SHIP_PLACEMENT_PHASE;
         spai.next();
@@ -72,18 +84,28 @@ public class BotPlayer implements Player, Runnable{
     }
 
     private void handleBattleStart() {
-
+        System.err.println("b BattleStart package");
     }
 
     private void handleHitResponse(HitResponse in) {
+        System.err.println("b HitResponse package");
         bai.handleHitResponse(in);
     }
 
     private void handleTurnUpdate(TurnUpdate in) {
+        System.err.println("b TurnUpdate package");
+        System.err.println("thisBotPlayerNumber " + thisBotPlayerNumber);
+        System.err.println("player move number: " + in.getPlayerTurn());
         bai.handleTurnUpdate(in);
         if (in.getPlayerTurn() == thisBotPlayerNumber) {
+            System.err.println("Bot allowed to shoot");
             bai.shoot();
         }
+    }
+
+    private void handleRematchOffer() {
+        System.err.println("b rematchOffer package");
+        currentGameServer.handleRematchDecision(this, new RematchDecision(true));
     }
 
     @Override
@@ -117,11 +139,19 @@ public class BotPlayer implements Player, Runnable{
     }
 
     public void sendPlaceShip(int x, int y, int size, int bias) {
-        currentGameServer.handlePlaceShip(this, new PlaceShip(x, y, size, bias));
+        try {
+            sendData(new PlaceShipResponse(currentGameServer.handlePlaceShip(this, new PlaceShip(x, y, size, bias))));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     public void allShipsPlaced() {
+        currentGameServer.playerReady(this);
+    }
 
+    public void handleShoot(Hit hit) {
+        currentGameServer.handleHit(this, hit.getX(), hit.getY());
     }
 
     public enum State {

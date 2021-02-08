@@ -43,7 +43,7 @@ public class BotPlayerSPAI {
 
     public void next() {
         System.err.println("bSPAI next()");
-        System.err.println("current list size- " + shipsToPlace.size());
+        System.err.println("current list size is " + shipsToPlace.size());
         if (shipsToPlace.size() > 0) {
             int x = random.nextInt(10);
             int y = random.nextInt(10);

@@ -41,6 +41,10 @@ public class Point {
         return new Point (x + p.x, y + p.y);
     }
 
+    public Point inverse() {
+        return new Point (x * -1, y * -1);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

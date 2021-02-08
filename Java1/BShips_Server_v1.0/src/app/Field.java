@@ -82,6 +82,9 @@ public class Field {
     private boolean hitShip(int x, int y) {
         for (ActualShip actualShip : shipsInPlay) {
             if (actualShip.hit(x, y)) {
+                if (!actualShip.isAlive()) {
+                    sunk = true;
+                }
                 return true;
             }
         }

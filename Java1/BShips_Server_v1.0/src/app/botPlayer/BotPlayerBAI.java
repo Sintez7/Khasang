@@ -58,16 +58,13 @@ public class BotPlayerBAI {
     public void shoot() {
 //        int x = random.nextInt(10);
 //        int y = random.nextInt(10);
+        System.err.println("hit: " + hit + ", chain: " + chain);
         if (hit || chain) {
             nextShot();
         } else {
             randomShot();
         }
-        try {
-            owner.sendData(new Hit(curX, curY));
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+        owner.handleShoot(new Hit(curX, curY));
     }
 
     public void handleHitResponse(HitResponse in) {
@@ -87,6 +84,7 @@ public class BotPlayerBAI {
 //            chainShots.clear();
             chains.clear();
         }
+        System.err.println("hitResponse: hit: " + hit + ", chain: " + chain + ", chains size: " + chains.size());
     }
 
     private void nextShot() {
@@ -122,6 +120,7 @@ public class BotPlayerBAI {
 //                calcNextShot();
 //            } // !hit & !chain сюда не попадёт - отсеется методом ранее
 //        }
+        System.err.println("bot nextShot");
         switch (countLandedHits()) {
             case 1 -> secondShot();
             case 2 -> thirdShot();
@@ -136,21 +135,20 @@ public class BotPlayerBAI {
                 landed++;
             }
         }
+        System.err.println("landed hits: " + landed);
         return landed;
     }
 
     private void secondShot() {
+        System.err.println("bot second shot");
         Iterator<Point> i = chains.keySet().iterator();
         Point last = new Point(0, 0);
         while (i.hasNext()) {
+            // Последним элементом будет удачное попадание, берём его.
             last = i.next();
         }
-
+        // следующий выстрел будет произведён в случайном направлении от точки попадания
         Point result = calculateShot(last);
-
-        // TODO: тут ошибка: если у последнего выстрела нету доступных
-        //  ячеек для выстрела, будет произведён рандомный выстрел, а надо
-        //  чтобы пробовались предыдущие попадания
         if (result == null) {
             randomShot();
         } else {
@@ -160,15 +158,125 @@ public class BotPlayerBAI {
     }
 
     private void thirdShot() {
+        /*
+         *  TODO: не работает
+         *  третий выстрел всё пытается выстрелить в последнюю клетку
+         * в которой было попадание
+         */
+        System.err.println("bot third shot");
+        Iterator<Point> i = chains.keySet().iterator();
+        ArrayList<Point> shots = new ArrayList<>();
+        // Собираем все точки, по которым было попадание
+        while (i.hasNext()) {
+            Point p = i.next();
+            if (chains.get(p)) {
+                shots.add(p);
+            }
+        }
+        /*
+         * Так как это третий выстрел, у нас гарантированно есть два попадания,
+         * и корабль ещё не потоплен, а значит мы должны стрелять по вектору
+         * вычисляемому из двух предыдущих выстрелов
+         */
+        Point vector = calculateVector(shots.get(0), shots.get(1));
+        Point next = shots.get(1).plus(vector);
+        // Если точка по направлению доступна для выстрела - стреляем
+        if (pointFree(next)) {
+            curX = next.x;
+            curY = next.y;
+        } else {
+            // Если нет - идём в обратном направлении
+            next = shots.get(0).plus(vector.inverse());
+            if (pointFree(next)) {
+                // Если эта точка свободна - стреляем
+                curX = next.x;
+                curY = next.y;
+            } else {
+                /* А вот тут сложно.
+                 * Проблема в том что при таком раскладе, это будет двух-палубный корабль, который
+                 * зажат с двух сторон недоступными для выстрела точками.
+                 * Однако согласно правилам, корабли не могут иметь "не прямую" форму, а значит
+                 * при таком раскладе двух-палубный корабль по идее должен был быть уже потоплен
+                 * и исполнение не должно сюда зайти.
+                 * Если вдруг что-то пошло не так и исполнение сюда добралось - пробуем точки вокруг корабля.
+                 * Если такие есть - стреляем, если нет - стреляем рандомно
+                 */
+                next = calculateShot(shots.get(0));
+                if (next == null) {
+                    next = calculateShot(shots.get(1));
+                    if (next == null) {
+                        randomShot();
+                    } else {
+                        curX = next.x;
+                        curY = next.y;
+                    }
+                } else {
+                    curX = next.x;
+                    curY = next.y;
+                }
+            }
+        }
 
     }
 
     private void fourthShot() {
+        System.err.println("bot fourth shot");
+        /*
+         * Предположительно, было три попадания подрят, а значит надо добить четырёх-палубный корабль
+         */
+        Iterator<Point> i = chains.keySet().iterator();
+        ArrayList<Point> shots = new ArrayList<>();
+        // Собираем все точки, по которым было попадание
+        while (i.hasNext()) {
+            Point p = i.next();
+            if (chains.get(p)) {
+                shots.add(p);
+            }
+        }
+        // Далее алгоритм такойже как и для третьего выстрела, тут только добавляется ещё одна ячейка для проверки
+        Point vector = calculateVector(shots.get(1), shots.get(2));
+        Point next = shots.get(2).plus(vector);
+        if (pointFree(next)) {
+            curX = next.x;
+            curY = next.y;
+        } else {
+            // Точка по вектору не доступна для выстрела, пробуем обратное направление
+            next = shots.get(0).plus(vector.inverse());
+            if (pointFree(next)) {
+                curX = next.x;
+                curY = next.y;
+            } else {
+                // Ситуация такаяже, как и для третьего выстрела
+                next = calculateShot(shots.get(0));
+                if (next == null) {
+                    next = calculateShot(shots.get(1));
+                    if (next == null) {
+                        next = calculateShot(shots.get(2));
+                        if (next == null) {
+                            randomShot();
+                        } else {
+                            curX = next.x;
+                            curY = next.y;
+                        }
+                    } else {
+                        curX = next.x;
+                        curY = next.y;
+                    }
+                } else {
+                    curX = next.x;
+                    curY = next.y;
+                }
+            }
+        }
+    }
 
+    private Point calculateVector(Point p1, Point p2) {
+        return new Point(p1.x - p2.x, p1.y - p2.y);
     }
 
     private Point calculateShot(Point last) {
         ArrayList<Point> availablePoints = new ArrayList<>();
+        // Собираем точки в которые можно стрелять
         if (pointFree(last.plus(UP))) {
             availablePoints.add(last.plus(UP));
         }
@@ -188,12 +296,13 @@ public class BotPlayerBAI {
             if (availablePoints.size() == 1) {
                 return availablePoints.get(0);
             } else {
+                // Если элементов больше одного - возвращаем случайный
                 return availablePoints.get(random.nextInt(availablePoints.size()));
             }
         }
     }
 
-    private boolean checkForAliveShip(Point p) {
+    private boolean checkForFreePoint(Point p) {
         return (pointFree(p.plus(UP)) ||
                 pointFree(p.plus(RIGHT)) ||
                 pointFree(p.plus(DOWN)) ||
@@ -201,14 +310,18 @@ public class BotPlayerBAI {
     }
 
     private boolean pointFree(Point p) {
+        /*
+         * Каждое обновление хода, свободные ячейки собираются в одну коллекцию.
+         * Так как сущности поля здесь нет - проверка вот так сделана.
+         */
         return availablePoints.contains(p);
     }
 
     private void randomShot() {
+        // Случайная ячейка из возможных для выстрела
         Point cur = availablePoints.get(random.nextInt(availablePoints.size()));
         curX = cur.x;
         curY = cur.y;
-        last1 = cur;
     }
 
     public void handleTurnUpdate(TurnUpdate in) {
