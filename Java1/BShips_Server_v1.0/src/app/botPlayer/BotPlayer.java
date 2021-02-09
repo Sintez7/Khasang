@@ -28,17 +28,13 @@ public class BotPlayer implements Player, Runnable{
     private int thisBotPlayerNumber = -1;
 
     public BotPlayer() {
+        self.setName("BotThread");
         self.start();
     }
 
     @Override
     public void run() {
         System.err.println("BotPlayer method run() started");
-//        try {
-//            Thread.sleep(4000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         while(alive) {
             System.err.println("BotPlayer new cycle iteration");
             try {
@@ -52,6 +48,7 @@ public class BotPlayer implements Player, Runnable{
                     case DataPackage.HIT_RESPONSE -> handleHitResponse((HitResponse) in);
                     case DataPackage.TURN_UPDATE -> handleTurnUpdate((TurnUpdate) in);
                     case DataPackage.REMATCH_OFFER -> handleRematchOffer();
+                    case DataPackage.REMATCH_SIGNAL -> handleRematch();
                     default -> System.err.println("Unknown package: " + in.toString());
                 }
             } catch (InterruptedException e) {
@@ -106,6 +103,11 @@ public class BotPlayer implements Player, Runnable{
     private void handleRematchOffer() {
         System.err.println("b rematchOffer package");
         currentGameServer.handleRematchDecision(this, new RematchDecision(true));
+    }
+
+    private void handleRematch() {
+        spai.prepareToRematch();
+        handleGameStart();
     }
 
     @Override

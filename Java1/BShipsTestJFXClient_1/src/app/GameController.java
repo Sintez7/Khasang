@@ -420,7 +420,7 @@ public class GameController {
         setTurn(temp.getPlayerTurn());
         if (!gameEnded) {
             System.err.println("temp.getPlayerTurn()" + temp.getPlayerTurn());
-            applyToChat("current player turn: " + whosTurnName());
+            applyToChat("current player turn: " + whosTurnName(temp.getPlayerTurn()));
         }
     }
 
@@ -449,13 +449,16 @@ public class GameController {
         this.playerTurn = thisPlayerNumber == playerTurn;
     }
 
-    private String whosTurnName() {
-        if (thisPlayerNumber == 1) {
+    private String whosTurnName(int playerTurn) {
+//        if (thisPlayerNumber == 1) {
+//            return playerNameLabel.getText();
+//        } else if (thisPlayerNumber == 2) {
+//            return opponentNameLabel.getText();
+//        }
+        if (thisPlayerNumber == 1 & playerTurn == 1 || thisPlayerNumber == 2 & playerTurn == 2) {
             return playerNameLabel.getText();
-        } else if (thisPlayerNumber == 2) {
-            return opponentNameLabel.getText();
         }
-        return "";
+        return opponentNameLabel.getText();
     }
 
     private void updatePlayerGrid(int[][] playerField) {

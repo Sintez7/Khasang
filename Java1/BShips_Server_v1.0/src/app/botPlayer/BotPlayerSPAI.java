@@ -23,6 +23,12 @@ public class BotPlayerSPAI {
         initShipSet();
     }
 
+    public void prepareToRematch() {
+        shipSet.clear();
+        shipsToPlace.clear();
+        initShipSet();
+    }
+
     private void initShipSet() {
         shipSet.add(new Ship(4, Ship.RIGHT));
 

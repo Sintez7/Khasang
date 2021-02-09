@@ -24,23 +24,11 @@ public class BotPlayerBAI {
 
     private final BotPlayer owner;
     private final Random random = new Random();
-//    private HashMap<Point, Boolean> availableCells = new HashMap<>();
-    private ArrayList<Point> availablePoints = new ArrayList<>(100);
+    private final ArrayList<Point> availablePoints = new ArrayList<>(100);
 
     private int curX;
     private int curY;
 
-    private int last1X;
-    private int last1Y;
-    private int last2X;
-    private int last2Y;
-
-    private Point last1 = null;
-    private Point last2 = null;
-    private Point last3 = null;
-    private Point last4 = null;
-
-    private final ArrayList<Point> chainShots = new ArrayList<>();
     private final HashMap<Point, Boolean> chains = new HashMap<>();
 
     private boolean hit = false;
@@ -48,16 +36,9 @@ public class BotPlayerBAI {
 
     public BotPlayerBAI(BotPlayer owner) {
         this.owner = owner;
-//        for (int i = 0; i < 10; i++) {
-//             for (int j = 0; j < 10; j++) {
-//                 availableCells.put(new Point(i, j), true);
-//             }
-//        }
     }
 
     public void shoot() {
-//        int x = random.nextInt(10);
-//        int y = random.nextInt(10);
         System.err.println("hit: " + hit + ", chain: " + chain);
         if (hit || chain) {
             nextShot();
@@ -71,7 +52,6 @@ public class BotPlayerBAI {
         if (in.getResponseType() == HitResponse.HIT) {
             hit = true;
             chain = true;
-//            chainShots.add(new Point(curX, curY));
             chains.put(new Point(curX, curY), true);
         }
 
@@ -81,47 +61,20 @@ public class BotPlayerBAI {
 
         if (in.getResponseType() == HitResponse.SUNK_SHIP) {
             chain = false;
-//            chainShots.clear();
             chains.clear();
         }
         System.err.println("hitResponse: hit: " + hit + ", chain: " + chain + ", chains size: " + chains.size());
     }
 
     private void nextShot() {
-//        if (last3 != null) {
-//            if (checkForAliveShip(last3)) {
-//                fourthShot();
-//                return;
-//            }
-//        }
-//
-//        if (last2 != null) {
-//            if (checkForAliveShip(last2)) {
-//                thirdShot();
-//                return;
-//            }
-//        }
-//
-//        if (checkForAliveShip(last1)) {
-//            secondShot();
-//            return;
-//        }
-//        randomShot();
-//        if (hit) {
-//            if (chain) {
-//                // последний выстрел попал. и в цепочке попаданий по одному кораблю
-//                calcNextShot();
-//            } else {
-//                // выстрел попал. но по новому кораблю
-//            }
-//        } else {
-//            if (chain) {
-//                // промах, но корабль ещё не добит
-//                calcNextShot();
-//            } // !hit & !chain сюда не попадёт - отсеется методом ранее
-//        }
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.err.println("bot nextShot");
         switch (countLandedHits()) {
+            case 0 -> randomShot();
             case 1 -> secondShot();
             case 2 -> thirdShot();
             case 3 -> fourthShot();
@@ -178,10 +131,11 @@ public class BotPlayerBAI {
          * и корабль ещё не потоплен, а значит мы должны стрелять по вектору
          * вычисляемому из двух предыдущих выстрелов
          */
-        Point vector = calculateVector(shots.get(0), shots.get(1));
+        Point vector = calculateVector(shots.get(0), shots.get(1)).inverse();
         Point next = shots.get(1).plus(vector);
         // Если точка по направлению доступна для выстрела - стреляем
         if (pointFree(next)) {
+            System.err.println("third shot first if next: x " + next.x + ", y " + next.y);
             curX = next.x;
             curY = next.y;
         } else {
@@ -202,15 +156,24 @@ public class BotPlayerBAI {
                  * Если такие есть - стреляем, если нет - стреляем рандомно
                  */
                 next = calculateShot(shots.get(0));
+                System.err.println("third shot third take calculated");
                 if (next == null) {
+                    System.err.println("next == null");
+                    System.err.println("calculating new shot");
                     next = calculateShot(shots.get(1));
+                    System.err.println("calculated");
                     if (next == null) {
+                        System.err.println("next == null");
+                        System.err.println("random shot");
                         randomShot();
                     } else {
+                        System.err.println("last take next x " + next.x + ", y " + next.y);
                         curX = next.x;
                         curY = next.y;
                     }
                 } else {
+                    System.err.println("third take was successful");
+                    System.err.println("x " + next.x + ", y " + next.y);
                     curX = next.x;
                     curY = next.y;
                 }
@@ -234,7 +197,7 @@ public class BotPlayerBAI {
             }
         }
         // Далее алгоритм такойже как и для третьего выстрела, тут только добавляется ещё одна ячейка для проверки
-        Point vector = calculateVector(shots.get(1), shots.get(2));
+        Point vector = calculateVector(shots.get(1), shots.get(2).inverse());
         Point next = shots.get(2).plus(vector);
         if (pointFree(next)) {
             curX = next.x;
@@ -330,7 +293,7 @@ public class BotPlayerBAI {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (temp[i][j] == 0) {
-                    availablePoints.add(new Point(j, i));
+                    availablePoints.add(new Point(i, j));
                 }
             }
         }
