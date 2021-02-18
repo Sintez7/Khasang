@@ -72,3 +72,8 @@
     -fx-background-repeat: repeat;
 }
 
+.grid{
+    -fx-background-image: url("../images/field_background.png");
+    -fx-background-repeat: no-repeat;
+}
+

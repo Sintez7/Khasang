@@ -4,20 +4,20 @@
 package app;
 
 import app.shared.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.transform.Rotate;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -81,9 +81,6 @@ public class GameController {
     private Button rematchNoBtn;
 
     @FXML
-    private TextArea chatTextArea;
-
-    @FXML
     private TextField chatInputTextField;
 
     @FXML
@@ -94,6 +91,16 @@ public class GameController {
 
     @FXML
     private Label availableShipsLabel;
+
+    @FXML
+    private AnchorPane playerGridPane;
+
+    @FXML
+    private AnchorPane opGridPane;
+
+    @FXML
+    private volatile ListView<String> chatListView;
+    private final ObservableList<String> chatMsgList = FXCollections.observableArrayList("test1", "test2");
 
     private int oneDeckShipsPlaced = 0;
     private int twoDeckShipsPlaced = 0;
@@ -121,7 +128,7 @@ public class GameController {
     private double curMY;
 
     private int thisPlayerNumber = -1;
-
+//TODO: fix grids horizontal grow
     public GameController(Main main) {
         this.main = main;
     }
@@ -151,34 +158,56 @@ public class GameController {
         l.setText("curMX: " + curMX + " curMY: " + curMY);
         flowPane.getChildren().add(l);
 
-        readyBtn.setVisible(true);
-        availableShipsLabel.setVisible(true);
-        rematchLabel.setVisible(false);
-        rematchYesBtn.setVisible(false);
-        rematchNoBtn.setVisible(false);
+        playerGridPane.getStyleClass().add("grid");
+        opGridPane.getStyleClass().add("grid");
+
+//        readyBtn.setVisible(true);
+//        availableShipsLabel.setVisible(true);
+//        rematchLabel.setVisible(false);
+//        rematchYesBtn.setVisible(false);
+//        rematchNoBtn.setVisible(false);
 
         applyToChat("Ship placement phase started!");
     }
 
     private void prepareChatWindow() {
-        rootPane.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
+        chatListView.setItems(chatMsgList);
+
+        chatMsgList.add("test");
+
+//        chatInputTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
+//            @Override
+//            public void handle(KeyEvent keyEvent) {
+//                if (keyEvent.getCode() == KeyCode.ENTER) {
+//                    sendChatMessage(chatInputTextField.getText());
+//                    chatInputTextField.setText("");
+//                }
+//            }
+//        });
+
+        chatInputTextField.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
-                    sendChatMessage(chatInputTextField.getText());
-                    chatInputTextField.setText("");
+                    if (!chatInputTextField.getText().equals("")) {
+                        sendChatMessage(chatInputTextField.getText());
+                        chatInputTextField.setText("");
+                    }
                 }
             }
         });
     }
 
     private void sendChatMessage(String text) {
-        main.sendChatMessage(text);
+//        main.sendChatMessage(text);
+        appendToChat("testPlayer", "random message");
+        chatInputTextField.setText("");
     }
 
     @FXML
     void sendMessage(ActionEvent event) {
-        sendChatMessage(chatInputTextField.getText());
+//        sendChatMessage(chatInputTextField.getText());
+        appendToChat("testPlayer", "random message");
         chatInputTextField.setText("");
     }
 
@@ -190,7 +219,12 @@ public class GameController {
 
     //Это конечный метод для добавления в чат текста
     private void appendToChat(String name, String text) {
-        chatTextArea.appendText(name + ": " + text + "\n");
+//        chatMsgList.add(name + ": " + text + "\n");
+        chatMsgList.add(name + ": " + text);
+        System.err.println("chatMsgList content");
+        for (String s : chatMsgList) {
+            System.err.println(s);
+        }
     }
 
     public void handleChatMessage(ChatMessage message) {
@@ -676,6 +710,14 @@ public class GameController {
             this.status = status;
         }
     }
+
+//    private static class ChatMessageCell extends ListCell<String> {
+//        @Override
+//        protected void updateItem(String s, boolean b) {
+//            super.updateItem(s, b);
+//            setText(s);
+//        }
+//    }
 
     private static class ShipButton extends Button {
         // Описание кнопок чтобы "взять" корабль

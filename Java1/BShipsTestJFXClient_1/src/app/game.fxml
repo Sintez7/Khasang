@@ -3,10 +3,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -17,16 +16,16 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<fx:root fx:id="rootPane" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="rootPane" type="AnchorPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <StackPane fx:id="sPane" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <StackPane fx:id="sPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" />
             <BorderPane fx:id="bPane">
                <center>
                   <BorderPane BorderPane.alignment="CENTER">
                      <center>
-                        <GridPane alignment="CENTER" hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="30.0">
+                        <GridPane alignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="30.0" BorderPane.alignment="CENTER">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" />
                             <ColumnConstraints hgrow="SOMETIMES" />
@@ -36,9 +35,9 @@
                             <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1">
+                              <AnchorPane fx:id="playerGridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                  <children>
-                                    <GridPane fx:id="playerGrid" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-grid-lines-visible: true;">
+                                    <GridPane fx:id="playerGrid" alignment="CENTER" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
@@ -65,10 +64,13 @@
                                       </rowConstraints>
                                     </GridPane>
                                  </children>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
                               </AnchorPane>
-                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <AnchorPane fx:id="opGridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                  <children>
-                                    <GridPane fx:id="opponentGrid" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-grid-lines-visible: true;">
+                                    <GridPane fx:id="opponentGrid" alignment="CENTER" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
                                        <columnConstraints>
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
@@ -116,65 +118,106 @@
                         </GridPane>
                      </center>
                      <bottom>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                           <top>
-                              <Label fx:id="availableShipsLabel" text="Available Ships" BorderPane.alignment="CENTER" />
-                           </top>
-                           <bottom>
-                              <BorderPane BorderPane.alignment="CENTER">
-                                 <top>
-                                    <Button fx:id="readyBtn" mnemonicParsing="false" onAction="#sendReady" text="Ready!" BorderPane.alignment="CENTER" />
-                                 </top>
-                                 <center>
-                                    <Label fx:id="rematchLabel" text="Rematch?" BorderPane.alignment="CENTER" />
-                                 </center>
-                                 <bottom>
-                                    <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="20.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <Button fx:id="rematchYesBtn" mnemonicParsing="false" onAction="#rematchYes" prefWidth="50.0" text="Yes" />
-                                          <Button fx:id="rematchNoBtn" mnemonicParsing="false" onAction="#rematchNo" prefWidth="50.0" text="No" />
-                                       </children>
-                                    </FlowPane>
-                                 </bottom>
-                              </BorderPane>
-                           </bottom>
-                           <center>
-                              <FlowPane fx:id="flowPane" hgap="30.0" prefHeight="200.0" prefWidth="200.0">
-                                 <BorderPane.margin>
-                                    <Insets left="50.0" />
-                                 </BorderPane.margin>
-                              </FlowPane>
-                           </center>
-                        </BorderPane>
+                        <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                           <tabs>
+                              <Tab closable="false" text="shipPlacementTab">
+                                 <content>
+                                    <BorderPane>
+                                       <top>
+                                          <Label fx:id="availableShipsLabel" text="Available Ships" BorderPane.alignment="CENTER" />
+                                       </top>
+                                       <center>
+                                          <FlowPane fx:id="flowPane" hgap="30.0" BorderPane.alignment="CENTER">
+                                             <BorderPane.margin>
+                                                <Insets left="50.0" top="30.0" />
+                                             </BorderPane.margin>
+                                          </FlowPane>
+                                       </center>
+                                       <bottom>
+                                          <BorderPane BorderPane.alignment="CENTER">
+                                             <center>
+                                                <Button fx:id="readyBtn" mnemonicParsing="false" onAction="#sendReady" text="Ready!" />
+                                             </center>
+                                             <top>
+                                                <Button mnemonicParsing="false" text="Auto-place ships" BorderPane.alignment="CENTER">
+                                                   <BorderPane.margin>
+                                                      <Insets bottom="15.0" />
+                                                   </BorderPane.margin>
+                                                </Button>
+                                             </top>
+                                          </BorderPane>
+                                       </bottom>
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </BorderPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="battleTab">
+                                 <content>
+                                    <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                       <center>
+                                          <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Button mnemonicParsing="false" text="Generate one shot" />
+                                                <Button mnemonicParsing="false" text="Auto-shoot till end" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                          </FlowPane>
+                                       </center></BorderPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="rematchTab">
+                                 <content>
+                                    <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                       <center>
+                                          <Label fx:id="rematchLabel" text="Rematch?" BorderPane.alignment="CENTER" />
+                                       </center>
+                                       <bottom>
+                                          <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="20.0" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Button fx:id="rematchYesBtn" mnemonicParsing="false" onAction="#rematchYes" prefWidth="50.0" text="Yes" />
+                                                <Button fx:id="rematchNoBtn" mnemonicParsing="false" onAction="#rematchNo" prefWidth="50.0" text="No" />
+                                             </children>
+                                             <BorderPane.margin>
+                                                <Insets bottom="30.0" />
+                                             </BorderPane.margin>
+                                          </FlowPane>
+                                       </bottom>
+                                    </BorderPane>
+                                 </content></Tab>
+                           </tabs>
+                        </TabPane>
                      </bottom>
+                     <BorderPane.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </BorderPane.margin>
                   </BorderPane>
                </center>
                <right>
-                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+                  <BorderPane BorderPane.alignment="CENTER">
                      <center>
-                        <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="300.0" BorderPane.alignment="CENTER">
-                           <content>
-                              <TabPane>
-                                 <tabs>
-                                    <Tab closable="false" text="Chat">
-                                       <content>
-                                          <TextArea fx:id="chatTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="297.0" />
-                                       </content>
-                                    </Tab>
-                                    <Tab closable="false" text="System">
-                                      <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                                      </content>
-                                    </Tab>
-                                 </tabs>
-                              </TabPane>
-                           </content>
-                        </ScrollPane>
+                        <TabPane BorderPane.alignment="CENTER">
+                           <tabs>
+                              <Tab closable="false" text="Chat">
+                                 <content>
+                                    <ListView fx:id="chatListView" />
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="System">
+                                <content>
+                                    <BorderPane />
+                                </content>
+                              </Tab>
+                           </tabs>
+                        </TabPane>
                      </center>
                      <bottom>
                         <BorderPane BorderPane.alignment="CENTER">
                            <center>
-                              <TextField fx:id="chatInputTextField" maxWidth="1.7976931348623157E308" />
+                              <TextField fx:id="chatInputTextField" BorderPane.alignment="CENTER" />
                            </center>
                            <right>
                               <Button mnemonicParsing="false" onAction="#sendMessage" text="Send message" BorderPane.alignment="CENTER" />
@@ -183,6 +226,9 @@
                      </bottom>
                   </BorderPane>
                </right>
+               <padding>
+                  <Insets bottom="20.0" right="20.0" />
+               </padding>
             </BorderPane>
             <AnchorPane fx:id="aPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mouseTransparent="true" />
          </children>
