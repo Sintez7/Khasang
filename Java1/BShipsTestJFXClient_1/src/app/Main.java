@@ -3,13 +3,11 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
+import app.gameController.GameController;
 import app.shared.*;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 

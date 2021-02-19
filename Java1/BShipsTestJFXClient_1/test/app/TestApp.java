@@ -1,5 +1,6 @@
 package app;
 
+import app.gameController.GameController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

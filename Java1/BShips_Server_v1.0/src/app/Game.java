@@ -190,22 +190,38 @@ public class Game implements Runnable {
     public synchronized void handleHit(Player player, int x, int y) {
         if (state == GameState.BATTLE_PHASE) {
             if (player.equals(player1)) {
-                try {
-                    System.err.println("========== handling player1 hit ===================");
-                    handlePlayer1Hit(x, y);
-                    System.err.println("========== player 1 hit handled ===================");
-                } catch (SocketException e) {
-                    System.err.println("handlePlayer1Hit exception");
+                if (player1Turn) {
+                    try {
+                        System.err.println("========== handling player1 hit ===================");
+                        handlePlayer1Hit(x, y);
+                        System.err.println("========== player 1 hit handled ===================");
+                    } catch (SocketException e) {
+                        System.err.println("handlePlayer1Hit exception");
+                    }
+                } else {
+                    try {
+                        player1.sendData(new HitResponse(HitResponse.CANT_SHOOT));
+                    } catch (SocketException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             if (player.equals(player2)) {
-                try {
-                    System.err.println("========== handling player2 hit ===================");
-                    handlePlayer2Hit(x, y);
-                    System.err.println("========== player 2 hit handled ===================");
-                } catch (SocketException e) {
-                    System.err.println("handlePlayer2Hit exception");
+                if (!player1Turn) {
+                    try {
+                        System.err.println("========== handling player2 hit ===================");
+                        handlePlayer2Hit(x, y);
+                        System.err.println("========== player 2 hit handled ===================");
+                    } catch (SocketException e) {
+                        System.err.println("handlePlayer2Hit exception");
+                    }
+                } else {
+                    try {
+                        player2.sendData(new HitResponse(HitResponse.CANT_SHOOT));
+                    } catch (SocketException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

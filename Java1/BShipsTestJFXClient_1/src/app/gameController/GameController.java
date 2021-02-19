@@ -1,8 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-package app;
+package app.gameController;
 
+import app.Main;
 import app.shared.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +18,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.transform.Rotate;
-import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,11 +30,6 @@ public class GameController {
     private static final int RIGHT = 2;
     private static final int DOWN = 3;
     private static final int LEFT = 4;
-
-    private static final int ONE_DECK_SHIPS_MAX = 4;
-    private static final int TWO_DECK_SHIPS_MAX = 3;
-    private static final int THREE_DECK_SHIPS_MAX = 2;
-    private static final int FOUR_DECK_SHIPS_MAX = 1;
 
     private Main main;
 
@@ -99,18 +94,28 @@ public class GameController {
     private AnchorPane opGridPane;
 
     @FXML
-    private volatile ListView<String> chatListView;
-    private final ObservableList<String> chatMsgList = FXCollections.observableArrayList("test1", "test2");
+    private TabPane tabPane;
 
-    private int oneDeckShipsPlaced = 0;
-    private int twoDeckShipsPlaced = 0;
-    private int threeDeckShipsPlaced = 0;
-    private int fourDeckShipsPlaced = 0;
+    @FXML
+    private volatile ListView<String> chatListView;
+    private final ObservableList<String> chatMsgList = FXCollections.observableArrayList();
+
+    private static final int SHIP_PLACEMENT_TAB = 0;
+    private static final int BATTLE_TAB = 1;
+    private static final int REMATCH_TAB = 2;
+
+    private ShipPlaceModule spm;
+    private ShootModule sm;
+
+//    private int oneDeckShipsPlaced = 0;
+//    private int twoDeckShipsPlaced = 0;
+//    private int threeDeckShipsPlaced = 0;
+//    private int fourDeckShipsPlaced = 0;
 
     private boolean gameEnded = false;
 
-    private volatile Cell[][] playerField = new Cell[SIZE][SIZE];
-    private volatile Cell[][] opponentField = new Cell[SIZE][SIZE];
+    private Cell[][] playerField = new Cell[SIZE][SIZE];
+    private Cell[][] opponentField = new Cell[SIZE][SIZE];
     private boolean holdingShip = false;
     private int shipSize = 0;
     private Integer shipBias = 0;
@@ -118,9 +123,8 @@ public class GameController {
     private ShipEntity shipToPlace = null;
 
     private boolean playerTurn = false;
-    private volatile boolean battlePhase = false;
+    private boolean battlePhase = false;
 
-    private String tempText = "asddsaasddsasddsaasddsa";
     private Label l = new Label();
     private ShipPicture heldShip = null;
     private Point2D stPoint;
@@ -128,13 +132,16 @@ public class GameController {
     private double curMY;
 
     private int thisPlayerNumber = -1;
-//TODO: fix grids horizontal grow
+
     public GameController(Main main) {
         this.main = main;
     }
 
     @FXML
     void initialize() {
+        spm = new ShipPlaceModule(this);
+        sm = new ShootModule(this);
+
         initPlayerGrid();
         initOpponentGrid();
         initShipSelection();
@@ -161,29 +168,13 @@ public class GameController {
         playerGridPane.getStyleClass().add("grid");
         opGridPane.getStyleClass().add("grid");
 
-//        readyBtn.setVisible(true);
-//        availableShipsLabel.setVisible(true);
-//        rematchLabel.setVisible(false);
-//        rematchYesBtn.setVisible(false);
-//        rematchNoBtn.setVisible(false);
-
+        tabPane.getStyleClass().add("tab-pane");
+        tabPane.getSelectionModel().select(SHIP_PLACEMENT_TAB);
         applyToChat("Ship placement phase started!");
     }
 
     private void prepareChatWindow() {
         chatListView.setItems(chatMsgList);
-
-        chatMsgList.add("test");
-
-//        chatInputTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-//            @Override
-//            public void handle(KeyEvent keyEvent) {
-//                if (keyEvent.getCode() == KeyCode.ENTER) {
-//                    sendChatMessage(chatInputTextField.getText());
-//                    chatInputTextField.setText("");
-//                }
-//            }
-//        });
 
         chatInputTextField.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
@@ -200,31 +191,30 @@ public class GameController {
 
     private void sendChatMessage(String text) {
 //        main.sendChatMessage(text);
-        appendToChat("testPlayer", "random message");
+        appendToChat("testPlayer", text);
         chatInputTextField.setText("");
     }
 
     @FXML
     void sendMessage(ActionEvent event) {
-//        sendChatMessage(chatInputTextField.getText());
-        appendToChat("testPlayer", "random message");
+        sendChatMessage(chatInputTextField.getText());
+//        appendToChat("testPlayer", "random message");
         chatInputTextField.setText("");
     }
 
     // Все сообщения не являющиеся сообщениями игроков должны быть
     // помечены как сообщения системы
-    private void applyToChat(String text) {
+    public void applyToChat(String text) {
         appendToChat("SYSTEM", text);
     }
 
     //Это конечный метод для добавления в чат текста
     private void appendToChat(String name, String text) {
-//        chatMsgList.add(name + ": " + text + "\n");
         chatMsgList.add(name + ": " + text);
-        System.err.println("chatMsgList content");
-        for (String s : chatMsgList) {
-            System.err.println(s);
-        }
+//        System.err.println("chatMsgList content");
+//        for (String s : chatMsgList) {
+//            System.err.println(s);
+//        }
     }
 
     public void handleChatMessage(ChatMessage message) {
@@ -306,8 +296,8 @@ public class GameController {
                             holdingShip = false;
                             aPane.getChildren().clear();
                             heldShip = null;
-                        } else if (oneDeckShipsPlaced >= ONE_DECK_SHIPS_MAX) {
-                            System.err.println("limit for one deck ships is " + ONE_DECK_SHIPS_MAX);
+                        } else if (!spm.oneDeckShipsAvailable()) { //oneDeckShipsPlaced >= ONE_DECK_SHIPS_MAX
+                            System.err.println("limit for one deck ships is " + ShipPlaceModule.ONE_DECK_SHIPS_MAX);
                             heldShip = null;
                         } else {
                             holdingShip = true;
@@ -331,8 +321,8 @@ public class GameController {
                             holdingShip = false;
                             aPane.getChildren().clear();
                             heldShip = null;
-                        } else if (twoDeckShipsPlaced >= TWO_DECK_SHIPS_MAX) {
-                            System.err.println("limit for two deck ships is " + TWO_DECK_SHIPS_MAX);
+                        } else if (!spm.twoDeckShipAvailable()) {
+                            System.err.println("limit for two deck ships is " + ShipPlaceModule.TWO_DECK_SHIPS_MAX);
                             heldShip = null;
                         } else {
                             holdingShip = true;
@@ -356,8 +346,8 @@ public class GameController {
                             holdingShip = false;
                             aPane.getChildren().clear();
                             heldShip = null;
-                        } else if (threeDeckShipsPlaced >= THREE_DECK_SHIPS_MAX) {
-                            System.err.println("limit for three deck ships is " + THREE_DECK_SHIPS_MAX);
+                        } else if (!spm.threeDeckShipAvailable()) {
+                            System.err.println("limit for three deck ships is " + ShipPlaceModule.THREE_DECK_SHIPS_MAX);
                             heldShip = null;
                         } else {
                             holdingShip = true;
@@ -380,8 +370,8 @@ public class GameController {
                             holdingShip = false;
                             aPane.getChildren().clear();
                             heldShip = null;
-                        } else if (fourDeckShipsPlaced >= FOUR_DECK_SHIPS_MAX) {
-                            System.err.println("limit for four deck ships is " + FOUR_DECK_SHIPS_MAX);
+                        } else if (!spm.fourDeckShipAvailable()) {
+                            System.err.println("limit for four deck ships is " + ShipPlaceModule.FOUR_DECK_SHIPS_MAX);
                             holdingShip = false;
                             heldShip = null;
                         } else {
@@ -404,19 +394,12 @@ public class GameController {
 
     @FXML
     void sendReady(ActionEvent event) {
-        if (checkReadiness()) {
+        if (spm.isAllShipsPlaced()) {
             applyToChat("Waiting for opponent...");
             main.sendReady();
         } else {
             applyToChat("You are not ready! Check your ships.");
         }
-    }
-
-    private boolean checkReadiness() {
-        return oneDeckShipsPlaced == ONE_DECK_SHIPS_MAX &
-                twoDeckShipsPlaced == TWO_DECK_SHIPS_MAX &
-                threeDeckShipsPlaced == THREE_DECK_SHIPS_MAX &
-                fourDeckShipsPlaced == FOUR_DECK_SHIPS_MAX;
     }
 
     public void handleRightClick() {
@@ -431,20 +414,36 @@ public class GameController {
         }
     }
 
-    public synchronized void handleHitResponse(HitResponse temp) {
-        applyToChat("player " + thisPlayerNumber + " hit response " + temp.getResponseType());
+    public void handleHitResponse(HitResponse temp) {
+//        applyToChat("player " + thisPlayerNumber + " hit response " + temp.getResponseType());
+        sm.handleHitResponse(temp);
     }
 
     private void handleShoot(int x, int y) {
-        if (battlePhase){
-            if (playerTurn) {
-                main.handleShoot(x, y);
-            } else {
-                System.err.println("not your turn");
-            }
-        } else {
-            System.err.println("not in battlePhase");
-        }
+//        if (battlePhase) {
+//            if (playerTurn) {
+//                main.handleShoot(x, y);
+//            } else {
+//                System.err.println("not your turn");
+//            }
+//        } else {
+//            System.err.println("not in battlePhase");
+//        }
+        sm.handleManualShot(x, y);
+    }
+
+    @FXML
+    void generateOneShot(ActionEvent event) {
+        sm.generateOneShot();
+    }
+
+    @FXML
+    void autoShoot(ActionEvent event) {
+        sm.handleAutoShot();
+    }
+
+    public void sendShot(int x, int y) {
+        main.handleShoot(x, y);
     }
 
     public void handleTurnUpdate(TurnUpdate temp) {
@@ -452,7 +451,11 @@ public class GameController {
         updatePlayerGrid(temp.getPlayerField());
         updateOpponentGrid(temp.getOpponentField());
         setTurn(temp.getPlayerTurn());
+        sm.setTurn(temp.getPlayerTurn());
         if (!gameEnded) {
+            if (sm.isAuto()) {
+                sm.handleAutoShot();
+            }
             System.err.println("temp.getPlayerTurn()" + temp.getPlayerTurn());
             applyToChat("current player turn: " + whosTurnName(temp.getPlayerTurn()));
         }
@@ -484,11 +487,6 @@ public class GameController {
     }
 
     private String whosTurnName(int playerTurn) {
-//        if (thisPlayerNumber == 1) {
-//            return playerNameLabel.getText();
-//        } else if (thisPlayerNumber == 2) {
-//            return opponentNameLabel.getText();
-//        }
         if (thisPlayerNumber == 1 & playerTurn == 1 || thisPlayerNumber == 2 & playerTurn == 2) {
             return playerNameLabel.getText();
         }
@@ -504,9 +502,13 @@ public class GameController {
     }
 
     private void updateOpponentGrid(int[][] opponentField) {
+        sm.clearPointsList();
         for (int i = 0; i < opponentField.length; i++) {
             for (int j = 0; j < opponentField.length; j++) {
                 updateCell(this.opponentField[j][i], opponentField[j][i]);
+                if (opponentField[i][j] == 0) {
+                    sm.addPointToAList(j, i);
+                }
             }
         }
     }
@@ -538,75 +540,68 @@ public class GameController {
     private void placeShip(int x, int y, int shipSize, int shipBias) {
         if (shipToPlace == null) {
             shipToPlace = new ShipEntity(x, y, shipSize, shipBias);
-            main.handlePlaceShip(x, y, shipSize, shipBias);
+            spm.placeShipManual(x, y, shipSize, shipBias);
         } else {
             System.err.println("waiting for ship placement response");
         }
-//        shipToPlace = new ShipEntity(x, y, shipSize, shipBias);
-//        handlePlaceShipResponse(true);
+        aPane.getChildren().clear();
+        heldShip = null;
+    }
+
+    @FXML
+    void autoPlaceShips(ActionEvent event) {
+        spm.placeShipAuto();
+    }
+
+    public void sendPlaceShip(int x, int y, int shipSize, int shipBias) {
+        main.handlePlaceShip(x, y, shipSize, shipBias);
         aPane.getChildren().clear();
         heldShip = null;
     }
 
     public void handlePlaceShipResponse(boolean accepted) {
-        System.err.println("handlePlaceShipResponse in GameController invoked");
-        if (shipToPlace != null) {
-            if (accepted) {
-                if (shipToPlace.size == 1) {
-                    playerField[shipToPlace.x][shipToPlace.y].getStyleClass().add("ship");
-                } else {
-                    int xOffset = 0;
-                    int yOffset = 0;
-
-                    switch (shipToPlace.bias) {
-                        case UP -> yOffset = -1;
-                        case RIGHT -> xOffset = 1;
-                        case DOWN -> yOffset = 1;
-                        case LEFT -> xOffset = -1;
-                    }
-                    for (int i = 0; i < shipToPlace.size; i++) {
-                        try {
-                            playerField[shipToPlace.x + (i * xOffset)]
-                                    [shipToPlace.y + (i * yOffset)]
-                                    .getStyleClass().add("ship");
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            System.err.println("out of area");
-                        }
-                    }
-                }
-                switch (shipSize) {
-                    case 1 -> oneDeckShipsPlaced++;
-                    case 2 -> twoDeckShipsPlaced++;
-                    case 3 -> threeDeckShipsPlaced++;
-                    case 4 -> fourDeckShipsPlaced++;
-                }
-                shipToPlace = null;
-            } else {
-                System.err.println("not accepted");
-                shipToPlace = null;
-            }
-        } else {
-            System.err.println("shipToPlace == null");
-        }
+        spm.handlePlaceShipResponse(accepted);
+        shipToPlace = null;
     }
 
-    public void startGame() {
+    public void drawPlacedShip(ShipEntity previousShip) {
+        System.err.println("drawPlacedShip in GameController invoked");
 
+        if (previousShip.size == 1) {
+            playerField[previousShip.x][previousShip.y].getStyleClass().add("ship");
+        } else {
+            int xOffset = 0;
+            int yOffset = 0;
+
+            switch (previousShip.bias) {
+                case UP -> yOffset = -1;
+                case RIGHT -> xOffset = 1;
+                case DOWN -> yOffset = 1;
+                case LEFT -> xOffset = -1;
+            }
+            for (int i = 0; i < previousShip.size; i++) {
+                try {
+                    playerField[previousShip.x + (i * xOffset)]
+                            [previousShip.y + (i * yOffset)]
+                            .getStyleClass().add("ship");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.err.println("out of area");
+                }
+            }
+        }
     }
 
     public void handlePlayerInfo(PlayerInfo playerInfo) {
         thisPlayerNumber = playerInfo.getPlayerInfo();
         playerNameLabel.setText(playerInfo.getPlayerName());
         opponentNameLabel.setText(playerInfo.getOpponentName());
-    }
-
-    private void hideShipSelection() {
-        flowPane.setVisible(false);
+        sm.setPlayerNumber(thisPlayerNumber);
     }
 
     public void handlePlayerWon(PlayerWon temp) {
         applyToChat("Player " + temp.getPlayerWon() + " won!");
         gameEnded = true;
+        sm.setGameEnded();
         battlePhase = false;
     }
 
@@ -615,11 +610,7 @@ public class GameController {
     }
 
     private void changeToRematchDecision() {
-        readyBtn.setVisible(false);
-        availableShipsLabel.setVisible(false);
-        rematchLabel.setVisible(true);
-        rematchYesBtn.setVisible(true);
-        rematchNoBtn.setVisible(true);
+        tabPane.getSelectionModel().select(REMATCH_TAB);
     }
 
     @FXML
@@ -634,28 +625,17 @@ public class GameController {
         main.loadLobby();
     }
 
-    public synchronized void handleRematch() {
-        clearFields();
-        showShipSelection();
-        hideRematchElements();
+    public void handleRematch() {
+        clearGrids();
+        spm.prepareToRematch();
+        sm.prepareToRematch();
+        tabPane.getSelectionModel().select(SHIP_PLACEMENT_TAB);
         gameEnded = false;
         applyToChat("Rematch accepted");
         applyToChat("Ship placement phase started!");
     }
 
-    private void hideRematchElements() {
-        readyBtn.setVisible(true);
-        availableShipsLabel.setVisible(true);
-        rematchLabel.setVisible(false);
-        rematchYesBtn.setVisible(false);
-        rematchNoBtn.setVisible(false);
-    }
-
-    private void showShipSelection() {
-        flowPane.setVisible(true);
-    }
-
-    private void clearFields() {
+    private void clearGrids() {
         for (int i = 0; i < playerField.length; i++) {
             for (int j = 0; j < playerField.length; j++) {
                 playerField[j][i].getStyleClass().clear();
@@ -664,15 +644,10 @@ public class GameController {
                 opponentField[j][i].getStyleClass().add("freeOpponentCell");
             }
         }
-
-        oneDeckShipsPlaced = 0;
-        twoDeckShipsPlaced = 0;
-        threeDeckShipsPlaced = 0;
-        fourDeckShipsPlaced = 0;
     }
 
     public void handleBattleStart() {
-        hideShipSelection();
+        tabPane.getSelectionModel().select(BATTLE_TAB);
         battlePhase = true;
         applyToChat("Battle Started!");
     }
@@ -680,10 +655,10 @@ public class GameController {
     public static class Cell extends Button {
         // Вспомогательный класс для упрощения управления сеткой с кораблями
 
-        protected static final int FREE = 0;
-        protected static final int OCCUPIED = 1;
-        protected static final int HIT = 2;
-        protected static final int OCCUPIED_HIT = 3;
+        public static final int FREE = 0;
+        public static final int OCCUPIED = 1;
+        public static final int HIT = 2;
+        public static final int OCCUPIED_HIT = 3;
 
         int x;
         int y;
@@ -711,14 +686,6 @@ public class GameController {
         }
     }
 
-//    private static class ChatMessageCell extends ListCell<String> {
-//        @Override
-//        protected void updateItem(String s, boolean b) {
-//            super.updateItem(s, b);
-//            setText(s);
-//        }
-//    }
-
     private static class ShipButton extends Button {
         // Описание кнопок чтобы "взять" корабль
 
@@ -730,21 +697,6 @@ public class GameController {
 
         public int getSize() {
             return size;
-        }
-    }
-
-    private static class ShipEntity {
-        // Описание характеристик
-        int x;
-        int y;
-        int size;
-        int bias;
-
-        public ShipEntity(int x, int y, int shipSize, int shipBias) {
-            this.x = x;
-            this.y = y;
-            size = shipSize;
-            bias = shipBias;
         }
     }
 
@@ -858,6 +810,7 @@ public class GameController {
             };
 
             abstract double getXOffset();
+
             abstract double getYOffset();
         }
     }

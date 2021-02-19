@@ -1,81 +1,84 @@
-package app.botPlayer;
+package app.gameController;
 
-import app.Point;
 import app.shared.Hit;
 import app.shared.HitResponse;
-import app.shared.TurnUpdate;
 
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
-public class BotPlayerBAI {
-    /*
-     * Battle Artificial Intelligence
-     * ИИ отвечающий за ведение боя
-     */
+public class ShootModule {
 
     private static final Point UP = new Point(0, -1);
     private static final Point RIGHT = new Point(1, 0);
     private static final Point DOWN = new Point(0, 1);
     private static final Point LEFT = new Point(-1, 0);
 
-    private final BotPlayer owner;
+    private final GameController owner;
+
     private final Random random = new Random();
     private final ArrayList<Point> availablePoints = new ArrayList<>(100);
-
-    private int curX;
-    private int curY;
-
     private final HashMap<Point, Boolean> chains = new HashMap<>();
 
     private boolean hit = false;
     private boolean chain = false;
+
+    private boolean autoShot = false;
+
     private boolean gameEnded = false;
 
-    public BotPlayerBAI(BotPlayer owner) {
-        this.owner = owner;
+    private int playerNumber;
+    private int turn;
+
+    private int curX;
+    private int curY;
+
+    public ShootModule(GameController gameController) {
+        owner = gameController;
     }
 
-    public void shoot() {
+    public void handleManualShot(int x, int y) {
+        if (myTurn()) {
+            curX = x;
+            curY = y;
+            owner.sendShot(x ,y);
+        }
+    }
+
+    public void generateOneShot() {
+        if (myTurn()) {
+            handleAutoShot();
+            autoShot = false;
+        }
+    }
+
+    public void handleAutoShot() {
         System.err.println("hit: " + hit + ", chain: " + chain);
-        if (!gameEnded) {
-            if (hit || chain) {
-                nextShot();
-            } else {
-                randomShot();
-            }
-            owner.handleShoot(new Hit(curX, curY));
-        }
-    }
 
-    public void handleHitResponse(HitResponse in) {
-        if (in.getResponseType() == HitResponse.HIT) {
-            hit = true;
-            chain = true;
-            chains.put(new Point(curX, curY), true);
-        }
-
-        if (in.getResponseType() == HitResponse.MISS) {
-            hit = false;
-        }
-
-        if (in.getResponseType() == HitResponse.SUNK_SHIP) {
-            chain = false;
-            chains.clear();
-        }
-        System.err.println("hitResponse: hit: " + hit + ", chain: " + chain + ", chains size: " + chains.size());
-    }
-
-    private void nextShot() {
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.err.println("bot nextShot");
+
+        if (myTurn()) {
+            if (hit || chain) {
+                nextShot();
+            } else {
+                randomShot();
+            }
+            owner.sendShot(curX, curY);
+            autoShot = true;
+        }
+    }
+
+    private boolean myTurn() {
+        return playerNumber == turn;
+    }
+
+    private void nextShot() {
+        System.err.println("player bot nextShot");
         switch (countLandedHits()) {
             case 0 -> randomShot();
             case 1 -> secondShot();
@@ -263,13 +266,6 @@ public class BotPlayerBAI {
         }
     }
 
-    private boolean checkForFreePoint(Point p) {
-        return (pointFree(p.plus(UP)) ||
-                pointFree(p.plus(RIGHT)) ||
-                pointFree(p.plus(DOWN)) ||
-                pointFree(p.plus(LEFT)));
-    }
-
     private boolean pointFree(Point p) {
         /*
          * Каждое обновление хода, свободные ячейки собираются в одну коллекцию.
@@ -285,25 +281,57 @@ public class BotPlayerBAI {
         curY = cur.y;
     }
 
-    public void handleTurnUpdate(TurnUpdate in) {
-        int[][] temp = in.getOpponentField();
-        availablePoints.clear();
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (temp[i][j] == 0) {
-                    availablePoints.add(new Point(i, j));
-                }
-            }
+    public void handleHitResponse(HitResponse in) {
+        if (in.getResponseType() == HitResponse.HIT) {
+            hit = true;
+            chain = true;
+            chains.put(new Point(curX, curY), true);
         }
+
+        if (in.getResponseType() == HitResponse.MISS) {
+            hit = false;
+        }
+
+        if (in.getResponseType() == HitResponse.SUNK_SHIP) {
+            chain = false;
+            chains.clear();
+        }
+        System.err.println("hitResponse: hit: " + hit + ", chain: " + chain + ", chains size: " + chains.size());
+
+        System.err.println("autoShot: " + autoShot);
+//        if (autoShot && !gameEnded) {
+//            handleAutoShot();
+//        }
     }
 
-    public void setGameEnded() {
+    public void clearPointsList() {
+        availablePoints.clear();
+    }
+
+    public void addPointToAList(int x, int y) {
+        availablePoints.add(new Point(x, y));
+    }
+
+    public void setGameEnded () {
         gameEnded = true;
     }
 
     public void prepareToRematch() {
         gameEnded = false;
-        availablePoints.clear();
+        clearPointsList();
         chains.clear();
+        autoShot = false;
+    }
+
+    public void setTurn(int playerTurn) {
+        turn = playerTurn;
+    }
+
+    public void setPlayerNumber(int thisPlayerNumber) {
+        playerNumber = thisPlayerNumber;
+    }
+
+    public boolean isAuto() {
+        return autoShot;
     }
 }

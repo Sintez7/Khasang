@@ -47,6 +47,7 @@ public class BotPlayer implements Player, Runnable{
                     case DataPackage.BATTLE_START -> handleBattleStart();
                     case DataPackage.HIT_RESPONSE -> handleHitResponse((HitResponse) in);
                     case DataPackage.TURN_UPDATE -> handleTurnUpdate((TurnUpdate) in);
+                    case DataPackage.PLAYER_WON -> handlePlayerWon();
                     case DataPackage.REMATCH_OFFER -> handleRematchOffer();
                     case DataPackage.REMATCH_SIGNAL -> handleRematch();
                     default -> System.err.println("Unknown package: " + in.toString());
@@ -55,6 +56,10 @@ public class BotPlayer implements Player, Runnable{
                 e.printStackTrace();
             }
         }
+    }
+
+    private void handlePlayerWon() {
+        bai.setGameEnded();
     }
 
     private void handlePlayerInfo(PlayerInfo in) {
@@ -107,6 +112,7 @@ public class BotPlayer implements Player, Runnable{
 
     private void handleRematch() {
         spai.prepareToRematch();
+        bai.prepareToRematch();
         handleGameStart();
     }
 

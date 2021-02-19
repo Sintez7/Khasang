@@ -32,72 +32,80 @@
                           </columnConstraints>
                           <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                            <RowConstraints vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <AnchorPane fx:id="playerGridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                 <children>
-                                    <GridPane fx:id="playerGrid" alignment="CENTER" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
-                                      <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                      </rowConstraints>
-                                    </GridPane>
-                                 </children>
+                              <BorderPane GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
-                              </AnchorPane>
-                              <AnchorPane fx:id="opGridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                 <children>
-                                    <GridPane fx:id="opponentGrid" alignment="CENTER" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
-                                       <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                                       </rowConstraints>
-                                    </GridPane>
-                                 </children>
-                              </AnchorPane>
+                                 <center>
+                                    <AnchorPane fx:id="playerGridPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" scaleShape="false" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <GridPane fx:id="playerGrid" alignment="CENTER" scaleShape="false" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                              <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </center>
+                              </BorderPane>
+                              <BorderPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                 <center>
+                                    <AnchorPane fx:id="opGridPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" scaleShape="false" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <GridPane fx:id="opponentGrid" alignment="CENTER" scaleShape="false" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </center>
+                              </BorderPane>
                               <BorderPane prefHeight="200.0" prefWidth="200.0">
                                  <center>
                                     <Label text="Player Field" BorderPane.alignment="CENTER" />
@@ -118,7 +126,7 @@
                         </GridPane>
                      </center>
                      <bottom>
-                        <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                            <tabs>
                               <Tab closable="false" text="shipPlacementTab">
                                  <content>
@@ -139,7 +147,7 @@
                                                 <Button fx:id="readyBtn" mnemonicParsing="false" onAction="#sendReady" text="Ready!" />
                                              </center>
                                              <top>
-                                                <Button mnemonicParsing="false" text="Auto-place ships" BorderPane.alignment="CENTER">
+                                                <Button mnemonicParsing="false" onAction="#autoPlaceShips" text="Auto-place ships" BorderPane.alignment="CENTER">
                                                    <BorderPane.margin>
                                                       <Insets bottom="15.0" />
                                                    </BorderPane.margin>
@@ -159,8 +167,8 @@
                                        <center>
                                           <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" BorderPane.alignment="CENTER">
                                              <children>
-                                                <Button mnemonicParsing="false" text="Generate one shot" />
-                                                <Button mnemonicParsing="false" text="Auto-shoot till end" />
+                                                <Button mnemonicParsing="false" onAction="#generateOneShot" text="Generate one shot" />
+                                                <Button mnemonicParsing="false" onAction="#autoShoot" text="Auto-shoot till end" />
                                              </children>
                                              <opaqueInsets>
                                                 <Insets />
