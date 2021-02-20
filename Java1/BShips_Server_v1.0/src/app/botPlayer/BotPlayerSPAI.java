@@ -12,7 +12,6 @@ public class BotPlayerSPAI {
      * AI для расстановки кораблей
      */
     private final BotPlayer owner;
-    private final ArrayList<Ship> shipSet = new ArrayList<>();
     private final ArrayList<Ship> shipsToPlace = new ArrayList<>();
     private final Random random = new Random();
 
@@ -24,27 +23,24 @@ public class BotPlayerSPAI {
     }
 
     public void prepareToRematch() {
-        shipSet.clear();
         shipsToPlace.clear();
         initShipSet();
     }
 
     private void initShipSet() {
-        shipSet.add(new Ship(4, Ship.RIGHT));
+        shipsToPlace.add(new Ship(4, Ship.RIGHT));
 
-        shipSet.add(new Ship(3, Ship.RIGHT));
-        shipSet.add(new Ship(3, Ship.RIGHT));
+        shipsToPlace.add(new Ship(3, Ship.RIGHT));
+        shipsToPlace.add(new Ship(3, Ship.RIGHT));
 
-        shipSet.add(new Ship(2, Ship.RIGHT));
-        shipSet.add(new Ship(2, Ship.RIGHT));
-        shipSet.add(new Ship(2, Ship.RIGHT));
+        shipsToPlace.add(new Ship(2, Ship.RIGHT));
+        shipsToPlace.add(new Ship(2, Ship.RIGHT));
+        shipsToPlace.add(new Ship(2, Ship.RIGHT));
 
-        shipSet.add(new Ship(1, Ship.RIGHT));
-        shipSet.add(new Ship(1, Ship.RIGHT));
-        shipSet.add(new Ship(1, Ship.RIGHT));
-        shipSet.add(new Ship(1, Ship.RIGHT));
-
-        shipsToPlace.addAll(shipSet);
+        shipsToPlace.add(new Ship(1, Ship.RIGHT));
+        shipsToPlace.add(new Ship(1, Ship.RIGHT));
+        shipsToPlace.add(new Ship(1, Ship.RIGHT));
+        shipsToPlace.add(new Ship(1, Ship.RIGHT));
     }
 
     public void next() {
@@ -66,6 +62,9 @@ public class BotPlayerSPAI {
 
     public void handleResponse(PlaceShipResponse in) {
         System.err.println("bSPAI handleResponse(), response: " + in.getResponse());
+        if (shipsToPlace.size() == 0) {
+            return;
+        }
         if (in.getResponse()) {
             shipsToPlace.remove(0);
         }

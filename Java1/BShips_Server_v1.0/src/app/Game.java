@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
+import app.botPlayer.BotPlayer;
 import app.shared.*;
 
 import java.net.SocketException;
@@ -59,6 +60,7 @@ public class Game implements Runnable {
                     PLAYERS_READY.wait();
                 } catch (InterruptedException e) {
                     System.err.println("PLAYERS_READY interrupted in Game");
+                    return;
                 }
             }
 
@@ -71,6 +73,7 @@ public class Game implements Runnable {
                     DEFEATED_MONITOR.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    return;
                 }
             }
 
@@ -89,6 +92,7 @@ public class Game implements Runnable {
                     REMATCH_DECISION_MONITOR.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    return;
                 }
             }
 
@@ -347,6 +351,35 @@ public class Game implements Runnable {
 
     public void setNegativeRematch() {
         rematch = false;
+    }
+
+    public void handlePlayerConnectionLost(Player player) {
+        if (player.equals(player1)) {
+            if (player2 instanceof BotPlayer) {
+                ((BotPlayer) player2).getBotThread().interrupt();
+            } else if (player2 instanceof ClientHandler) {
+                try {
+                    player2.sendData(new PlayerWon(2));
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        if (player.equals(player2)) {
+            if (player1 instanceof BotPlayer) {
+                ((BotPlayer) player1).getBotThread().interrupt();
+            } else if (player1 instanceof ClientHandler) {
+                try {
+                    player1.sendData(new PlayerWon(1));
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Thread.currentThread().interrupt();
     }
 
     private enum GameState {

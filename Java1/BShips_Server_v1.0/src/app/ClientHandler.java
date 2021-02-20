@@ -72,6 +72,9 @@ public class ClientHandler extends Thread {
             } catch (SocketException e1) {
                 // Клиент ОТВАЛИЛСЯ
                 System.err.println(client.toString() + " connection lost");
+                if (currentGameServer != null) {
+                    currentGameServer.handlePlayerConnectionLost(thisPlayer);
+                }
                 // Завершаем цикл чтения
                 connectionAlive = false;
                 inExecutor.interrupt();

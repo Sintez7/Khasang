@@ -129,7 +129,7 @@ public class BotPlayerBAI {
          * и корабль ещё не потоплен, а значит мы должны стрелять по вектору
          * вычисляемому из двух предыдущих выстрелов
          */
-        Point vector = calculateVector(shots.get(0), shots.get(1)).inverse();
+        Point vector = calculateVector(shots.get(0), shots.get(1));
         Point next = shots.get(1).plus(vector);
         // Если точка по направлению доступна для выстрела - стреляем
         if (pointFree(next)) {
@@ -195,7 +195,7 @@ public class BotPlayerBAI {
             }
         }
         // Далее алгоритм такойже как и для третьего выстрела, тут только добавляется ещё одна ячейка для проверки
-        Point vector = calculateVector(shots.get(1), shots.get(2).inverse());
+        Point vector = calculateVector(shots.get(1), shots.get(2));
         Point next = shots.get(2).plus(vector);
         if (pointFree(next)) {
             curX = next.x;
@@ -232,7 +232,7 @@ public class BotPlayerBAI {
     }
 
     private Point calculateVector(Point p1, Point p2) {
-        return new Point(p1.x - p2.x, p1.y - p2.y);
+        return new Point(p2.x - p1.x, p2.y - p1.y);
     }
 
     private Point calculateShot(Point last) {
@@ -252,6 +252,7 @@ public class BotPlayerBAI {
         }
 
         if (availablePoints.size() == 0) {
+            // чтобы просигналить что нету подходящих точек
             return null;
         } else {
             if (availablePoints.size() == 1) {

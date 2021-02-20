@@ -190,16 +190,13 @@ public class GameController {
     }
 
     private void sendChatMessage(String text) {
-//        main.sendChatMessage(text);
-        appendToChat("testPlayer", text);
+        main.sendChatMessage(text);
         chatInputTextField.setText("");
     }
 
     @FXML
     void sendMessage(ActionEvent event) {
         sendChatMessage(chatInputTextField.getText());
-//        appendToChat("testPlayer", "random message");
-        chatInputTextField.setText("");
     }
 
     // Все сообщения не являющиеся сообщениями игроков должны быть
@@ -211,10 +208,6 @@ public class GameController {
     //Это конечный метод для добавления в чат текста
     private void appendToChat(String name, String text) {
         chatMsgList.add(name + ": " + text);
-//        System.err.println("chatMsgList content");
-//        for (String s : chatMsgList) {
-//            System.err.println(s);
-//        }
     }
 
     public void handleChatMessage(ChatMessage message) {
@@ -507,7 +500,7 @@ public class GameController {
             for (int j = 0; j < opponentField.length; j++) {
                 updateCell(this.opponentField[j][i], opponentField[j][i]);
                 if (opponentField[i][j] == 0) {
-                    sm.addPointToAList(j, i);
+                    sm.addPointToAList(i, j);
                 }
             }
         }

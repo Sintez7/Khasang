@@ -54,6 +54,7 @@ public class BotPlayer implements Player, Runnable{
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                alive = false;
             }
         }
     }
@@ -160,6 +161,10 @@ public class BotPlayer implements Player, Runnable{
 
     public void handleShoot(Hit hit) {
         currentGameServer.handleHit(this, hit.getX(), hit.getY());
+    }
+
+    public Thread getBotThread() {
+        return self;
     }
 
     public enum State {

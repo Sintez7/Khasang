@@ -3,12 +3,12 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
+import app.chatFilterModule.ChatFilterModule;
 import app.shared.*;
 
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CyclicBarrier;
 
 public class GameServer extends Thread {
     private static int id;
@@ -27,6 +27,8 @@ public class GameServer extends Thread {
     private final List<Player> spectators = new ArrayList<>();
 
     private final Game game;
+
+    private final ChatFilterModule cfm = new ChatFilterModule();
 
     public GameServer(Player player1, Player player2, List<Player> spectators) {
         setName("GameServer " + id++);
@@ -165,11 +167,25 @@ public class GameServer extends Thread {
 
     public void handleChatMessage(Player thisPlayer, ChatMessage in) {
         System.err.println("handling chatMessage");
+        String temp = cfm.clearMessage(in.getMessage());
+
         try {
-            player1.sendData(new ChatMessage(thisPlayer.getName(), in.getMessage()));
-            player2.sendData(new ChatMessage(thisPlayer.getName(), in.getMessage()));
+            player1.sendData(new ChatMessage(thisPlayer.getName(), temp));
+            player2.sendData(new ChatMessage(thisPlayer.getName(), temp));
         } catch (SocketException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void handlePlayerConnectionLost(Player player) {
+        game.handlePlayerConnectionLost(player);
+        if (player.equals(player1)) {
+            player1Rematch = false;
+            player1RematchVoted = true;
+        }
+        if (player.equals(player2)) {
+            player2Rematch = false;
+            player2RematchVoted = true;
         }
     }
 }
