@@ -146,8 +146,8 @@ public class GameController {
         initOpponentGrid();
         initShipSelection();
         prepareChatWindow();
-        Label dl = new Label();
-        flowPane.getChildren().add(dl);
+//        Label dl = new Label();
+//        flowPane.getChildren().add(dl);
         sPane.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
                 System.err.println("sPane OnMouseClicked triggered");
@@ -162,7 +162,7 @@ public class GameController {
             }
         });
 
-        l.setText("curMX: " + curMX + " curMY: " + curMY);
+//        l.setText("curMX: " + curMX + " curMY: " + curMY);
         flowPane.getChildren().add(l);
 
         playerGridPane.getStyleClass().add("grid");
@@ -208,6 +208,7 @@ public class GameController {
     //Это конечный метод для добавления в чат текста
     private void appendToChat(String name, String text) {
         chatMsgList.add(name + ": " + text);
+        chatListView.scrollTo(chatMsgList.size() - 1);
     }
 
     public void handleChatMessage(ChatMessage message) {

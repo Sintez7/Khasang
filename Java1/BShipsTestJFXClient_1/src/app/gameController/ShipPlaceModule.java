@@ -94,7 +94,7 @@ public class ShipPlaceModule {
     }
 
     private void handleNegativeSPR() {
-        owner.applyToChat("Ship placement denied.");
+//        owner.applyToChat("Ship placement denied.");
     }
 
     public void prepareToRematch() {
