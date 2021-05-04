@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
 import java.util.HashMap;
@@ -9,11 +12,22 @@ public class ActualShip {
     public static final int DEAD = 0;
 
     private final Map<Point, Integer> occupiedPoints = new HashMap<>();
+    private int size;
+
+    private Point bias;
+    private boolean circled = false;
+
+    private int initX;
+    private int initY;
 
     public ActualShip(int x, int y, Ship ship) {
-        Point temp = new Point();
+        initX = x;
+        initY = y;
+        bias = ship.getVector();
+        size = ship.getSize();
         for (int i = 0; i < ship.getSize(); i++) {
-            temp.set(x + (ship.getVector().x * i), y + (ship.getVector().y * i));
+            Point temp = new Point();
+            temp.set(x + (bias.x * i), y + (bias.y * i));
             occupiedPoints.put(temp, ALIVE);
         }
     }
@@ -38,5 +52,32 @@ public class ActualShip {
             }
         }
         return false;
+    }
+
+    public Point[] getShipPoint() {
+        Point[] result = new Point[size];
+        int counter = 0;
+        for (Point point : occupiedPoints.keySet()) {
+            result[counter] = point;
+            counter++;
+        }
+        return result;
+    }
+
+    public Point getBias() {
+        return bias;
+    }
+
+    public void setCircled() {
+        circled = true;
+    }
+
+    public boolean isCircled() {
+        return circled;
+    }
+
+    @Override
+    public String toString() {
+        return "ActualShip, size " + size + ", x " + initX + ", y " + initY + ", alive? " + isAlive();
     }
 }

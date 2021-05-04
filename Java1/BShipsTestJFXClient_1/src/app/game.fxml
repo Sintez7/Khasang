@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<fx:root fx:id="rootPane" type="AnchorPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <StackPane fx:id="sPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" />
+            <BorderPane fx:id="bPane">
+               <center>
+                  <BorderPane BorderPane.alignment="CENTER">
+                     <center>
+                        <GridPane alignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="30.0" BorderPane.alignment="CENTER">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <BorderPane GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                                 <center>
+                                    <AnchorPane fx:id="playerGridPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" scaleShape="false" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <GridPane fx:id="playerGrid" alignment="CENTER" scaleShape="false" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                              <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </center>
+                              </BorderPane>
+                              <BorderPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                 <center>
+                                    <AnchorPane fx:id="opGridPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" scaleShape="false" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <GridPane fx:id="opponentGrid" alignment="CENTER" scaleShape="false" style="-fx-grid-lines-visible: true;" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="23.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                                <ColumnConstraints hgrow="NEVER" minWidth="20.0" prefWidth="20.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                 </center>
+                              </BorderPane>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                 <center>
+                                    <Label text="Player Field" BorderPane.alignment="CENTER" />
+                                 </center>
+                                 <bottom>
+                                    <Label fx:id="playerNameLabel" text="Label" BorderPane.alignment="CENTER" />
+                                 </bottom>
+                              </BorderPane>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                 <center>
+                                    <Label text="Opponent Field" BorderPane.alignment="CENTER" />
+                                 </center>
+                                 <bottom>
+                                    <Label fx:id="opponentNameLabel" text="Label" BorderPane.alignment="CENTER" />
+                                 </bottom>
+                              </BorderPane>
+                           </children>
+                        </GridPane>
+                     </center>
+                     <bottom>
+                        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                           <tabs>
+                              <Tab closable="false" text="shipPlacementTab">
+                                 <content>
+                                    <BorderPane>
+                                       <top>
+                                          <Label fx:id="availableShipsLabel" text="Available Ships" BorderPane.alignment="CENTER" />
+                                       </top>
+                                       <center>
+                                          <FlowPane fx:id="flowPane" hgap="30.0" BorderPane.alignment="CENTER">
+                                             <BorderPane.margin>
+                                                <Insets left="50.0" top="30.0" />
+                                             </BorderPane.margin>
+                                          </FlowPane>
+                                       </center>
+                                       <bottom>
+                                          <BorderPane BorderPane.alignment="CENTER">
+                                             <center>
+                                                <Button fx:id="readyBtn" mnemonicParsing="false" onAction="#sendReady" text="Ready!" />
+                                             </center>
+                                             <top>
+                                                <Button mnemonicParsing="false" onAction="#autoPlaceShips" text="Auto-place ships" BorderPane.alignment="CENTER">
+                                                   <BorderPane.margin>
+                                                      <Insets bottom="15.0" />
+                                                   </BorderPane.margin>
+                                                </Button>
+                                             </top>
+                                          </BorderPane>
+                                       </bottom>
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </BorderPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="battleTab">
+                                 <content>
+                                    <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                       <center>
+                                          <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Button mnemonicParsing="false" onAction="#generateOneShot" text="Generate one shot" />
+                                                <Button mnemonicParsing="false" onAction="#autoShoot" text="Auto-shoot till end" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                          </FlowPane>
+                                       </center></BorderPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="rematchTab">
+                                 <content>
+                                    <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                       <center>
+                                          <Label fx:id="rematchLabel" text="Rematch?" BorderPane.alignment="CENTER" />
+                                       </center>
+                                       <bottom>
+                                          <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="20.0" BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Button fx:id="rematchYesBtn" mnemonicParsing="false" onAction="#rematchYes" prefWidth="50.0" text="Yes" />
+                                                <Button fx:id="rematchNoBtn" mnemonicParsing="false" onAction="#rematchNo" prefWidth="50.0" text="No" />
+                                             </children>
+                                             <BorderPane.margin>
+                                                <Insets bottom="30.0" />
+                                             </BorderPane.margin>
+                                          </FlowPane>
+                                       </bottom>
+                                    </BorderPane>
+                                 </content></Tab>
+                           </tabs>
+                        </TabPane>
+                     </bottom>
+                     <BorderPane.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </BorderPane.margin>
+                  </BorderPane>
+               </center>
+               <right>
+                  <BorderPane BorderPane.alignment="CENTER">
+                     <center>
+                        <TabPane BorderPane.alignment="CENTER">
+                           <tabs>
+                              <Tab closable="false" text="Chat">
+                                 <content>
+                                    <ListView fx:id="chatListView" />
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="System">
+                                <content>
+                                    <BorderPane />
+                                </content>
+                              </Tab>
+                           </tabs>
+                        </TabPane>
+                     </center>
+                     <bottom>
+                        <BorderPane BorderPane.alignment="CENTER">
+                           <center>
+                              <TextField fx:id="chatInputTextField" BorderPane.alignment="CENTER" />
+                           </center>
+                           <right>
+                              <Button mnemonicParsing="false" onAction="#sendMessage" text="Send message" BorderPane.alignment="CENTER" />
+                           </right>
+                        </BorderPane>
+                     </bottom>
+                  </BorderPane>
+               </right>
+               <padding>
+                  <Insets bottom="20.0" right="20.0" />
+               </padding>
+            </BorderPane>
+            <AnchorPane fx:id="aPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mouseTransparent="true" />
+         </children>
+      </StackPane>
+   </children>
+</fx:root>

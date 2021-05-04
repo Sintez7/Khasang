@@ -1,0 +1,532 @@
+{
+  "warnings": [
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\PlaceShip.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\CreateLobby.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\LobbyData.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\RightClickHandler.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\LobbiesPackage.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\Hit.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\PlayerInfo.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\RematchDecision.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\RematchOffer.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\ReadyToStart.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\Lobby.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\DataPackage.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\BattleStart.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\HitResponse.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\PlaceShipResponse.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\LobbyChoice.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\EnterRoom.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\LeaveRoom.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\RematchSignal.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\GameStart.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\LobbyRoomData.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\TurnUpdate.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\LobbiesDataPackage.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\PlayerName.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\PlayerWon.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\test\\app\\TestApp.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\test\\app\\GameControllerTest.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V009",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\shared\\ReturnToLobby.java",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 100500
+        }
+      ],
+      "message": "To use free version of PVS-Studio, source code files are required to start with a special comment.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V6026",
+      "cwe": 0,
+      "level": 1,
+      "positions": [
+        {
+          "file": "C:\\JavaProj\\Khasang\\Java1\\BShipsTestJFXClient_1\\src\\app\\GameController.java",
+          "line": 314,
+          "endLine": 314,
+          "column": 29,
+          "endColumn": 48,
+          "navigation": {
+            "previousLine": 389561564,
+            "currentLine": 10040013,
+            "nextLine": 607547,
+            "columns": 48
+          }
+        }
+      ],
+      "message": "This value is already assigned to the \u0027holdingShip\u0027 variable.",
+      "projects": [],
+      "favorite": false,
+      "falseAlarm": false
+    }
+  ]
+}

@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
 import java.util.Objects;
@@ -32,6 +35,14 @@ public class Point {
     public void add(Point point) {
         x += point.x;
         y += point.y;
+    }
+
+    public Point plus(Point p) {
+        return new Point (x + p.x, y + p.y);
+    }
+
+    public Point inverse() {
+        return new Point (x * -1, y * -1);
     }
 
     @Override

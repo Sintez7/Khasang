@@ -1,59 +1,90 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
+
+import app.shared.*;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.net.SocketException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/*
+ * ClientHandler предназначен для обработки входящего подключения как клиента
+ * Наследует Thread, чтобы снять нагрузку с основного класса,
+ * который ожидает подключения, тем самым обеспечивая некоторе быстродействие
+ */
 
 public class ClientHandler extends Thread {
+    private static int id = 0;
 
-    // сокет как агрегат всех точек коннекта
     private final Socket client;
+    private final BlockingQueue<DataPackage> inputQueue = new LinkedBlockingQueue<>();
+    private final Player thisPlayer;
+    private final LobbyServer lobbyServer;
+    private final InExecutor inExecutor;
 
     // в этом потоке пишем ОТСЮДА ТУДА (от сервера на клиент)
     private ObjectOutputStream out = null;
     // в этом потоке читаем ОТТУДА СЮДА (от клиента на сервер)
     private ObjectInputStream in;
 
-    private List<String> lines = Collections.synchronizedList(new ArrayList<>());
+    private LobbyRoom currentRoom;
+    private GameServer currentGameServer;
+    private boolean connectionAlive = false;
 
     public ClientHandler(Socket client, LobbyServer lobbyServer) {
+        setName("ClientHandler " + id++);
         this.client = client;
-
-
-
-        lobbyServer.addPlayer(new ActualPlayer(this));
+        Player player = new ActualPlayer(this);
+        thisPlayer = player;
+        this.lobbyServer = lobbyServer;
+        lobbyServer.addPlayer(player);
+        inExecutor = new InExecutor();
+        inExecutor.setDaemon(true);
+        inExecutor.setName("InExecutor " + id);
+        inExecutor.start();
+        connectionAlive = true;
     }
 
-    // Здесь мы ПРИНИМАЕМ даные, если метод выкинул ошибку - клиент отвалился
+    // если метод выкинул ошибку - клиент отвалился
     @Override
     public void run() {
         try {
-            // инициализируем всё это непотребство
             out = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()));
             out.flush();
             in = new ObjectInputStream(new BufferedInputStream(client.getInputStream()));
-            try {
-                while (true) { // TODO по хорошему, должен быть флаг
-                    String line = in.readUTF();
-                    lines.add(line);
-                    // save line or continue work
-                }
-            } catch (IOException e) {
-                // Клиент ОТВАЛИЛСЯ
 
-            } finally {
-                // вот тут описываются действия если клиент отвалился
+            /*
+             * Обработка входящего пакета может быть довольно долгой.
+             * Чтобы принимать пакеты от клиента как можно чаще,
+             * делегируем обработку классу InExecutor через очередь
+             */
+            try {
+                while (connectionAlive) {
+                    Object input = in.readObject();
+                    inputQueue.add((DataPackage) input);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SocketException e1) {
+                // Клиент ОТВАЛИЛСЯ
+                System.err.println(client.toString() + " connection lost");
+                if (currentGameServer != null) {
+                    currentGameServer.handlePlayerConnectionLost(thisPlayer);
+                }
+                // Завершаем цикл чтения
+                connectionAlive = false;
+                inExecutor.interrupt();
             }
-        } catch (IOException e) { // чекает в ран-тайме на коннект
+        } catch (IOException e) {
             e.printStackTrace();
-            try { // закрываем выходящий поток, зачем - а хер его знает...
-                // надо ли закрывать in? надо
+            try { // закрываем выходящий поток
                 if (out != null) {
                     out.close();
-                }
+                } // закрываем входящий поток
                 if (in != null) {
                     in.close();
                 }
@@ -69,31 +100,130 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public String getLine() {
-        String temp = "";
-        Iterator<String> it = lines.iterator();
-        if (it.hasNext()) {
-            temp = it.next();
-            it.remove();
-        }
-        return temp;
-    }
-
-    public void sendData(DataPackage dataPackage) {
+    /*
+     * Бросает SocketException, чтобы класс использовавший метод,
+     * мог определить что клиент отвалился, и принять меры на своей стороне
+     */
+    public void sendData(DataPackage dataPackage) throws SocketException {
         try {
             out.writeObject(dataPackage);
             out.flush();
+        } catch (SocketException e1) {
+            throw e1;
         } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("IOEx e, klient otvalilsya");
+        }
+    }
+
+    public LobbyRoom getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(LobbyRoom currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
+    private void transferPlayerToRoom(int lobbyId) {
+        lobbyServer.movePlayerToLobbyRoom(thisPlayer, lobbyId);
+    }
+
+    private void gameStart() {
+        currentGameServer = currentRoom.startGame();
+        System.err.println(currentGameServer);
+    }
+
+    private void handlePlaceShip(PlaceShip ship) {
+        System.err.println(currentGameServer + " player " + thisPlayer);
+        try {
+            sendData(new PlaceShipResponse(currentGameServer.handlePlaceShip(thisPlayer, ship)));
+        } catch (SocketException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendData(String s) {
+    private void handleHit(Hit in) {
+        currentGameServer.handleHit(thisPlayer, in.getX(), in.getY());
+    }
+
+    public void setCurrentGameServer(GameServer gameServer) {
+        currentGameServer = gameServer;
+    }
+
+    private class InExecutor extends Thread {
+
+        /*
+         * Берёт на себя нагрузку в виде внутренней обработки входящих пакетов.
+         * Здесь происходит определение типа пакета и вызов
+         * следущих методов цепи обработки входящих пакетов
+         */
+
+        @Override
+        public void run() {
+            DataPackage in;
+            while (true) {
+                try {
+                    in = inputQueue.take();
+                    switch (in.getId()) {
+                        case DataPackage.PLAYER_NAME -> setPlayerName(((PlayerName) in).getName());
+                        case DataPackage.LOBBY_CHOICE -> transferPlayerToRoom(((LobbyChoice) in).lobbyId);
+                        case DataPackage.CREATE_LOBBY -> createLobby();
+                        case DataPackage.LEAVE_ROOM -> returnPlayerToLobbyServer();
+                        case DataPackage.GAME_START -> gameStart();
+                        case DataPackage.PLACE_SHIP -> handlePlaceShip((PlaceShip) in);
+                        case DataPackage.READY_TO_GAME_START -> handleReady();
+                        case DataPackage.HIT -> handleHit((Hit) in);
+                        case DataPackage.REMATCH_DECISION -> handleRematchDecision((RematchDecision) in);
+                        case DataPackage.CHAT_MESSAGE_PACKAGE -> handleChatMessage((ChatMessage) in);
+                        case DataPackage.PLAY_VS_AI -> handlePvA();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void handlePvA() {
+        currentRoom.handlePvA();
+    }
+
+    private void handleChatMessage(ChatMessage in) {
+        System.err.println("chat message accepted");
+        System.err.println("name: " + in.getName() + " , message: " + in.getMessage());
+        currentGameServer.handleChatMessage(thisPlayer, in);
+    }
+
+    private void handleRematchDecision(RematchDecision dec) {
+        currentGameServer.handleRematchDecision(thisPlayer, dec);
+    }
+
+    private void handleReady() {
+        currentGameServer.playerReady(thisPlayer);
+    }
+
+    private void returnPlayerToLobbyServer() {
+        currentRoom.returnPlayerToLobbyServer(thisPlayer);
+        lobbyServer.addPlayer(thisPlayer);
         try {
-            out.writeObject(s);
-            out.flush();
-        } catch (IOException e) {
+            sendData(new ReturnToLobby());
+        } catch (SocketException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createLobby() {
+        Lobby temp = lobbyServer.newLobby("");
+        transferPlayerToRoom(temp.getId());
+        try {
+            sendData(new EnterRoom());
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setPlayerName(String name) {
+        thisPlayer.setName(name);
     }
 }

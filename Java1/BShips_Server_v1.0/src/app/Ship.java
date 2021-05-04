@@ -1,3 +1,6 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 package app;
 
 public class Ship {
@@ -9,7 +12,7 @@ public class Ship {
     public static final int DOWN = 3;
     public static final int LEFT = 4;
 
-    private final int bias;
+    private int bias;
     private final Point vector = new Point();
 
     public Ship(int size, int bias) {
@@ -37,5 +40,9 @@ public class Ship {
 
     public Point getVector() {
         return vector;
+    }
+
+    public void setBias(int bias) {
+        this.bias = bias;
     }
 }

@@ -1,0 +1,119 @@
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:63 - ********************************
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:64 - Native library search paths: 
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:948 - C:\Users\Daniil\AppData\Roaming\PVS-Studio-Java\7.11.44138
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:948 - .
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:948 - C:\Users\Daniil\AppData\Roaming\PVS-Studio-Java\7.11.44138\..
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:948 - C:\Users\Daniil\AppData\Roaming\PVS-Studio-Java\7.11.44138\..\..
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:948 - C:\Users\Daniil\AppData\Roaming\PVS-Studio-Java\7.11.44138\..\..\build
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:66 - Additional path: native/win
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:75 - Native library found: C:\Users\Daniil\AppData\Roaming\PVS-Studio-Java\7.11.44138\native\win\analysis-core.dll
+2021-01-12 18:13:58 [INFO ] c.p.r.NativeLoader:76 - ********************************
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:48 - Module: BShipsTestJFXClient_1
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:49 - Sources:
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/Khasang/Java1/BShipsTestJFXClient_1/test
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/Khasang/Java1/BShipsTestJFXClient_1/src
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:51 - Classpath:
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.incubator.jpackage
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.compiler
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.internal.ed
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jcmd
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.rmic
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.security.jgss
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.naming.rmi
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.management.rmi
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx.media.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.accessibility
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.xml
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.unsupported.desktop
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.net
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.logging
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.incubator.foreign
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.management.agent
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.rmi
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.internal.vm.compiler.management
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx.web.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.smartcardio
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.security.sasl
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.crypto.cryptoki
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.attach
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx.graphics.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.internal.vm.ci
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.security.auth
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jlink
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.internal.vm.compiler
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jshell
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.xml.dom
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx-swt.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.charsets
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.scripting.nashorn.shell
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jfr
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.prefs
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.hotspot.agent
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.se
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.javadoc
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx.base.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.base
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.instrument
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.zipfs
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jdi
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.desktop
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.naming
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx.fxml.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jstatd
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx.swing.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/src.zip
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.nio.mapmode
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/junit/platform/junit-platform-engine/1.4.2/junit-platform-engine-1.4.2.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.crypto.mscapi
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.scripting.nashorn
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.httpserver
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/JavaProj/javafx-sdk-14.0.1/lib/javafx.controls.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.compiler
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.editpad
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jsobject
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.sql
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.management
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.internal.le
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/junit/platform/junit-platform-commons/1.4.2/junit-platform-commons-1.4.2.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.datatransfer
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.localedata
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.4.2/junit-jupiter-api-5.4.2.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.management.jfr
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jconsole
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jdeps
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.4.2/junit-jupiter-params-5.4.2.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.naming.dns
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.aot
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.scripting
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.4.2/junit-jupiter-engine-5.4.2.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.security.jgss
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jartool
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.internal.opt
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.sctp
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Users/Daniil/.m2/repository/org/junit/jupiter/junit-jupiter/5.4.2/junit-jupiter-5.4.2.jar
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.unsupported
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.crypto.ec
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.jdwp.agent
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.management
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.transaction.xa
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.xml.crypto
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.net.http
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.dynalink
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/java.sql.rowset
+2021-01-12 18:13:59 [INFO ] c.p.p.JsonEvaluator:75 - C:/Program Files/Java/jdk-14.0.1!/jdk.internal.jvmstat
+2021-01-12 18:14:00 [INFO ] c.p.p.IncrementalLauncher:178 - Build model from scratch...
+2021-01-12 18:14:02 [INFO ] c.p.p.IncrementalLauncher:303 - Cache saving started.
+2021-01-12 18:14:03 [WARN ] c.p.p.IncrementalLauncher:310 - Spoon compile error: The preview feature Case Labels with '->' is only available with source level 12 and above at C:\JavaProj\Khasang\Java1\BShipsTestJFXClient_1\src\app\GameController.java:230
+spoon.support.compiler.SnippetCompilationError: The preview feature Case Labels with '->' is only available with source level 12 and above at C:\JavaProj\Khasang\Java1\BShipsTestJFXClient_1\src\app\GameController.java:230
+	at spoon.support.compiler.jdt.JDTBasedSpoonCompiler.reportProblemsWhenCompiling(JDTBasedSpoonCompiler.java:609)
+	at spoon.support.compiler.jdt.JDTBasedSpoonCompiler.compile(JDTBasedSpoonCompiler.java:167)
+	at com.pvsstudio.projects.IncrementalLauncher.saveCache(IncrementalLauncher.java:306)
+	at com.pvsstudio.projects.Module.build(Module.java:384)
+	at com.pvsstudio.runner.ModuleWorker.run(ModuleWorker.java:49)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-01-12 18:14:03 [INFO ] c.p.p.IncrementalLauncher:346 - Cache saving finished.
+2021-01-12 18:14:03 [INFO ] c.p.p.Module:388 - Model build success.
