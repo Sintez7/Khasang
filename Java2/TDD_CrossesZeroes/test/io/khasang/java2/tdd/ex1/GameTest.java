@@ -1,9 +1,6 @@
 package io.khasang.java2.tdd.ex1;
 
-import game.ConsoleShootStrategy;
-import game.Game;
-import game.Point;
-import game.User;
+import game.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,13 +102,16 @@ public class GameTest {
 
     @Test
     public void testGameStart() throws UnsupportedEncodingException {
-        String mockInputForUser1 = "0 0\n0 1\n0 2\n";
-        String mockInputForUser2 = "2 0\n1 1\n2 2\n";
-        InputStream mockInputStream1 = new ByteArrayInputStream(mockInputForUser1.getBytes(StandardCharsets.UTF_8.name()));
-        InputStream mockInputStream2 = new ByteArrayInputStream(mockInputForUser2.getBytes(StandardCharsets.UTF_8.name()));
+//        String mockInputForUser1 = "0 0\n0 1\n0 2\n";
+//        String mockInputForUser2 = "2 0\n1 1\n2 2\n";
+//        InputStream mockInputStream1 = new ByteArrayInputStream(mockInputForUser1.getBytes(StandardCharsets.UTF_8.name()));
+//        InputStream mockInputStream2 = new ByteArrayInputStream(mockInputForUser2.getBytes(StandardCharsets.UTF_8.name()));
 
-        ConsoleShootStrategy consoleShootStrategy1 = new ConsoleShootStrategy(mockInputStream1);
-        ConsoleShootStrategy consoleShootStrategy2 = new ConsoleShootStrategy(mockInputStream2);
+//        ConsoleShootStrategy consoleShootStrategy1 = new ConsoleShootStrategy(mockInputStream1);
+//        ConsoleShootStrategy consoleShootStrategy2 = new ConsoleShootStrategy(mockInputStream2);
+
+        ShootStrategy consoleShootStrategy1 = new RandomShootStratagy();
+        ShootStrategy consoleShootStrategy2 = new RandomShootStratagy();
 
         User user1 = new User(consoleShootStrategy1, 'X');
         User user2 = new User(consoleShootStrategy2, 'O');
