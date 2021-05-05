@@ -10,7 +10,13 @@ public class LSB {
     private static final char HIT_POINT = '+';
     private static final char HIT_SHIP = 'x';
 
+    public static final String MISS_MESSAGE = "Промах!";
+    public static final String HIT_MESSAGE = "Корабль потоплен!";
+    public static final String WIN_MESSAGE = "Победа!";
+    public static final String MOVES_COUNT_MESSAGE = "Количество ходов: ";
+
     Input input;
+    Output output;
 
     private char[] field = new char[SIZE];
     private int curShipPos = 0;
@@ -27,8 +33,16 @@ public class LSB {
     }
 
     public LSB(Input input) {
+        this(input, new SerrOut());
+    }
+
+    public LSB(Output output) {
+        this(new ConsoleInput(), output);
+    }
+
+    public LSB(Input input, Output output) {
         this.input = input;
-//        init();
+        this.output = output;
     }
 
 
@@ -50,31 +64,32 @@ public class LSB {
 
     public void play() {
         while(playable) {
-            System.err.println("Введите число от 0 до " + SIZE);
+            output.send("Введите число от 1 до " + SIZE);
             shoot(input.getShot());
             printField();
         }
     }
 
     public int shoot(int i) {
-        int point = i - 1;
-        if (point < 1 || point > SIZE) {
-            System.err.println("invalid point: " + point);
+        if (i < 1 || i > SIZE) {
+            output.send("invalid point: " + i);
             return 0;
         }
 
+        int point = i - 1;
         shotCount++;
 
         if (point == curShipPos) {
             field[point] = HIT_SHIP;
             shipHit = true;
-            System.err.println("Корабль потоплен!");
-            System.err.println("Победа!");
-            System.err.println("Количество ходов: " + shotCount);
+            output.send(HIT_MESSAGE);
+            output.send(WIN_MESSAGE);
+            output.send( MOVES_COUNT_MESSAGE + shotCount);
+            playable = false;
             return 1;
         } else {
             field[point] = HIT_POINT;
-            System.err.println("Промах!");
+            output.send(MISS_MESSAGE);
             return 2;
         }
     }
@@ -86,5 +101,9 @@ public class LSB {
 
     public int getShipPos() {
         return curShipPos;
+    }
+
+    public int getShotsCount() {
+        return shotCount;
     }
 }
