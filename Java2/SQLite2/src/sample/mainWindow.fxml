@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TableViewController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <TableView BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn maxWidth="100.0" minWidth="50.0" prefWidth="50.0" text="№" />
+          <TableColumn prefWidth="120.0" text="Название Проекта" />
+            <TableColumn prefWidth="120.0" text="Название задачи" />
+            <TableColumn prefWidth="120.0" text="Ответственный" />
+            <TableColumn prefWidth="100.0" text="Контакт ответственного" />
+            <TableColumn prefWidth="100.0" text="Дата старта задачи" />
+            <TableColumn prefWidth="100.0" text="Длительность задачи" />
+            <TableColumn prefWidth="100.0" text="Статус задачи" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </center>
+   <bottom>
+      <FlowPane hgap="5.0" vgap="15.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" text="Новый проект" />
+            <Button mnemonicParsing="false" text="Добавить задачу для выбранного проекта" />
+            <Button mnemonicParsing="false" text="Задача выполнена" />
+            <Button mnemonicParsing="false" text="Обновить" />
+         </children>
+      </FlowPane>
+   </bottom>
+</BorderPane>
