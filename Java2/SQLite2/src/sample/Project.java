@@ -57,6 +57,6 @@ public class Project implements ProjectUnit {
 
     @Override
     public boolean isDone() {
-        return taskManager.get;
+        return false;
     }
 }
