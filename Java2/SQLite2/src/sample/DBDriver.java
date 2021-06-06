@@ -16,6 +16,7 @@ public class DBDriver {
             return st.executeQuery();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } ;
+        }
+        return null;
     }
 }

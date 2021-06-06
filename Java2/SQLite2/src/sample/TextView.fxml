@@ -18,7 +18,7 @@
    <center>
       <BorderPane BorderPane.alignment="CENTER">
          <center>
-            <TextArea fx:id="textArea" editable="false" wrapText="true" BorderPane.alignment="CENTER" />
+            <TextArea fx:id="textArea" wrapText="true" BorderPane.alignment="CENTER" />
          </center></BorderPane>
    </center>
 </BorderPane>
