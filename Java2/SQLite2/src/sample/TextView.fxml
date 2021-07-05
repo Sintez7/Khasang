@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TextViewController">
+   <top>
+      <FlowPane BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#firstStory" text="1" />
+            <Button mnemonicParsing="false" onAction="#secondStory" text="2" />
+            <Button mnemonicParsing="false" onAction="#thirdStory" text="3" />
+            <Button mnemonicParsing="false" onAction="#fourthStory" text="4" />
+            <Button mnemonicParsing="false" onAction="#fifthStory" text="5" />
+         </children>
+      </FlowPane>
+   </top>
+   <center>
+      <BorderPane BorderPane.alignment="CENTER">
+         <center>
+            <TextArea fx:id="textArea" wrapText="true" BorderPane.alignment="CENTER" />
+         </center></BorderPane>
+   </center>
+</BorderPane>
