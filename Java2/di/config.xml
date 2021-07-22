@@ -1,0 +1,12 @@
+<root>
+    <bean id="engine" class="io.khasang.reflection.Engine">
+        <property name="power" val="230"/>
+    </bean>
+    <bean id="gear" class="io.khasang.reflection.Manual">
+        <property name="count" val="2"/>
+    </bean>
+    <bean id="car" class="io.khasang.reflection.Car">
+        <!--<property name="engine" ref="engine"/>-->
+        <!--<property name="gear" ref="gear"/>-->
+    </bean>
+</root>
