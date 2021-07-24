@@ -17,7 +17,7 @@ public class Main {
             stack.push("zxcv");
             System.err.println("added 1 element to stack");
             System.err.println("Stack isEmpty() " + stack.isEmpty());
-            stack.push(new Exception());
+//            stack.push(new Exception());
 //            stack.push("zxcasd");
 //            stack.push("qwedsa");
 //            stack.push("cdswq");

@@ -1,5 +1,6 @@
 package io.khasang.reflection.di;
 
+import io.khasang.reflection.Car;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -159,10 +160,12 @@ public class Context {
                 if (auto.isRequired() && !objectsByClassName.containsKey(field.getType().getName())) {
                     throw new InvalidConfigurationException("Failed @Auto " + field.getName() + " " + field.getType());
                 } else {
-                    if (objectsByClassName.containsKey(field.getType().getName())) {
-                        Object o = objectsByClassName.get(field.getType().getName());
-                        field.setAccessible(true);
-                        field.set(instance, o);
+
+                    for (Object value : objectsById.values()) {
+                        if (field.getType().isInstance(value)) {
+                            field.setAccessible(true);
+                            field.set(instance, value);
+                        }
                     }
                 }
             }
@@ -200,6 +203,16 @@ public class Context {
             }
         }
 //        return aClass.getField(fieldName); // java.lang.NoSuchFieldException: power
+    }
+
+    public <E> E getBean(Class<?> clazz) {
+        // возвращает уже созданный и настроенный экземпляр класса (бин)
+        for (Object o : objectsById.values()) {
+            if (clazz.isInstance(o)) {
+                return (E) o;
+            }
+        }
+        return null;
     }
 
     public Object getBean(String beanId) {

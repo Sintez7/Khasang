@@ -69,8 +69,9 @@ public class GenericStack<E> implements Stack<E>{
     // pop all elements from stack to @dst
     @Override
     public void popAll(Collection<? super E> dst) throws StackException {
+        int iterations = list.size();
         try{
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < iterations; i++) {
                 dst.add(pop());
             }
         } catch (Exception e) {
