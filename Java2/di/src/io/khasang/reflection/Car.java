@@ -3,8 +3,7 @@ package io.khasang.reflection;
 import io.khasang.reflection.di.Auto;
 
 public class Car {
-//    @Deprecated
-//    @Auto(isRequired = true)
+
     @Auto
     private Engine engine;
     @Auto
