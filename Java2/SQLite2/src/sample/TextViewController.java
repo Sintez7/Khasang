@@ -4,11 +4,29 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.TextArea;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 public class TextViewController {
+
+    /*
+     * Даты в БД записаны в Integer в формате YYYYMMDD
+     * заметка: из БД вытаскивается Long а не int
+     * Длительность также число, обозначает кол-во дней
+     */
+
+
+
     private static final String URL = "jdbc:sqlite:db_one.db";
 
     private final DBDriver dbdriver = new DBDriver();
+
+    private static final String DB_DATE_FORMAT = "yyyMMdd";
+    private static final String BD_TASK_START_TIME = "StartTime";
+    private static final String BD_TASK_DURATION = "Duration";
 
     public TextArea textArea;
 
@@ -33,6 +51,22 @@ public class TextViewController {
         }
     }
 
+    private void writeToScreen(ResultSet resultSet) throws SQLException {
+        int i = resultSet.getMetaData().getColumnCount();
+        String s = "";
+        while (resultSet.next()) {
+            for (int j = 1; j <= i; j++) {
+                s = resultSet.getString(j);
+                if (s == null) {
+                    s = "null";
+                }
+                textArea.appendText(s);
+                textArea.appendText("\t");
+            }
+            textArea.appendText("\n");
+        }
+    }
+
     /*
      * 1. Какие проекты в работе (по которым есть хотя бы одна незавершенная задача).
      */
@@ -42,19 +76,26 @@ public class TextViewController {
         try (Connection connection = DriverManager.getConnection(URL)) {
             PreparedStatement st = connection.prepareStatement
                     ("""
-                            SELECT
-                              Projects.PrjName,
-                              Tasks.TaskName,
-                              Masters.FirstName,
-                              Masters.SecondName
-                            FROM
-                              Tasks
-                              INNER JOIN Masters ON (Tasks.IdMaster = Masters.Id)
-                              INNER JOIN Projects ON (Tasks.Id = Projects.IdTask)
-                              AND (Projects.IdMaster = Masters.Id)
-                              AND (Tasks.IdPrjName = Projects.Id)
-                                                        
-                            """);
+                            SELECT Projects.Id, Projects.PrjName, Tasks.TaskName FROM Projects
+                            INNER JOIN Tasks ON (Tasks.ProjectID = Projects.Id)
+                            WHERE (Tasks.Finished = 0)
+                            GROUP BY Projects.Id;
+                            """
+                    );
+//                    ("""
+//                            SELECT
+//                              Projects.PrjName,
+//                              Tasks.TaskName,
+//                              Masters.FirstName,
+//                              Masters.SecondName
+//                            FROM
+//                              Tasks
+//                              INNER JOIN Masters ON (Tasks.IdMaster = Masters.Id)
+//                              INNER JOIN Projects ON (Tasks.Id = Projects.IdTask)
+//                              AND (Projects.IdMaster = Masters.Id)
+//                              AND (Tasks.IdPrjName = Projects.Id)
+//                            WHERE (Tasks.finished = 0)
+//                            """);
 //                    ("""
 //                            SELECT
 //                              Projects.PrjName,
@@ -77,21 +118,7 @@ public class TextViewController {
 //                            "JOIN Masters ON Projects.IdMaster = Masters.Id " +
 //                            "JOIN Tasks ON Projects.IdTask = Tasks.Id;");
             final ResultSet resultSet = st.executeQuery();
-            int i = resultSet.getMetaData().getColumnCount();
-            System.err.println(i);
-            String s = "";
-            while (resultSet.next()) {
-//                System.err.println(resultSet.getString(i));
-                for (int j = 1; j <= i; j++) {
-                    s = resultSet.getString(j);
-                    if (s == null) {
-                        s = "null";
-                    }
-                    textArea.appendText(s);
-                    textArea.appendText("\t");
-                }
-                textArea.appendText("\n");
-            }
+            writeToScreen(resultSet);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -99,18 +126,54 @@ public class TextViewController {
 
 //        writeToTextArea(resultSet);
     }
-
     /*
      * 2. Сколько по данному проекту незавершенных задач.
      */
+
     public void secondStory(ActionEvent actionEvent) {
+        try (Connection connection = DriverManager.getConnection(URL)) {
+            PreparedStatement st = connection.prepareStatement
+                    ("""
+                            SELECT Projects.Id, Projects.PrjName, Tasks.TaskName FROM Projects
+                            INNER JOIN Tasks ON (Tasks.ProjectID = Projects.Id)
+                            WHERE (Tasks.Finished = 0)
+                            """
+                    );
+            final ResultSet resultSet = st.executeQuery();
 
+            writeToScreen(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
-
     /*
      * 3. Какие незавершенные задачи есть у некоторого ответственного, имя которого, я хочу ввести в программу.
      */
+
     public void thirdStory(ActionEvent actionEvent) {
+        try (Connection connection = DriverManager.getConnection(URL)) {
+            PreparedStatement st = connection.prepareStatement
+                    ("""
+                            SELECT id, (FirstName + ' ' + SecondName + ' ' + LastName) AS Name
+                            FROM Masters
+                            """
+                    );
+//                    ("""
+//                            SELECT Projects.Id, Projects.PrjName, Tasks.TaskName, Masters.Id FROM Projects
+//
+//                            INNER JOIN Tasks ON (Tasks.ProjectID = Projects.Id)
+//                            INNER JOIN Masters ON (Masters.Id = Projects.IdMaster)
+//
+//                            WHERE (Tasks.Finished = 0)
+//                            """
+//                    );
+
+            final ResultSet resultSet = st.executeQuery();
+
+            writeToScreen(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
     }
 
@@ -119,6 +182,94 @@ public class TextViewController {
      */
     public void fourthStory(ActionEvent actionEvent) {
 
+        LocalDateTime lt = LocalDateTime.now();
+        DateTimeFormatter f = DateTimeFormatter.ofPattern(DB_DATE_FORMAT);
+        int date = Integer.parseInt(f.format(lt));
+
+        try (Connection connection = DriverManager.getConnection(URL)) {
+            PreparedStatement st = connection.prepareStatement
+                    ("""
+                            SELECT Projects.Id, Projects.PrjName, Tasks.TaskName, Tasks.StartTime, Tasks.Duration FROM Projects
+                            INNER JOIN Tasks ON (Tasks.ProjectID = Projects.Id)
+                            WHERE (Tasks.Finished = 0) AND (Tasks.StartTime < ?)
+                            """
+                    );
+            st.setInt(1, date);
+
+            final ResultSet resultSet = st.executeQuery();
+            writeTasksForToday(resultSet);
+//            int i = resultSet.getMetaData().getColumnCount();
+//            System.err.println(i);
+//            String s = "";
+//            while (resultSet.next()) {
+//                for (int j = 1; j <= i; j++) {
+//                    s = resultSet.getString(j);
+//                    if (s == null) {
+//                        s = "null";
+//                    }
+//                    textArea.appendText(s);
+//                    textArea.appendText(" \t");
+//                }
+//                textArea.appendText("\n");
+//            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+    private void writeTasksForToday(ResultSet resultSet) {
+        try {
+//            String s = resultSet.getString("StartTime");
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            while (resultSet.next()) {
+                if (taskForToday(resultSet, columnCount)) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        textArea.appendText(resultSet.getString(i));
+                        textArea.appendText(" \t");
+                    }
+                    textArea.appendText("\n");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean taskForToday(ResultSet resultSet, int columnCount) {
+        ResultSetMetaData metaData;
+        try {
+            metaData = resultSet.getMetaData();
+            LocalDate date = null;
+            Period taskDuration = null;
+            for (int i = 1; i <= columnCount; i++) {
+                if (metaData.getColumnLabel(i).equalsIgnoreCase(BD_TASK_START_TIME)) {
+                    date = convertToLocalDate(resultSet.getString(i));
+                }
+
+                if (metaData.getColumnLabel(i).equalsIgnoreCase(BD_TASK_DURATION)) {
+                    taskDuration = Period.ofDays(resultSet.getInt(i));
+                }
+
+                if (date != null && taskDuration != null) {
+//                    Period p = Period.between(date, date.plus(taskDuration));
+                    LocalDate now = LocalDate.now();
+
+                    return now.isAfter(date) && now.isBefore(date.plus(taskDuration));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private LocalDate convertToLocalDate(String s) {
+        int year = Integer.parseInt(s.substring(0, 4));
+        int month = Integer.parseInt(s.substring(4, 6));
+        int day = Integer.parseInt(s.substring(6));
+        return LocalDate.of(year, month, day);
     }
 
     /*
