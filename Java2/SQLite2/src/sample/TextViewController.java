@@ -2,6 +2,7 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -30,8 +31,9 @@ public class TextViewController {
 
     public TextArea textArea;
 
-    public void initialize() {
+    public TextField textField;
 
+    public void initialize() {
     }
 
     private void writeToTextArea(ResultSet resultSet) {
@@ -52,6 +54,7 @@ public class TextViewController {
     }
 
     private void writeToScreen(ResultSet resultSet) throws SQLException {
+        textArea.clear();
         int i = resultSet.getMetaData().getColumnCount();
         String s = "";
         while (resultSet.next()) {
@@ -154,20 +157,22 @@ public class TextViewController {
         try (Connection connection = DriverManager.getConnection(URL)) {
             PreparedStatement st = connection.prepareStatement
                     ("""
-                            SELECT id, (FirstName + ' ' + SecondName + ' ' + LastName) AS Name
-                            FROM Masters
+                            SELECT Tasks.id, TaskName, Tasks.idMaster, names.name, Projects.PrjName FROM Tasks
+                            JOIN (SELECT id AS id, (FirstName || ' ' || SecondName || ' ' || LastName) AS name FROM Masters) AS names
+                            ON (Tasks.idMaster = names.id)
+                            JOIN Projects ON (Tasks.ProjectID = Projects.Id)
+                            WHERE (Tasks.Finished = 0) AND names.name LIKE '%?%'
                             """
                     );
 //                    ("""
-//                            SELECT Projects.Id, Projects.PrjName, Tasks.TaskName, Masters.Id FROM Projects
-//
-//                            INNER JOIN Tasks ON (Tasks.ProjectID = Projects.Id)
-//                            INNER JOIN Masters ON (Masters.Id = Projects.IdMaster)
-//
-//                            WHERE (Tasks.Finished = 0)
+//                            SELECT DISTINCT Projects.id, Projects.PrjName, Projects.idMaster, Projects.idTask FROM Projects
+//                            JOIN (SELECT id AS id, (FirstName || ' ' || SecondName || ' ' || LastName) AS name FROM Masters) AS names
+//                            ON (Projects.idMaster = names.id)
+//                            JOIN Tasks ON (Projects.idTask = Tasks.id)
 //                            """
 //                    );
 
+            st.setString(1, textField.getText());
             final ResultSet resultSet = st.executeQuery();
 
             writeToScreen(resultSet);
@@ -198,20 +203,6 @@ public class TextViewController {
 
             final ResultSet resultSet = st.executeQuery();
             writeTasksForToday(resultSet);
-//            int i = resultSet.getMetaData().getColumnCount();
-//            System.err.println(i);
-//            String s = "";
-//            while (resultSet.next()) {
-//                for (int j = 1; j <= i; j++) {
-//                    s = resultSet.getString(j);
-//                    if (s == null) {
-//                        s = "null";
-//                    }
-//                    textArea.appendText(s);
-//                    textArea.appendText(" \t");
-//                }
-//                textArea.appendText("\n");
-//            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -219,6 +210,7 @@ public class TextViewController {
     }
 
     private void writeTasksForToday(ResultSet resultSet) {
+        textArea.clear();
         try {
 //            String s = resultSet.getString("StartTime");
             ResultSetMetaData metaData = resultSet.getMetaData();

@@ -13,7 +13,7 @@
             <Button mnemonicParsing="false" onAction="#thirdStory" text="3" />
             <Button mnemonicParsing="false" onAction="#fourthStory" text="4" />
             <Button mnemonicParsing="false" onAction="#fifthStory" text="5" />
-            <TextField>
+            <TextField fx:id="textField">
                <FlowPane.margin>
                   <Insets left="15.0" />
                </FlowPane.margin>
