@@ -82,8 +82,6 @@ public class Game {
         }
 
         return Status.DRAW;
-
-        
     }
 
     public String getFieldForOutput() {

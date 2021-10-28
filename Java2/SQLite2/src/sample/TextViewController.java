@@ -5,18 +5,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
+import java.util.TimeZone;
 
 public class TextViewController {
 
     /*
-     * Даты в БД записаны в Integer в формате YYYYMMDD
+     * Даты в БД записаны в Integer в формате Millies from Epoch
      * заметка: из БД вытаскивается Long а не int
-     * Длительность также число, обозначает кол-во дней
+     * Длительность также millis, обозначает кол-во дней
      */
 
 
@@ -25,7 +23,8 @@ public class TextViewController {
 
     private final DBDriver dbdriver = new DBDriver();
 
-    private static final String DB_DATE_FORMAT = "yyyMMdd";
+    private static final String DB_DATE_FORMAT = "yyyyMMdd";
+    private static final String DATE_FORMAT = "yyyy MM dd";
     private static final String BD_TASK_START_TIME = "StartTime";
     private static final String BD_TASK_DURATION = "Duration";
 
@@ -34,23 +33,21 @@ public class TextViewController {
     public TextField textField;
 
     public void initialize() {
-    }
+        try (Connection connection = DriverManager.getConnection(URL)) {
+            PreparedStatement st = connection.prepareStatement
+                    ("""
+                            SELECT * FROM Projects
+                            """
+                    );
 
-    private void writeToTextArea(ResultSet resultSet) {
-        textArea.clear();
-        int i = 0;
-        if (resultSet != null) {
-            while (true) {
-                try {
-                    if (!resultSet.next()) break;
-                    System.err.println(resultSet.getString( + 1));
-                    i++;
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                    return;
-                }
+            final ResultSet resultSet = st.executeQuery();
+            if (resultSet == null) {
+                textArea.setText("База данных не существует либо не доступна");
             }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
     }
 
     private void writeToScreen(ResultSet resultSet) throws SQLException {
@@ -73,9 +70,7 @@ public class TextViewController {
     /*
      * 1. Какие проекты в работе (по которым есть хотя бы одна незавершенная задача).
      */
-
     public void firstStory(ActionEvent actionEvent) {
-//        final ResultSet resultSet = dbdriver.method1("SELECT * FROM Projects;");
         try (Connection connection = DriverManager.getConnection(URL)) {
             PreparedStatement st = connection.prepareStatement
                     ("""
@@ -85,63 +80,33 @@ public class TextViewController {
                             GROUP BY Projects.Id;
                             """
                     );
-//                    ("""
-//                            SELECT
-//                              Projects.PrjName,
-//                              Tasks.TaskName,
-//                              Masters.FirstName,
-//                              Masters.SecondName
-//                            FROM
-//                              Tasks
-//                              INNER JOIN Masters ON (Tasks.IdMaster = Masters.Id)
-//                              INNER JOIN Projects ON (Tasks.Id = Projects.IdTask)
-//                              AND (Projects.IdMaster = Masters.Id)
-//                              AND (Tasks.IdPrjName = Projects.Id)
-//                            WHERE (Tasks.finished = 0)
-//                            """);
-//                    ("""
-//                            SELECT
-//                              Projects.PrjName,
-//                              Projects.IdTask,
-//                              Projects.IdMaster,
-//                              Masters.FirstName,
-//                              Masters.SecondName,
-//                              Tasks.TaskName
-//                            FROM
-//                              Tasks
-//                              INNER JOIN Masters ON (Tasks.IdMaster = Masters.Id)
-//                              INNER JOIN Projects ON (Tasks.Id = Projects.IdTask)
-//                              AND (Projects.IdMaster = Masters.Id)
-//                              AND (Tasks.IdPrjName = Projects.Id)
-//                              """);
 
-//                    ("SELECT " +
-//                            "Projects.PrjName, Masters.FirstName " +
-//                            "FROM Projects " +
-//                            "JOIN Masters ON Projects.IdMaster = Masters.Id " +
-//                            "JOIN Tasks ON Projects.IdTask = Tasks.Id;");
             final ResultSet resultSet = st.executeQuery();
             writeToScreen(resultSet);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-
-//        writeToTextArea(resultSet);
     }
+
     /*
      * 2. Сколько по данному проекту незавершенных задач.
      */
-
     public void secondStory(ActionEvent actionEvent) {
+        if (textField.getText().equalsIgnoreCase("")) {
+            textArea.clear();
+            textArea.setText("Поле для ввода пустое");
+            return;
+        }
         try (Connection connection = DriverManager.getConnection(URL)) {
             PreparedStatement st = connection.prepareStatement
                     ("""
-                            SELECT Projects.Id, Projects.PrjName, Tasks.TaskName FROM Projects
-                            INNER JOIN Tasks ON (Tasks.ProjectID = Projects.Id)
-                            WHERE (Tasks.Finished = 0)
+                            SELECT Projects.Id, Projects.PrjName, Tasks.TaskName, COUNT(Projects.PrjName) FROM Tasks
+                            JOIN Projects ON (Tasks.ProjectID = Projects.Id)
+                            WHERE (Tasks.Finished = 0) AND Projects.PrjName LIKE ?
                             """
                     );
+            st.setString(1, "%" + textField.getText() + "%");
             final ResultSet resultSet = st.executeQuery();
 
             writeToScreen(resultSet);
@@ -149,10 +114,10 @@ public class TextViewController {
             throwables.printStackTrace();
         }
     }
+
     /*
      * 3. Какие незавершенные задачи есть у некоторого ответственного, имя которого, я хочу ввести в программу.
      */
-
     public void thirdStory(ActionEvent actionEvent) {
         try (Connection connection = DriverManager.getConnection(URL)) {
             PreparedStatement st = connection.prepareStatement
@@ -161,18 +126,11 @@ public class TextViewController {
                             JOIN (SELECT id AS id, (FirstName || ' ' || SecondName || ' ' || LastName) AS name FROM Masters) AS names
                             ON (Tasks.idMaster = names.id)
                             JOIN Projects ON (Tasks.ProjectID = Projects.Id)
-                            WHERE (Tasks.Finished = 0) AND names.name LIKE '%?%'
+                            WHERE (Tasks.Finished = 0) AND names.name LIKE ?
                             """
                     );
-//                    ("""
-//                            SELECT DISTINCT Projects.id, Projects.PrjName, Projects.idMaster, Projects.idTask FROM Projects
-//                            JOIN (SELECT id AS id, (FirstName || ' ' || SecondName || ' ' || LastName) AS name FROM Masters) AS names
-//                            ON (Projects.idMaster = names.id)
-//                            JOIN Tasks ON (Projects.idTask = Tasks.id)
-//                            """
-//                    );
 
-            st.setString(1, textField.getText());
+            st.setString(1, "%" + textField.getText() + "%");
             final ResultSet resultSet = st.executeQuery();
 
             writeToScreen(resultSet);
@@ -186,88 +144,79 @@ public class TextViewController {
      * 4. Какие задачи есть на сегодня и кто за них отвечает.
      */
     public void fourthStory(ActionEvent actionEvent) {
-
-        LocalDateTime lt = LocalDateTime.now();
-        DateTimeFormatter f = DateTimeFormatter.ofPattern(DB_DATE_FORMAT);
-        int date = Integer.parseInt(f.format(lt));
-
         try (Connection connection = DriverManager.getConnection(URL)) {
             PreparedStatement st = connection.prepareStatement
                     ("""
                             SELECT Projects.Id, Projects.PrjName, Tasks.TaskName, Tasks.StartTime, Tasks.Duration FROM Projects
                             INNER JOIN Tasks ON (Tasks.ProjectID = Projects.Id)
-                            WHERE (Tasks.Finished = 0) AND (Tasks.StartTime < ?)
+                            WHERE (Tasks.Finished = 0) AND (Tasks.StartTime + Tasks.Duration > ?)
                             """
                     );
-            st.setInt(1, date);
+            st.setLong(1, System.currentTimeMillis());
 
             final ResultSet resultSet = st.executeQuery();
-            writeTasksForToday(resultSet);
+            writeTasksWithDate(resultSet);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
     }
 
-    private void writeTasksForToday(ResultSet resultSet) {
+    private void writeTasksWithDate(ResultSet resultSet) {
         textArea.clear();
         try {
-//            String s = resultSet.getString("StartTime");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             while (resultSet.next()) {
-                if (taskForToday(resultSet, columnCount)) {
-                    for (int i = 1; i <= columnCount; i++) {
-                        textArea.appendText(resultSet.getString(i));
-                        textArea.appendText(" \t");
+                for (int i = 1; i <= columnCount; i++) {
+                    if (metaData.getColumnLabel(i).equalsIgnoreCase(BD_TASK_START_TIME)) {
+                        Instant instant = Instant.ofEpochMilli(resultSet.getLong(i));
+                        var zd = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId());
+                        var formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+                        textArea.appendText(zd.format(formatter));
+                    } else {
+                        if (metaData.getColumnLabel(i).equalsIgnoreCase(BD_TASK_DURATION)) {
+                            var dur = Duration.ofMillis(resultSet.getLong(i));
+                            textArea.appendText(dur.toHours() + " часа");
+                        } else {
+                            textArea.appendText(resultSet.getString(i));
+                        }
                     }
-                    textArea.appendText("\n");
+                    textArea.appendText(" \t");
                 }
+                textArea.appendText("\n");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    private boolean taskForToday(ResultSet resultSet, int columnCount) {
-        ResultSetMetaData metaData;
-        try {
-            metaData = resultSet.getMetaData();
-            LocalDate date = null;
-            Period taskDuration = null;
-            for (int i = 1; i <= columnCount; i++) {
-                if (metaData.getColumnLabel(i).equalsIgnoreCase(BD_TASK_START_TIME)) {
-                    date = convertToLocalDate(resultSet.getString(i));
-                }
-
-                if (metaData.getColumnLabel(i).equalsIgnoreCase(BD_TASK_DURATION)) {
-                    taskDuration = Period.ofDays(resultSet.getInt(i));
-                }
-
-                if (date != null && taskDuration != null) {
-//                    Period p = Period.between(date, date.plus(taskDuration));
-                    LocalDate now = LocalDate.now();
-
-                    return now.isAfter(date) && now.isBefore(date.plus(taskDuration));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    private LocalDate convertToLocalDate(String s) {
-        int year = Integer.parseInt(s.substring(0, 4));
-        int month = Integer.parseInt(s.substring(4, 6));
-        int day = Integer.parseInt(s.substring(6));
-        return LocalDate.of(year, month, day);
     }
 
     /*
      * 5. Имена и контакты тех, кто просрочил свои задачи (текущая дата больше, чем дата старта задачи + ее длительность)
      */
     public void fifthStory(ActionEvent actionEvent) {
+        if (textField.getText().equalsIgnoreCase("")) {
+            textArea.clear();
+            textArea.setText("Поле для ввода пустое");
+            return;
+        }
+        try (Connection connection = DriverManager.getConnection(URL)) {
+            PreparedStatement st = connection.prepareStatement
+                    ("""
+                            SELECT Tasks.id, TaskName, Tasks.StartTime, Tasks.Duration, Tasks.idMaster, names.name, Masters.Phone, Masters.email, Projects.PrjName FROM Tasks
+                            JOIN (SELECT id AS id, (FirstName || ' ' || SecondName || ' ' || LastName) AS name FROM Masters) AS names
+                            ON (Tasks.idMaster = names.id)
+                            JOIN Projects ON (Tasks.ProjectID = Projects.Id)
+                            JOIN Masters ON (Tasks.idMaster = Masters.id)
+                            WHERE (Tasks.Finished = 0) AND (Tasks.StartTime + Tasks.duration < ?)
+                            """
+                    );
 
+            st.setLong(1, System.currentTimeMillis());
+            final ResultSet resultSet = st.executeQuery();
+
+            writeTasksWithDate(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

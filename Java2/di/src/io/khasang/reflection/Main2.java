@@ -8,8 +8,8 @@ public class Main2 {
 
         Car car = new Car();
         // DI
-        car.setEngine(engine);
-        car.setGear(gear);
+//        car.setEngine(engine);
+//        car.setGear(gear);
 
         System.out.println(car);
     }

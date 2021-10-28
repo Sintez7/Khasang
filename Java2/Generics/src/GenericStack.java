@@ -37,6 +37,9 @@ public class GenericStack<E> implements Stack<E>{
     // return the top element but doesn't remove
     @Override
     public E peek() {
+        if (list.isEmpty()) {
+            return null;
+        }
         return list.get(0);
     }
 
